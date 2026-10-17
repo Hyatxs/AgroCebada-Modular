@@ -1,0 +1,31 @@
+# Entornos virtuales de Python
+.venv/
+venv/
+env/
+
+# Archivos temporales de Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Configuración local
+.env
+.env.*
+!.env.example
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Configuración personal del editor
+.vscode/
+.idea/
+
+# Archivos temporales
+*.log
+*.tmp
+# Evitar subir respaldos y el entorno local
+backend/.venv/
+*.zip
+*respaldo*
