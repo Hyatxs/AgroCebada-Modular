@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="../../">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Capítulo 3 · Del rendimiento al crédito · Barley Bot</title>
+  <meta name="description" content="Cómo las predicciones del modelo se vuelven información para un crédito agrícola: rendimiento financiable, punto de equilibrio con intereses, riesgo de precio y la cartera de 59 parcelas." />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=DM+Sans:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="vistas/compartido/styles.css" />
+  <link rel="stylesheet" href="vistas/compartido/diccionario.css" />
+  <link rel="stylesheet" href="vistas/08-credito/capitulo3.css" />
+</head>
+
+<body data-page="credito" data-cursor="on" class="c3">
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <!-- Cambio de capítulo: el telón verde (el mismo con el que sale el capítulo 2) se levanta -->
+  <div id="c3-telon" aria-hidden="true">
+    <span class="capitulo">Capítulo 3</span>
+    <span class="c3-telon-sub">Del rendimiento al crédito</span>
+  </div>
+
+  <!-- Fondo propio del capítulo: líneas finas como las de un billete -->
+  <svg class="c3-fondo" aria-hidden="true" preserveAspectRatio="xMidYMid slice"></svg>
+
+  <canvas id="mascot" aria-hidden="true"></canvas>
+  <div id="bubble" aria-hidden="true"><span class="typed"></span><span class="rest"></span></div>
+
+  <nav id="nav" aria-label="Principal"></nav>
+  <div class="c3-progreso" aria-hidden="true"><i></i></div>
+
+  <div class="c3-indice" role="navigation" aria-label="Secciones del capítulo 3">
+    <a href="vistas/08-credito/index.html#c3-historia"><span>La pregunta de FIRA</span></a>
+    <a href="vistas/08-credito/index.html#c3-simulador"><span>Simulador de crédito</span></a>
+    <a href="vistas/08-credito/index.html#c3-cartera"><span>La cartera</span></a>
+    <a href="vistas/08-credito/index.html#c3-recorrido"><span>Todo el recorrido</span></a>
+  </div>
+
+  <main id="contenido">
+    <!-- =========================================================== -->
+    <!-- Historia: las 59 parcelas cambian de forma con el scroll      -->
+    <!-- =========================================================== -->
+    <section class="c3-historia" id="c3-historia">
+      <div class="c3-escenario">
+        <div class="c3-lienzo" id="c3-lienzo">
+          <svg id="c3-fichas" role="img"
+            aria-label="Las 59 parcelas por predecir, con su forma real; cambian de acomodo en cada paso de la historia"></svg>
+        </div>
+        <p class="c3-pista-toque" aria-hidden="true">Toca una parcela para llevarla al simulador</p>
+      </div>
+
+      <div class="c3-pasos">
+        <article class="c3-paso c3-portada" data-paso="portada"
+          data-say="Ya tenemos cuánto rendiría cada parcela. Ahora la pregunta es de FIRA: ¿se le puede prestar?">
+          <div class="c3-texto">
+            <span class="capitulo">Capítulo 3</span>
+            <h1>Del rendimiento al crédito</h1>
+            <p class="c3-entrada">
+              Ya sabemos cuánto rendiría cada una de las <b data-c3="n">59</b> parcelas. Para FIRA la pregunta es
+              otra: <b>¿a quién se le puede prestar, cuánto y con qué riesgo?</b>
+            </p>
+            <p class="c3-atajos">
+              <a href="vistas/08-credito/index.html#c3-simulador" class="btn principal">Ir al simulador de crédito</a>
+              <a href="vistas/08-credito/index.html#c3-cartera" class="btn">Ver la cartera</a>
+            </p>
+            <span class="c3-desliza" aria-hidden="true">Desliza</span>
+          </div>
+        </article>
+
+        <article class="c3-paso" data-paso="fira">
+          <div class="c3-texto">
+            <span class="c3-etiqueta">Lo que le importa</span>
+            <h2>Prestar al campo sin adivinar</h2>
+            <p>
+              <span data-termino="fira">FIRA</span> son cuatro fondos del Gobierno Federal que dan crédito, descuento
+              y <span data-termino="garantia">garantías</span> al campo a través de bancos y otros intermediarios.
+              Su meta es la <span data-termino="inclusion-financiera">inclusión financiera</span>: que más productores
+              lleguen al crédito formal.
+            </p>
+            <ol class="c3-preguntas">
+              <li><b>¿Cuánto va a producir?</b> <span>La predicción de cada parcela.</span></li>
+              <li><b>¿Qué tan seguro es?</b> <span>Su rango y su nivel de riesgo.</span></li>
+              <li><b>¿Alcanza para pagar?</b> <span>Lo que vale la cosecha contra lo que se debe: costo e intereses.</span></li>
+            </ol>
+            <p class="c3-pie">Sin datos de la parcela, el banco no puede contestar.</p>
+          </div>
+        </article>
+
+        <article class="c3-paso" data-paso="cuando">
+          <div class="c3-texto">
+            <span class="c3-etiqueta">Antes de sembrar</span>
+            <h2>¿Llega a tiempo la predicción?</h2>
+            <p>
+              El <span data-termino="credito-avio">crédito de avío</span> se decide antes de sembrar, cuando todavía no
+              hay cosecha que ver. Por eso importa de dónde sale lo que sabe el modelo.
+            </p>
+            <p>
+              El modelo final solo usa la ubicación: el municipio y el rendimiento de las parcelas vecinas conocidas
+              (en verde). El promedio del municipio ya se equivoca ±<b data-c3="rmse_base">0.51</b> t/ha; sumando las
+              vecinas, ±<b data-c3="rmse2">0.50</b>. No necesita imágenes del ciclo.
+            </p>
+            <p>
+              Así que puede dar una cifra antes de la siembra, <b>si el patrón por zona se repite de un año a otro</b>.
+              Con un solo ciclo de rendimientos todavía no se puede comprobar: es lo primero que habría que validar con
+              los datos de otro año.
+            </p>
+          </div>
+        </article>
+
+        <article class="c3-paso" data-paso="p20">
+          <div class="c3-texto">
+            <span class="c3-etiqueta">Pregunta 1 y 2</span>
+            <h2>Una cifra prudente</h2>
+            <p>
+              Para prestar no conviene usar la predicción, sino el
+              <span data-termino="p20">rendimiento financiable (P20)</span>: una cifra más baja que, en la
+              validación, <b>8 de cada 10 parcelas</b> alcanzaron o superaron.
+            </p>
+            <p>
+              Con la predicción, las 59 parcelas suman <b><span data-c3="t_est">1,554</span> t</b>; con su P20,
+              <b><span data-c3="t_p20">1,399</span> t</b>. Esa diferencia es el colchón por si el modelo se equivoca
+              hacia abajo. Ojo: mide el error del modelo en un ciclo como el de 2025, no lo que pasaría en un año de
+              sequía o helada.
+            </p>
+            <p class="c3-pie">Cada línea va del P20 (abajo) a la predicción (punto), de la parcela que menos rinde a la que más.</p>
+          </div>
+        </article>
+
+        <article class="c3-paso" data-paso="equilibrio">
+          <div class="c3-texto">
+            <span class="c3-etiqueta">Pregunta 3</span>
+            <h2>¿Alcanza para pagar?</h2>
+            <p>
+              Producir una hectárea de cebada en Hidalgo cuesta unos <b>$<span data-c3="costo">15,755</span></b>
+              (FIRA, primavera-verano 2025); usamos esa cifra también para Puebla y Tlaxcala. Con un crédito al <b><span data-c3="tasa">8.5</span> % anual</b> a
+              <span data-c3="plazo">10</span> meses, se deben <b>$<span data-c3="deuda_ha">16,871</span></b> por
+              hectárea.
+            </p>
+            <p>
+              Con la tonelada a <b>$<span data-c3="precio">7,500</span></b>, el precio pactado en 2025, hacen falta
+              <b><span data-c3="equilibrio">2.25</span> t/ha</b> solo para pagar: el
+              <span data-termino="equilibrio">punto de equilibrio</span>. Aun con su P20, la cifra prudente,
+              <b><span data-c3="cubren">59</span> de 59</b> parcelas quedan por encima.
+            </p>
+            <p class="c3-pie">Debajo de la línea, la cosecha no alcanza para pagar el crédito.</p>
+          </div>
+        </article>
+
+        <article class="c3-paso" data-paso="precio">
+          <div class="c3-texto">
+            <span class="c3-etiqueta">Lo que más mueve el riesgo</span>
+            <h2>El riesgo está en el precio</h2>
+            <p>
+              Con el precio de 2025 todas alcanzan. Pero si la tonelada se pagara al promedio nacional de 2024
+              ($6,077), <b><span data-c3="no_6077">19</span> parcelas</b> ya no pagarían su crédito con su P20.
+            </p>
+            <p>
+              Con los <b>$4,500</b> que, según los productores, la cervecera quería pagar en 2025, la línea sube a
+              <b><span data-c3="equilibrio_4500">3.75</span> t/ha</b> y solo
+              <b><span data-c3="cubren_4500">35</span> de 59</b> alcanzan. Las que no, en rosa, están en
+              <span data-c3="mun_4500">Calpulalpan, Singuilucan, Chignahuapan y Nanacamilpa</span>.
+            </p>
+            <p class="c3-pie">
+              Con estos rendimientos, lo que decide si el crédito se paga es el precio. Por eso importa pactarlo antes
+              de sembrar.
+            </p>
+          </div>
+        </article>
+
+        <article class="c3-paso" data-paso="riesgo">
+          <div class="c3-texto">
+            <span class="c3-etiqueta">El semáforo</span>
+            <h2>No todas tienen el mismo margen</h2>
+            <p>
+              El <span data-termino="riesgo">nivel de riesgo</span> mide cuánto podría caer el rendimiento por debajo
+              de lo esperado: la distancia entre la predicción y el P20. Las 59 se dividen en tercios.
+            </p>
+            <ul class="c3-semaforo">
+              <li class="bajo"><b data-c3="n_bajo">20</b> de riesgo bajo <span>caída de hasta <span data-c3="u1">8</span> %</span></li>
+              <li class="medio"><b data-c3="n_medio">19</b> de riesgo medio <span><span data-c3="u1b">8</span> a <span data-c3="u2">12</span> %</span></li>
+              <li class="alto"><b data-c3="n_alto">20</b> de riesgo alto <span>más de <span data-c3="u2b">12</span> %</span></li>
+            </ul>
+            <p class="c3-pie">Riesgo alto no quiere decir «no prestar»: quiere decir prestar con más cuidado.</p>
+          </div>
+        </article>
+
+        <article class="c3-paso" data-paso="municipios">
+          <div class="c3-texto">
+            <span class="c3-etiqueta">Dónde está el riesgo</span>
+            <h2>El riesgo tiene domicilio</h2>
+            <p>
+              <b>Calpulalpan</b> reúne <b><span data-c3="alto_calpulalpan">13</span> de las
+              <span data-c3="n_alto2">20</span></b> parcelas de riesgo alto. <b>Chignahuapan</b>, en cambio, tiene
+              <b><span data-c3="bajo_chignahuapan">17</span></b> de las de riesgo bajo.
+            </p>
+            <p>
+              Donde las parcelas rinden menos y las vecinas conocidas son pocas, el rango se abre.
+            </p>
+            <p>
+              Las 59 están, en mediana, a <b><span data-c3="dist_m">349</span> m</b> de una parcela conocida. En una
+              zona sin vecinas conocidas el error sube a ±<span data-c3="rmse_esp">0.66</span> t/ha: para llevar la
+              herramienta a más productores, primero hay que medir la cosecha de algunas parcelas en cada zona nueva.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- Simulador de crédito                                        -->
+    <!-- =========================================================== -->
+    <section class="c3-seccion" id="c3-simulador"
+      data-say="Elige una parcela y mueve el precio: verás si su cosecha alcanza para pagar.">
+      <div class="c3-ancho">
+        <span class="kicker">Simulador de crédito</span>
+        <h2>¿Le prestarías a esta parcela?</h2>
+        <p class="c3-entrada">
+          Elige una de las 59 parcelas y ajusta el precio de la cebada, el costo de producción y la tasa del crédito.
+          El simulador usa su predicción y su P20 del modelo para responder las tres preguntas.
+        </p>
+
+        <div class="c3-sim">
+          <div class="c3-sim-controles">
+            <label class="c3-campo">
+              <span>Parcela</span>
+              <input id="c3-buscar" list="c3-lista" autocomplete="off" spellcheck="false" />
+              <datalist id="c3-lista"></datalist>
+            </label>
+            <button type="button" id="c3-azar">Otra al azar</button>
+
+            <div class="c3-minimapa" id="c3-minimapa" aria-label="Las 59 parcelas: toca una para elegirla"></div>
+
+            <div class="c3-deslizador">
+              <label for="c3-precio">Precio de la cebada <b id="c3-precio-valor">$7,500 / t</b></label>
+              <input type="range" id="c3-precio" min="4000" max="9000" step="50" value="7500" />
+              <div class="c3-presets" role="group" aria-label="Precios de referencia">
+                <button type="button" data-precio="8252">2023 · $8,252</button>
+                <button type="button" data-precio="7500">2025 · $7,500</button>
+                <button type="button" data-precio="7000">2026 · $7,000</button>
+                <button type="button" data-precio="4500">Recorte propuesto · $4,500</button>
+              </div>
+            </div>
+
+            <div class="c3-deslizador">
+              <label for="c3-costo">Costo de producción <b id="c3-costo-valor">$15,755 / ha</b></label>
+              <input type="range" id="c3-costo" min="10000" max="25000" step="5" value="15755" />
+              <p class="c3-nota">Referencia: FIRA, cebada de Hidalgo, primavera-verano 2025. Se usa también para Puebla y Tlaxcala.</p>
+            </div>
+
+            <div class="c3-deslizador">
+              <label for="c3-tasa">Tasa de interés anual <b id="c3-tasa-valor">8.5 %</b></label>
+              <input type="range" id="c3-tasa" min="0" max="25" step="0.5" value="8.5" />
+              <div class="c3-presets" role="group" aria-label="Tasas de referencia">
+                <button type="button" data-tasa="0">Sin intereses</button>
+                <button type="button" data-tasa="8.5">Cosechando Soberanía · 8.5 %</button>
+                <button type="button" data-tasa="17.5">Tasa alta (FIRA Sinaloa) · 17.5 %</button>
+              </div>
+              <p class="c3-nota">
+                Las dos tasas son referencias: 8.5 % es la del programa federal Cosechando Soberanía, pero no
+                encontramos que incluya la cebada; 17.5 % es la máxima que citó FIRA en Sinaloa. Crédito a 10 meses que
+                financia todo el costo, un supuesto prudente: FIRA suele financiar de 80 a 90 % a pequeños productores.
+              </p>
+            </div>
+          </div>
+
+          <article class="c3-ficha" id="c3-ficha" aria-live="polite">
+            <header class="c3-ficha-cabeza">
+              <span class="c3-folio">Ficha de crédito</span>
+              <h3 class="c3-ficha-id">AGC_000</h3>
+              <span class="c3-ficha-meta"></span>
+              <span class="c3-sello"></span>
+            </header>
+
+            <div class="c3-renglones">
+              <div class="c3-renglon">
+                <span>1 · ¿Cuánto va a producir?</span>
+                <b class="c3-v-prod"></b>
+                <small class="c3-v-prod-d"></small>
+              </div>
+              <div class="c3-renglon">
+                <span>2 · ¿Qué tan seguro es?</span>
+                <b class="c3-v-p20"></b>
+                <small class="c3-v-p20-d"></small>
+              </div>
+            </div>
+
+            <div class="c3-regla" id="c3-regla"></div>
+
+            <div class="c3-dinero">
+              <span class="c3-dinero-titulo">3 · ¿Alcanza para pagar?</span>
+              <div class="c3-barra-dinero costo">
+                <span>Lo que se debe: costo e intereses</span>
+                <i><em></em></i>
+                <b class="c3-v-costo"></b>
+              </div>
+              <div class="c3-barra-dinero ingreso">
+                <span>Lo que vale la cosecha con su P20</span>
+                <i><em></em></i>
+                <b class="c3-v-ingreso"></b>
+              </div>
+              <p class="c3-nota c3-v-desglose"></p>
+            </div>
+
+            <div class="c3-veredicto">
+              <div class="c3-cobertura">
+                <b class="c3-v-cob"></b>
+                <span><span data-termino="cobertura">cobertura</span> del crédito</span>
+              </div>
+              <p class="c3-v-texto"></p>
+            </div>
+            <p class="c3-idea"></p>
+            <p class="c3-aviso">
+              Ejemplo del equipo para mostrar el uso del modelo. No es una regla de FIRA ni una aprobación de crédito.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- La cartera                                                  -->
+    <!-- =========================================================== -->
+    <section class="c3-seccion" id="c3-cartera"
+      data-say="Así se ve la cartera completa. Y ojo con el precio: mueve todo.">
+      <div class="c3-ancho">
+        <span class="kicker">La cartera</span>
+        <h2>El riesgo de la cartera está en el precio</h2>
+        <p class="c3-entrada">
+          Las 59 parcelas como las vería un banco, con el precio, el costo y la tasa que elijas en el simulador. Aquí
+          está todo para consultar y descargar.
+        </p>
+
+        <div class="c3-cifras" id="c3-cifras">
+          <div class="c3-cifra"><b data-cartera="ha">393.6</b><span>hectáreas</span></div>
+          <div class="c3-cifra"><b data-cartera="t">1,399</b><span>toneladas financiables (P20)</span></div>
+          <div class="c3-cifra"><b data-cartera="ingreso">$10.5 M</b><span>valor de la cosecha con P20</span></div>
+          <div class="c3-cifra"><b data-cartera="cubren">59 de 59</b><span>parcelas pagan su crédito con su P20</span></div>
+        </div>
+
+        <div class="c3-dos">
+          <figure class="c3-fig">
+            <p class="c3-fig-titulo">¿Cuántas parcelas pagan su crédito con su P20, según el precio?</p>
+            <div id="c3-sensibilidad"></div>
+            <figcaption>
+              Con <b>$4,500</b> por tonelada, el recorte que según los productores pedía la cervecera en 2025, solo
+              <b><span data-vivo="cubren_4500">35</span> de 59</b> parcelas pagarían su crédito con su P20. Las
+              que no alcanzan están en <span data-vivo="mun_4500">Calpulalpan, Singuilucan, Chignahuapan y
+              Nanacamilpa</span>. Un precio pactado protege al crédito.
+            </figcaption>
+          </figure>
+          <figure class="c3-fig">
+            <p class="c3-fig-titulo">Superficie por nivel de riesgo</p>
+            <div id="c3-riesgo-ha"></div>
+            <figcaption>
+              Cada nivel tiene casi el mismo número de parcelas, pero no la misma superficie: lo que se presta depende
+              de las hectáreas, no solo del número de parcelas.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="c3-tabla-cabeza">
+          <div class="c3-filtros" role="group" aria-label="Filtrar por riesgo">
+            <button type="button" data-filtro="todos" aria-pressed="true">Todas</button>
+            <button type="button" data-filtro="Bajo" aria-pressed="false">Riesgo bajo</button>
+            <button type="button" data-filtro="Medio" aria-pressed="false">Riesgo medio</button>
+            <button type="button" data-filtro="Alto" aria-pressed="false">Riesgo alto</button>
+          </div>
+          <button type="button" class="btn" id="c3-descargar">Descargar CSV</button>
+        </div>
+        <div class="c3-tabla-caja">
+          <table class="c3-tabla" id="c3-tabla">
+            <thead>
+              <tr>
+                <th data-orden="id" scope="col">Parcela</th>
+                <th data-orden="mun" scope="col">Municipio</th>
+                <th data-orden="ha" scope="col" class="num">ha</th>
+                <th data-orden="est" scope="col" class="num">Predicción<br><small>t/ha</small></th>
+                <th data-orden="p20" scope="col" class="num">P20<br><small>t/ha</small></th>
+                <th data-orden="caida" scope="col">Riesgo</th>
+                <th data-orden="ingreso" scope="col" class="num">Valor con P20</th>
+                <th data-orden="cob" scope="col" class="num">Cobertura</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="c3-nota">Toca una fila para abrir la parcela en el simulador. Toca un encabezado para ordenar.</p>
+      </div>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- Todo el recorrido                                           -->
+    <!-- =========================================================== -->
+    <section class="c3-seccion c3-recorrido" id="c3-recorrido"
+      data-say="¡Llegamos! De una semilla a un crédito. Gracias por acompañarme.">
+      <div class="c3-ancho">
+        <span class="kicker">Todo el recorrido</span>
+        <h2>De la semilla al crédito</h2>
+        <div class="c3-capitulos">
+          <article class="c3-capitulo">
+            <span class="c3-capitulo-num">1</span>
+            <h3>La cebada y su territorio</h3>
+            <p>Qué es la cebada, dónde y cómo crece en el Altiplano, y por qué 2025 fue un año atípico.</p>
+            <a href="vistas/01-introduccion/index.html">Volver al capítulo 1</a>
+          </article>
+          <article class="c3-capitulo">
+            <span class="c3-capitulo-num">2</span>
+            <h3>El modelo</h3>
+            <p>
+              El municipio y las vecinas explican la mayor parte del rendimiento. El GP jerárquico se equivoca
+              <b>±<span data-c3="rmse">0.50</span> t/ha</b> y da un rango calibrado a cada parcela.
+            </p>
+            <a href="vistas/07-modelo/index.html#c2-simulador">Correr el modelo</a>
+          </article>
+          <article class="c3-capitulo">
+            <span class="c3-capitulo-num">3</span>
+            <h3>El crédito</h3>
+            <p>
+              Con el P20, los intereses y una prueba de precio, cada parcela llega con una cifra prudente para prestar:
+              <b><span data-c3="t_p20b">1,399</span> t financiables</b> en <span data-c3="ha">393.6</span> ha.
+            </p>
+            <a href="vistas/08-credito/index.html#c3-simulador">Probar el simulador</a>
+          </article>
+        </div>
+       
+        <p class="c3-atajos">
+          <a class="btn principal" href="index.html">Volver al inicio</a>
+          <a class="btn" href="vistas/07-modelo/index.html">Volver al capítulo 2</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="c3-fuentes">
+    <p>
+      Predicciones, P20 y niveles de riesgo: modelo del equipo (GP jerárquico, NB07) sobre los datos del Reto
+      AgroCebada FIRA 2026. El P20 mide el error del modelo en un ciclo (2025), no la variación de un año a otro.
+      Costo de producción, precio y tasa de interés son supuestos editables en el simulador.
+    </p>
+    <ul>
+      <li>FIRA, objetivo y estructura: Bases de participación del Reto AgroCebada 2026; garantías (FEGA):
+        <a href="https://www.cuentapublica.hacienda.gob.mx/work/models/CP/2024/tomo/VII/MAT_Print.6HAS.01.INTRO.pdf" target="_blank" rel="noopener">Cuenta Pública 2024</a>.</li>
+      <li>Costo de producción de cebada en Hidalgo, primavera-verano 2025 ($15,755/ha, FIRA): citado en
+        <a href="https://rsdjournal.org/rsd/article/download/50771/39806/515061" target="_blank" rel="noopener">Research, Society and Development (2025)</a>.</li>
+      <li>Precio 2025 ($7,500/t) y, según los productores, la intención de bajar de $8,252 (2023) a $4,500:
+        <a href="https://www.jornada.com.mx/noticia/2025/05/04/estados/productores-de-hidalgo-y-modelo-fijan-precio-precio-de-cebada-finaliza-conflicto" target="_blank" rel="noopener">La Jornada, 4 may 2025</a>.
+        Precio 2026 ($7,000/t):
+        <a href="https://lasillarota.com/hidalgo/estado/2026/5/11/logran-acuerdos-comerciales-para-productores-de-cebada-son-mil-pesos-por-tonelada-509532.html" target="_blank" rel="noopener">La Silla Rota, 11 may 2026</a>.</li>
+      <li>Tasa preferencial de 8.5 % anual (Cosechando Soberanía, ciclo 2026-2027):
+        <a href="https://www.luznoticias.mx/2026-10-14/sinaloa/piden-a-agricultores-de-sinaloa-tramitar-creditos-con-fira-para-evitar-intereses-mas-altos/309833" target="_blank" rel="noopener">Luz Noticias, 14 oct 2026</a>.
+        Cultivos que menciona el programa (maíz, frijol, arroz, trigo, café, leche y pesca):
+        <a href="https://www.tusbuenasnoticias.com/amp/noticias/economia/2025/04/11/43856-cosechando-soberania-creditos-accesibles-para-el-campo-mexicano" target="_blank" rel="noopener">Tus Buenas Noticias</a>.
+        Tasa máxima de 17.5 % en créditos de 10 meses, según la residencia de FIRA en Sinaloa:
+        <a href="https://losnoticieristas.com/agricola/2026/09/presenta-fira-alternativas-de-credito-para-pequenos-y-medianos-productores-de-guasave-sinaloa-1138803/" target="_blank" rel="noopener">Los Noticieristas, sep 2026</a>.
+        FIRA financia de 80 a 90 % del costo a pequeños productores:
+        <a href="https://www.bbva.com/es/mx/empresas/financiamiento-agropecuario-en-mexico-como-funciona-el-credito-fira/" target="_blank" rel="noopener">BBVA</a>.</li>
+      <li>Precio promedio nacional 2024 ($6,077/t, SADER-SIAP):
+        <a href="https://blogagricultura.com/estadisticas-cebada-grano-mexico/" target="_blank" rel="noopener">Blog Agricultura</a>.</li>
+    </ul>
+    <a href="referencias.html">Referencias del sitio</a>.
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="vistas/compartido/common.js"></script>
+  <script src="vistas/compartido/mascota.js"></script>
+  <script src="vistas/compartido/diccionario.js"></script>
+  <script src="vistas/07-modelo/datos-modelo.js"></script>
+  <script src="vistas/08-credito/capitulo3.js"></script>
+</body>
+</html>
