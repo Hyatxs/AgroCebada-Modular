@@ -297,8 +297,8 @@ function montarNavegacion() {
 
   const actual = document.body.dataset.page;
   const enlaces = [
-    ["home", "index.html", "Storytime"],
-    ["mapa", "mapa.html", "Mapa"],
+    ["home", "index.html", "Introducción"],
+
     ["modelo", "modelo.html", "Modelo"],
   ];
 
@@ -327,7 +327,7 @@ function montarNavegacion() {
     </div>
     <div class="menu">
       <button id="menu-btn" class="ui" aria-haspopup="true" aria-expanded="false"
-              aria-controls="menu-panel">Menú ▾</button>
+              aria-controls="menu-panel">Preferencias ▾</button>
       <div id="menu-panel" class="menu-panel" hidden>
         <a href="glosario.html" class="menu-enlace">📖 Glosario</a>
         <a href="referencias.html" class="menu-enlace">🔗 Referencias</a>
