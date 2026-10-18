@@ -864,6 +864,157 @@ body.c2 .c2-sim-izq h2 {
   stroke-width: 2;
 }
 
+/* === INICIO: estilos nuevos de las gráficas (diez modelos, resultados, preguntas) === */
+
+.c2-rejilla.menor {
+  stroke: color-mix(in srgb, var(--line) 45%, transparent);
+}
+
+.c2-eje-linea {
+  stroke: var(--ink);
+  stroke-opacity: 0.55;
+  stroke-width: 1;
+}
+
+/* Diez modelos: filas con banda, tallo desde la referencia y columna de valores */
+.c2-fila-alterna {
+  fill: color-mix(in srgb, var(--ink) 4%, transparent);
+}
+
+.c2-fila-destacada {
+  fill: color-mix(in srgb, var(--green) 14%, transparent);
+}
+
+.c2-tallo {
+  stroke: var(--tipo);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-opacity: 0.45;
+}
+
+.c2-fila.final .c2-tallo {
+  stroke-opacity: 0.85;
+}
+
+.c2-referencia-solida {
+  stroke: var(--ink);
+  stroke-opacity: 0.6;
+  stroke-width: 1.5;
+}
+
+.c2-etiqueta-final {
+  font-size: 10.5px !important;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: var(--rosa) !important;
+}
+
+.c2-fila.final .c2-fila-valor {
+  font-weight: 700;
+  fill: var(--ink) !important;
+}
+
+.c2-carrera .c2-fila-valor {
+  font-size: 13px !important;
+}
+
+.c2-carrera .c2-fila-nombre {
+  font-size: 13px !important;
+}
+
+/* Resultados: título, clave y guías de lectura */
+.c2-fig-cabeza {
+  margin-bottom: 0.5rem;
+}
+
+.c2-fig-titulo {
+  margin: 0 0 0.35rem;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.c2-clave {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--c2-tinta-suave);
+}
+
+.c2-clave span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.c2-clave span::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.c2-clave .k-lejano::before {
+  background: var(--rosa);
+}
+
+.c2-clave .k-banda::before {
+  width: 18px;
+  height: 10px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--green) 22%, transparent);
+}
+
+.c2-clave .k-diagonal::before {
+  width: 18px;
+  height: 0;
+  border-radius: 0;
+  border-top: 2px dashed var(--green);
+  background: none;
+}
+
+.c2-clave .k-riesgo.medio::before {
+  background: var(--gold);
+}
+
+.c2-clave .k-riesgo.alto::before {
+  background: var(--rosa);
+}
+
+.c2-guia {
+  font-size: 11.5px !important;
+  font-style: italic;
+  fill: var(--c2-tinta-suave) !important;
+}
+
+.c2-clave-oruga {
+  --riesgo: var(--ink);
+}
+
+.c2-clave-texto {
+  font-size: 11.5px !important;
+  fill: var(--c2-tinta-suave) !important;
+}
+
+.c2-clave-texto.fuerte {
+  font-weight: 600;
+  fill: var(--ink) !important;
+}
+
+/* Textos con halo del color del fondo: las líneas de referencia pasan por detrás */
+.c2-con-halo {
+  paint-order: stroke;
+  stroke: var(--sky);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+/* === FIN: estilos nuevos de las gráficas === */
+
 .c2-fila {
   --tipo: var(--green);
 }
