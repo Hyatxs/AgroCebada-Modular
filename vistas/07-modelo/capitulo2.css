@@ -1,0 +1,1689 @@
+/* ==========================================================================
+   Capítulo 2 · El modelo
+   Todo va bajo body.c2 o con prefijo c2- para no tocar el mapa (02-territorio
+   carga estilos.css de esta carpeta, no este archivo).
+   Colores: variables de la paleta compartida (tema y daltonismo incluidos).
+   ========================================================================== */
+
+body.c2 {
+  --c2-papel: color-mix(in srgb, var(--line) 38%, transparent);
+  --c2-mesa: color-mix(in srgb, var(--sky) 90%, var(--green));
+  --c2-tinta-suave: color-mix(in srgb, var(--ink) 70%, var(--sky));
+  --c2-satelite: color-mix(in srgb, var(--ink) 50%, var(--sky));
+  --c2-nav: 68px;
+
+  /* Cambio de vista respecto al capítulo 1: papel cuadriculado de levantamiento */
+  background-color: var(--sky);
+  background-image:
+    linear-gradient(var(--c2-papel) 1px, transparent 1px),
+    linear-gradient(90deg, var(--c2-papel) 1px, transparent 1px);
+  background-size: 56px 56px;
+  background-attachment: fixed;
+}
+
+body.c2 main {
+  pointer-events: auto; /* styles.css lo apaga para el storytime */
+}
+
+body.c2 h2 {
+  font-size: clamp(2.1rem, 4.6vw, 4rem);
+}
+
+.c2 b {
+  font-weight: 600;
+}
+
+.c2 [hidden] {
+  display: none !important;
+}
+
+/* --- Telón de cambio de capítulo ---------------------------------------- */
+
+#c2-telon {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--sky);
+  pointer-events: none;
+  animation: c2-telon 0.95s cubic-bezier(0.7, 0, 0.2, 1) 0.65s forwards;
+}
+
+@keyframes c2-telon {
+  to { transform: translateY(-101%); }
+}
+
+#c2-telon .capitulo {
+  font-size: clamp(3.4rem, 13vw, 10rem);
+}
+
+.c2-telon-sub {
+  font: 600 1.1rem "DM Sans", system-ui, sans-serif;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+
+html[data-motion="reduce"] #c2-telon {
+  display: none;
+}
+
+/* --- Progreso e índice del capítulo ------------------------------------- */
+
+.c2-progreso {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 60;
+}
+
+.c2-progreso i {
+  display: block;
+  height: 100%;
+  background: var(--rosa);
+  transform-origin: left;
+  transform: scaleX(var(--progreso, 0));
+}
+
+.c2-indice {
+  position: fixed;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.c2-indice a {
+  position: relative;
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--green);
+  background: var(--sky);
+  transition: background 0.3s, transform 0.3s;
+}
+
+.c2-indice a.actual {
+  background: var(--green);
+  transform: scale(1.25);
+}
+
+.c2-indice span {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.c2-indice a:hover span,
+.c2-indice a:focus-visible span {
+  opacity: 1;
+}
+
+@media (max-width: 1100px) {
+  .c2-indice {
+    display: none;
+  }
+}
+
+/* --- Escena a pantalla completa: las pistas y el simulador --------------- */
+/* La escena 3D se queda fija (sticky) mientras el texto pasa a los lados.
+   No hay tarjetas encima del mapa: el texto se lee sobre un velo degradado. */
+
+.c2-escena {
+  --c2-col: min(31rem, 36vw);
+  --c2-sim-izq: min(29rem, 31vw);
+  --c2-sim-der: min(25rem, 27vw);
+  --c2-margen: 5vw;
+  position: relative;
+}
+
+.c2-escenario {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 0;
+  background: var(--sky);
+}
+
+.c2-lienzo {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.c2-lienzo > svg,
+.c2-lienzo-3d {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: manipulation;
+}
+
+/* Velos: dan contraste al texto sin cajas */
+.c2-velo {
+  position: absolute;
+  pointer-events: none;
+  transition: opacity 0.8s;
+}
+
+.c2-velo-izq {
+  inset: 0 auto 0 0;
+  width: calc(var(--c2-margen) + var(--c2-col) + 18vw);
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--sky) 92%, transparent) 0%,
+    color-mix(in srgb, var(--sky) 82%, transparent) 52%,
+    color-mix(in srgb, var(--sky) 0%, transparent) 100%);
+}
+
+.c2-velo-der {
+  inset: 0 0 0 auto;
+  width: calc(var(--c2-margen) + var(--c2-sim-der) + 14vw);
+  background: linear-gradient(270deg,
+    color-mix(in srgb, var(--sky) 92%, transparent) 0%,
+    color-mix(in srgb, var(--sky) 82%, transparent) 55%,
+    color-mix(in srgb, var(--sky) 0%, transparent) 100%);
+  opacity: 0;
+}
+
+.c2-velo-sup {
+  inset: 0 0 auto 0;
+  height: 130px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sky) 85%, transparent), transparent);
+}
+
+.c2-velo-inf {
+  inset: auto 0 0 0;
+  height: 140px;
+  background: linear-gradient(0deg, color-mix(in srgb, var(--sky) 80%, transparent), transparent);
+}
+
+.c2-escenario[data-paso="simulador"] .c2-velo-der {
+  opacity: 1;
+}
+
+.c2-escenario[data-paso="simulador"] .c2-velo-izq {
+  width: calc(var(--c2-margen) + var(--c2-sim-izq) + 14vw);
+}
+
+/* Etiquetas proyectadas desde la escena: solo texto con halo, sin recuadro */
+.c2-etiquetas-3d {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.c2-etq3d {
+  --halo: color-mix(in srgb, var(--sky) 88%, transparent);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font: 600 0.78rem "DM Sans", system-ui, sans-serif;
+  color: var(--ink);
+  white-space: nowrap;
+  text-shadow: 0 0 3px var(--halo), 0 0 6px var(--halo), 0 0 12px var(--halo);
+  transition: opacity 0.3s;
+}
+
+.c2-etq3d.municipio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.05;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  animation: c2-aparece 0.6s backwards;
+}
+
+.c2-etq3d.municipio::after {
+  content: "";
+  width: 1.5px;
+  height: 14px;
+  margin-top: 3px;
+  background: var(--ink);
+  opacity: 0.55;
+}
+
+.c2-etq3d.municipio b {
+  font: 800 1.15rem "Fraunces", Georgia, serif;
+  color: var(--green);
+}
+
+.c2-etq3d.distancia {
+  font: 600 0.72rem "DM Sans", system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  animation: c2-aparece 0.5s 0.4s backwards;
+}
+
+.c2-etq3d.anillo {
+  font-size: 0.72rem;
+  color: var(--c2-tinta-suave);
+}
+
+/* Pie del mapa (leyenda y nota): abajo a la derecha */
+.c2-pie-mapa {
+  position: absolute;
+  right: calc(var(--c2-margen) + 18px);
+  bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: min(36rem, 42vw);
+  pointer-events: none;
+  text-shadow: 0 0 6px var(--sky), 0 0 12px var(--sky);
+}
+
+.c2-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px 18px;
+}
+
+.c2-escenario[data-paso="simulador"] .c2-pie-mapa {
+  right: calc(var(--c2-margen) + var(--c2-sim-der) + 2.5rem);
+  left: calc(var(--c2-margen) + var(--c2-sim-izq) + 2.5rem);
+  max-width: none;
+  align-items: center;
+}
+
+.c2-escenario[data-paso="simulador"] .c2-leyenda {
+  justify-content: center;
+}
+
+.c2-ley,
+.c2-ley-rampa {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  animation: c2-aparece 0.5s backwards;
+}
+
+.c2-ley::before {
+  content: "";
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  background: var(--green);
+}
+
+.c2-ley.por-predecir::before {
+  background: repeating-linear-gradient(45deg, var(--gold) 0 3px, color-mix(in srgb, var(--gold) 30%, var(--sky)) 3px 6px);
+}
+
+.c2-ley.enlace-sube::before,
+.c2-ley.enlace-baja::before {
+  width: 18px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.c2-ley.enlace-baja::before {
+  background: var(--rosa);
+}
+
+.c2-ley.enlace-neutro::before {
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+
+.c2-ley-rampa i {
+  width: 74px;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--rampa-0, #dde2cf), var(--green), var(--rampa-1, #2f4f2a));
+}
+
+html[data-theme="dark"] .c2-ley-rampa i {
+  --rampa-0: #3a4436;
+  --rampa-1: #cfe8c4;
+}
+
+.c2-ley-rampa small {
+  order: -1;
+  font-weight: 400;
+}
+
+.c2-ley-rampa small:last-child {
+  order: 1;
+}
+
+.c2-nota-mapa {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  text-align: right;
+  color: var(--c2-tinta-suave);
+}
+
+/* La nota solo acompaña las vistas del mapa completo */
+.c2-escenario[data-paso="vecinos"] .c2-nota-mapa,
+.c2-escenario[data-paso="juntas"] .c2-nota-mapa,
+.c2-escenario[data-paso="simulador"] .c2-nota-mapa {
+  display: none;
+}
+
+/* Pasos: pasan por encima de la escena; solo el texto recibe clics */
+.c2-pasos {
+  position: relative;
+  z-index: 1;
+  margin-top: -100vh;
+  pointer-events: none;
+}
+
+.c2-paso {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: calc(var(--c2-nav) + 2vh) var(--c2-margen) 9vh;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.c2-texto {
+  width: var(--c2-col);
+  pointer-events: auto;
+}
+
+.c2-texto > * {
+  opacity: 0.08;
+  transform: translateY(18px);
+  transition: opacity 0.6s, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.c2-paso.activo .c2-texto > * {
+  opacity: 1;
+  transform: none;
+}
+
+.c2-paso.activo .c2-texto > :nth-child(2) { transition-delay: 0.08s; }
+.c2-paso.activo .c2-texto > :nth-child(3) { transition-delay: 0.16s; }
+.c2-paso.activo .c2-texto > :nth-child(4) { transition-delay: 0.24s; }
+.c2-paso.activo .c2-texto > :nth-child(5) { transition-delay: 0.32s; }
+
+.c2-portada .c2-texto {
+  padding-top: 4vh;
+}
+
+.c2-portada h1 {
+  font-size: clamp(2.6rem, 4.6vw, 5rem);
+  line-height: 0.92;
+  margin-top: 0.2em;
+}
+
+.c2-portada .capitulo {
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+}
+
+.c2-entrada {
+  font-size: 1.12rem;
+  max-width: 36rem;
+}
+
+.c2-atajos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 1.2rem;
+}
+
+.c2-desliza {
+  display: block;
+  margin-top: 6vh;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--c2-tinta-suave);
+}
+
+.c2-desliza::after {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 46px;
+  margin: 10px 0 0 1.2em;
+  background: linear-gradient(var(--rosa), transparent);
+  animation: c2-goteo 1.8s ease-in-out infinite;
+}
+
+@keyframes c2-goteo {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+.c2-pista-num {
+  font-weight: 600;
+  color: var(--rosa);
+  font-size: 1rem;
+}
+
+.c2-pie {
+  font-size: 0.92rem;
+  color: var(--c2-tinta-suave);
+}
+
+.c2-curva-graf {
+  margin: 0.6rem 0 0.2rem;
+}
+
+/* Fórmula: términos subrayados, sin cajas */
+.c2-formula {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+  margin: 0.4rem 0 1.2rem;
+}
+
+.c2-termino {
+  padding: 0.1rem 0 0.15rem;
+  border-bottom: 3px solid var(--line);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1.25;
+}
+
+.c2-termino.base b {
+  font: 800 1.05rem "Fraunces", Georgia, serif;
+  color: var(--green);
+}
+
+.c2-termino.mun {
+  border-color: var(--gold);
+}
+
+.c2-termino.vec {
+  border-color: var(--green);
+}
+
+.c2-termino.res {
+  border-color: var(--rosa);
+  color: var(--green);
+  font: 800 1.15rem "Fraunces", Georgia, serif;
+  text-transform: uppercase;
+}
+
+.c2-termino small {
+  display: block;
+  font: 400 0.8rem "DM Sans", system-ui, sans-serif;
+  text-transform: none;
+  color: var(--c2-tinta-suave);
+}
+
+.c2-op {
+  font: 800 1.4rem "Fraunces", Georgia, serif;
+  color: var(--rosa);
+}
+
+/* Simulador: controles a la izquierda, ficha a la derecha, la escena en medio */
+.c2-paso-simulador {
+  display: grid;
+  grid-template-columns: var(--c2-sim-izq) minmax(0, 1fr) var(--c2-sim-der);
+  align-items: center;
+  gap: 2rem;
+  padding: calc(var(--c2-nav) + 16px) var(--c2-margen) 28px;
+}
+
+.c2-sim-izq,
+.c2-sim-der {
+  pointer-events: auto;
+  opacity: 0.08;
+  transform: translateY(18px);
+  transition: opacity 0.6s, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.c2-paso-simulador.activo .c2-sim-izq,
+.c2-paso-simulador.activo .c2-sim-der {
+  opacity: 1;
+  transform: none;
+}
+
+.c2-paso-simulador.activo .c2-sim-der {
+  transition-delay: 0.15s;
+}
+
+.c2-sim-izq {
+  grid-column: 1;
+}
+
+.c2-sim-der {
+  grid-column: 3;
+}
+
+body.c2 .c2-sim-izq h2 {
+  font-size: clamp(2rem, 3.6vw, 3.4rem);
+}
+
+.c2-sim-izq .c2-entrada {
+  font-size: 1rem;
+}
+
+/* --- Parcelas en el mapa ------------------------------------------------- */
+
+.c2-mapa {
+  --borde: 2.2px;
+}
+
+.c2-parcela {
+  cursor: pointer;
+  transition: opacity 0.4s;
+}
+
+.c2-parcela path:first-child {
+  fill: var(--green);
+  fill-opacity: 0.88;
+  stroke: var(--green);
+  stroke-width: var(--borde);
+  stroke-linejoin: round;
+  transition: fill 0.6s, stroke 0.6s;
+}
+
+.c2-parcela.por-predecir path:first-child {
+  fill: color-mix(in srgb, var(--gold) 35%, var(--sky));
+  stroke: var(--gold);
+}
+
+.c2-parcela.pintada path:first-child {
+  fill-opacity: 1;
+}
+
+.c2-rayas {
+  pointer-events: none;
+}
+
+.c2-parcela.pintada .c2-rayas {
+  opacity: 0.35;
+}
+
+.c2-rayado-fondo {
+  fill: transparent;
+}
+
+.c2-rayado-linea {
+  fill: var(--gold);
+}
+
+.c2-parcela.seleccionada path:first-child {
+  stroke: var(--rosa);
+  stroke-width: 4px;
+}
+
+.c2-parcela.vecina path:first-child,
+.c2-parcela.mismo-municipio path:first-child {
+  stroke: var(--ink);
+}
+
+.c2-mapa.atenuar .c2-parcela:not(.mismo-municipio):not(.seleccionada) {
+  opacity: 0.18;
+}
+
+.c2-mapa.latiendo .c2-parcela.por-predecir path:first-child {
+  animation: c2-latido 1.6s ease-in-out infinite;
+}
+
+@keyframes c2-latido {
+  50% { stroke-width: 5px; }
+}
+
+.c2-parcela.destello path:first-child {
+  animation: c2-destello 0.9s ease-out;
+}
+
+@keyframes c2-destello {
+  0% { stroke: var(--rosa); stroke-width: 7px; }
+  100% { stroke-width: var(--borde); }
+}
+
+.c2-enlace {
+  stroke-linecap: round;
+}
+
+.c2-enlace.sube {
+  stroke: var(--green);
+}
+
+.c2-enlace.baja {
+  stroke: var(--rosa);
+}
+
+.c2-enlace.dibujando {
+  animation: c2-trazo 0.8s ease-out var(--retraso, 0s) forwards;
+}
+
+@keyframes c2-trazo {
+  to { stroke-dashoffset: 0; }
+}
+
+.c2-anillo {
+  fill: none;
+  stroke: var(--ink);
+  stroke-opacity: 0.45;
+  stroke-width: 1.4px;
+  stroke-dasharray: 4 5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: c2-crece 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+@keyframes c2-crece {
+  from { transform: scale(0); }
+}
+
+.c2-anillo-texto {
+  font: 600 calc(var(--km-px, 0.05) * 12px) "DM Sans", system-ui, sans-serif;
+  fill: var(--c2-tinta-suave);
+  paint-order: stroke;
+  stroke: var(--c2-mesa);
+  stroke-width: calc(var(--km-px, 0.05) * 4px);
+}
+
+.c2-etiquetas {
+  opacity: 0;
+  transition: opacity 0.6s;
+  pointer-events: none;
+}
+
+.c2-mapa.con-etiquetas .c2-etiquetas {
+  opacity: 1;
+}
+
+.c2-etiqueta text {
+  font: 600 0.62px "DM Sans", system-ui, sans-serif;
+  fill: var(--ink);
+  paint-order: stroke;
+  stroke: var(--c2-mesa);
+  stroke-width: 0.18px;
+}
+
+.c2-etiqueta .c2-etiqueta-valor {
+  font: 800 0.95px "Fraunces", Georgia, serif;
+}
+
+.c2-pin-halo {
+  fill: none;
+  stroke: var(--rosa);
+  stroke-width: 0.09;
+  animation: c2-pulso 1.6s ease-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.c2-pin-punto {
+  fill: var(--rosa);
+}
+
+@keyframes c2-pulso {
+  0% { transform: scale(0.4); opacity: 1; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+.c2-escala line {
+  stroke: var(--ink);
+  stroke-width: 2px;
+}
+
+.c2-escala text {
+  fill: var(--ink);
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-weight: 600;
+}
+
+/* --- Secciones ----------------------------------------------------------- */
+
+.c2-seccion {
+  padding: 16vh 6vw 10vh;
+}
+
+.c2-ancho {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.c2-segmentado {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  margin: 1rem 0 1.4rem;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+
+.c2-segmentado button {
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.9rem;
+  padding: 0.4rem 1rem;
+}
+
+.c2-segmentado button[aria-pressed="true"] {
+  background: var(--green);
+  color: var(--sky);
+}
+
+.c2-segmentado button:not([aria-pressed="true"]):hover {
+  background: var(--line);
+  color: var(--ink);
+}
+
+.c2-carrera {
+  padding: 1rem 0 0.2rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.c2-tipos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0.8rem 0 1.4rem;
+  font-size: 0.85rem;
+}
+
+.c2-tipos span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.c2-tipos span::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--tipo);
+}
+
+.c2-conclusion {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 0 3rem;
+  max-width: 980px;
+}
+
+/* --- Gráficas ------------------------------------------------------------ */
+
+.c2-grafica {
+  display: block;
+  overflow: visible;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.c2-grafica text {
+  font-size: 12px;
+  fill: var(--ink);
+}
+
+.c2-eje text {
+  fill: var(--c2-tinta-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.c2-eje-titulo {
+  font-weight: 600;
+}
+
+.c2-rejilla {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.c2-pista {
+  stroke: var(--line);
+  stroke-width: 2;
+}
+
+.c2-fila {
+  --tipo: var(--green);
+}
+
+.c2-fila.tipo-mixto {
+  --tipo: var(--gold);
+}
+
+.c2-fila.tipo-satelite {
+  --tipo: var(--c2-satelite);
+}
+
+.c2-fila .c2-punto {
+  fill: var(--tipo);
+  stroke: var(--sky);
+  stroke-width: 2;
+}
+
+.c2-fila.final .c2-punto {
+  stroke: var(--rosa);
+  stroke-width: 3;
+}
+
+.c2-fila-nombre {
+  font-weight: 600;
+}
+
+.c2-fila.final .c2-fila-nombre {
+  fill: var(--green);
+}
+
+.c2-fila-valor {
+  font-variant-numeric: tabular-nums;
+  fill: var(--c2-tinta-suave) !important;
+}
+
+.c2-referencia {
+  stroke: var(--ink);
+  stroke-opacity: 0.55;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+
+.c2-referencia-texto {
+  font-size: 11px !important;
+  font-weight: 600;
+  fill: var(--c2-tinta-suave) !important;
+}
+
+.c2-error {
+  stroke: var(--tipo, var(--green));
+  stroke-width: 2;
+  stroke-opacity: 0.55;
+}
+
+.c2-banda {
+  fill: color-mix(in srgb, var(--green) 14%, transparent);
+}
+
+.c2-diagonal {
+  stroke: var(--green);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 5;
+}
+
+.c2-nota-grafica {
+  font-size: 11px !important;
+  fill: var(--c2-tinta-suave) !important;
+  font-style: italic;
+}
+
+.c2-dato {
+  fill: var(--green);
+  fill-opacity: 0.7;
+  stroke: var(--sky);
+  stroke-width: 1;
+  animation: c2-aparece 0.5s backwards;
+}
+
+.c2-dato.lejano {
+  fill: var(--rosa);
+  fill-opacity: 0.9;
+}
+
+.c2-dato:hover {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+@keyframes c2-aparece {
+  from { opacity: 0; transform: translateY(-8px); }
+}
+
+.c2-oruga {
+  --riesgo: var(--green);
+  animation: c2-aparece 0.4s backwards;
+}
+
+.c2-oruga.riesgo-medio {
+  --riesgo: var(--gold);
+}
+
+.c2-oruga.riesgo-alto {
+  --riesgo: var(--rosa);
+}
+
+.c2-oruga-rango {
+  stroke: var(--riesgo);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-opacity: 0.5;
+}
+
+.c2-oruga-p20 {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.c2-oruga-punto {
+  fill: var(--riesgo);
+  stroke: var(--sky);
+  stroke-width: 1.2;
+}
+
+.c2-zona {
+  fill: transparent;
+}
+
+.c2-zona:hover + *,
+.c2-oruga:hover .c2-oruga-rango {
+  stroke-opacity: 1;
+}
+
+.c2-curva-area {
+  fill: color-mix(in srgb, var(--green) 16%, transparent);
+}
+
+.c2-curva {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 3;
+}
+
+path.c2-curva.dibujando {
+  animation: c2-trazo 1.4s ease-out 0.2s forwards;
+}
+
+.c2-marca-linea {
+  stroke: var(--rosa);
+  stroke-dasharray: 3 3;
+}
+
+.c2-marca-punto {
+  fill: var(--rosa);
+}
+
+.c2-barra rect {
+  fill: color-mix(in srgb, var(--green) 55%, var(--sky));
+  transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.c2-barra.primera rect {
+  fill: var(--green);
+}
+
+.c2-tip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 120;
+  max-width: 260px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  background: var(--sky);
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  font-size: 0.85rem;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
+/* --- Simulador ----------------------------------------------------------- */
+
+.c2-sim-controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  margin: 1.2rem 0 1rem;
+}
+
+.c2-sim-controles .c2-segmentado {
+  margin: 0;
+}
+
+.c2-campo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.c2-campo input {
+  width: 8.5rem;
+  font: 600 1rem "DM Sans", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--card);
+  border: 2px solid var(--green);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  text-transform: uppercase;
+}
+
+.c2-ficha {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.c2-ficha header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+.c2-ficha-id {
+  font: 800 2rem "Fraunces", Georgia, serif;
+  color: var(--green);
+  line-height: 1;
+}
+
+.c2-ficha-meta {
+  font-weight: 600;
+}
+
+.c2-ficha-estado {
+  flex-basis: 100%;
+  font-size: 0.85rem;
+  color: var(--c2-tinta-suave);
+}
+
+.c2-pasos-sim {
+  list-style: none;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.c2-paso-sim {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 10px;
+  padding: 0.5rem 0.75rem 0.5rem 0.9rem;
+  border-radius: 14px;
+  border-left: 4px solid var(--line);
+  transition: background 0.35s, border-color 0.35s, opacity 0.35s;
+  opacity: 0.55;
+}
+
+.c2-paso-sim.activo {
+  opacity: 1;
+  background: color-mix(in srgb, var(--gold) 16%, transparent);
+  border-left-color: var(--gold);
+}
+
+.c2-paso-sim.hecho {
+  opacity: 1;
+  border-left-color: var(--green);
+}
+
+.c2-paso-nombre {
+  font-weight: 600;
+}
+
+.c2-paso-valor {
+  font: 800 1.15rem "Fraunces", Georgia, serif;
+  font-variant-numeric: tabular-nums;
+  color: var(--green);
+  text-align: right;
+}
+
+.c2-paso-detalle {
+  grid-column: 1 / -1;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--c2-tinta-suave);
+}
+
+.c2-regla {
+  min-height: 92px;
+}
+
+.c2-regla-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: -0.3rem 0 0;
+  font-size: 0.75rem;
+  color: var(--c2-tinta-suave);
+}
+
+.c2-regla-leyenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.c2-regla-leyenda span::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.c2-regla-leyenda .r-banda::before {
+  width: 18px;
+  height: 8px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--gold) 45%, transparent);
+}
+
+.c2-regla-leyenda .r-p20::before {
+  width: 2px;
+  height: 14px;
+  border-radius: 0;
+}
+
+.c2-regla-leyenda .r-real::before {
+  background: var(--rosa);
+}
+
+.c2-regla-leyenda .r-real {
+  display: none;
+}
+
+.modo-prueba .c2-regla-leyenda .r-real {
+  display: inline-flex;
+}
+
+.c2-regla-linea {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.c2-regla-marca {
+  stroke: var(--ink);
+  stroke-opacity: 0.6;
+}
+
+.c2-regla-pin circle {
+  fill: var(--ink);
+  stroke: var(--sky);
+  stroke-width: 2;
+}
+
+.c2-regla-pin.final circle {
+  fill: var(--green);
+  r: 8px;
+}
+
+.c2-regla-pin.real circle {
+  fill: var(--rosa);
+}
+
+.c2-regla-pin {
+  animation: c2-cae 0.5s cubic-bezier(0.3, 1.5, 0.6, 1) backwards;
+}
+
+@keyframes c2-cae {
+  from { opacity: 0; transform: translateY(-14px); }
+}
+
+.c2-regla-pin.real {
+  animation-name: c2-sube;
+}
+
+@keyframes c2-sube {
+  from { opacity: 0; }
+}
+
+.c2-regla-asta {
+  stroke: var(--ink);
+  stroke-opacity: 0.4;
+}
+
+.c2-regla-texto {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.c2-regla-texto.p20 {
+  font-size: 10px !important;
+  fill: var(--c2-tinta-suave) !important;
+}
+
+.c2-regla-flecha {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.7s ease-out;
+}
+
+.c2-regla-flecha.sube {
+  stroke: var(--green);
+}
+
+.c2-regla-flecha.baja {
+  stroke: var(--rosa);
+}
+
+.c2-regla-banda rect {
+  fill: color-mix(in srgb, var(--gold) 45%, transparent);
+  animation: c2-abre 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+@keyframes c2-abre {
+  from { transform: scaleX(0); }
+}
+
+.c2-regla-p20 {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.c2-resultado {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: 8px 22px;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--line);
+  animation: c2-aparece 0.5s backwards;
+}
+
+.c2-dato-res {
+  display: flex;
+  flex-direction: column;
+}
+
+.c2-dato-res span {
+  font-size: 0.78rem;
+  color: var(--c2-tinta-suave);
+}
+
+.c2-dato-res b {
+  font: 800 1.35rem "Fraunces", Georgia, serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.c2-dato-res.principal b {
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--green);
+}
+
+.c2-dato-res.principal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 6px;
+  grid-row: span 2;
+}
+
+.c2-dato-res.principal span {
+  flex-basis: 100%;
+}
+
+.c2-dato-res.bien b {
+  color: var(--green);
+}
+
+.c2-dato-res.mal b {
+  color: var(--rosa);
+}
+
+.c2-veredicto {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.c2-sim-nota {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--c2-tinta-suave);
+}
+
+.c2-chip {
+  display: inline-block;
+  padding: 0.05rem 0.6rem;
+  border-radius: 999px;
+  font: 600 0.85rem "DM Sans", system-ui, sans-serif;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--chip) 30%, var(--sky));
+  border: 1.5px solid var(--chip);
+}
+
+.c2-chip.riesgo-bajo {
+  --chip: var(--green);
+}
+
+.c2-chip.riesgo-medio {
+  --chip: var(--gold);
+}
+
+.c2-chip.riesgo-alto {
+  --chip: var(--rosa);
+}
+
+.c2-dato-res b.c2-chip {
+  font: 600 1rem "DM Sans", system-ui, sans-serif;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.c2-lote {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 1rem;
+}
+
+.c2-lote p {
+  margin: 0;
+  max-width: 46rem;
+  font-size: 0.95rem;
+}
+
+/* --- Resultados ---------------------------------------------------------- */
+
+.c2-cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px 28px;
+  margin: 1.4rem 0 2.2rem;
+}
+
+.c2-cifra > b {
+  display: block;
+  font: 800 clamp(2.6rem, 5vw, 4rem) / 1 "Fraunces", Georgia, serif;
+  color: var(--green);
+  font-variant-numeric: tabular-nums;
+}
+
+.c2-cifra > span {
+  display: block;
+  margin-top: 0.4rem;
+  max-width: 22rem;
+}
+
+.c2-dos {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.c2-fig {
+  margin: 0;
+  padding: 1rem 0 0;
+  border-top: 2px solid var(--line);
+}
+
+.c2-fig figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--c2-tinta-suave);
+}
+
+.c2-fig figcaption .c2-chip {
+  font-size: 0.78rem;
+}
+
+/* --- Preguntas guía ------------------------------------------------------ */
+
+.c2-preguntas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 18px;
+  margin-top: 1.6rem;
+}
+
+.c2-pregunta {
+  position: relative;
+  padding: 1.2rem 0 0.6rem;
+  border-top: 2px solid var(--line);
+}
+
+.c2-pregunta-num {
+  position: absolute;
+  top: -0.35em;
+  right: 0.25em;
+  font: 800 4.2rem / 1 "Fraunces", Georgia, serif;
+  color: color-mix(in srgb, var(--gold) 55%, transparent);
+  pointer-events: none;
+}
+
+body.c2 .c2-pregunta h3 {
+  text-transform: none;
+  font-size: 1.3rem;
+  line-height: 1.1;
+  max-width: 85%;
+}
+
+.c2-respuesta {
+  font-size: 1.05rem;
+}
+
+.c2-respuesta b {
+  color: var(--green);
+}
+
+.c2-aviso {
+  margin-top: 22px;
+  padding: 1.1rem 1.3rem;
+  border-radius: 22px;
+  border: 2px dashed var(--rosa);
+  max-width: 820px;
+}
+
+body.c2 .c2-aviso h3 {
+  text-transform: none;
+  color: var(--rosa);
+  font-size: 1.2rem;
+}
+
+.c2-aviso p {
+  margin: 0;
+}
+
+/* --- Cierre -------------------------------------------------------------- */
+
+.c2-cierre {
+  min-height: 80vh;
+}
+
+.c2-resumen {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1.6rem;
+  display: grid;
+  gap: 0.8rem;
+  max-width: 44rem;
+  font-size: 1.15rem;
+}
+
+.c2-resumen li {
+  padding-left: 1.4rem;
+  border-left: 4px solid var(--gold);
+}
+
+.c2-fuentes {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2rem 6vw 3rem;
+  font-size: 0.82rem;
+  color: var(--c2-tinta-suave);
+}
+
+/* --- Términos del diccionario dentro del texto --------------------------- */
+
+.c2 [data-termino] {
+  text-decoration: underline dotted color-mix(in srgb, var(--rosa) 80%, transparent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  cursor: help;
+}
+
+/* --- Pantallas medianas y móviles ---------------------------------------- */
+
+@media (max-width: 1000px) {
+  .c2-dos {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Móvil: la escena arriba (fija) y el texto debajo; nunca uno encima del otro */
+@media (max-width: 900px) {
+  body.c2 {
+    --c2-nav: 58px;
+  }
+
+  .c2-escena {
+    --c2-margen: 5vw;
+  }
+
+  .c2-escenario {
+    height: 56vh;
+    z-index: 2;
+    box-shadow: 0 1px 0 var(--line);
+  }
+
+  .c2-velo-izq,
+  .c2-velo-der {
+    display: none;
+  }
+
+  .c2-velo-sup {
+    height: 90px;
+  }
+
+  .c2-velo-inf {
+    height: 70px;
+  }
+
+  .c2-pie-mapa,
+  .c2-escenario[data-paso="simulador"] .c2-pie-mapa {
+    left: 12px;
+    right: 12px;
+    bottom: 8px;
+    max-width: none;
+    align-items: flex-start;
+  }
+
+  .c2-leyenda,
+  .c2-escenario[data-paso="simulador"] .c2-leyenda {
+    justify-content: flex-start;
+    gap: 4px 12px;
+  }
+
+  .c2-ley,
+  .c2-ley-rampa {
+    font-size: 0.72rem;
+  }
+
+  .c2-nota-mapa {
+    display: none;
+  }
+
+  .c2-pasos {
+    margin-top: 0;
+    pointer-events: auto;
+  }
+
+  .c2-paso {
+    min-height: 72vh;
+    align-items: flex-start;
+    padding: 1.6rem var(--c2-margen) 2rem;
+  }
+
+  .c2-paso:last-child {
+    min-height: auto;
+  }
+
+  .c2-texto {
+    width: auto;
+  }
+
+  .c2-portada .c2-texto {
+    padding-top: 0;
+  }
+
+  .c2-desliza {
+    margin-top: 1.2rem;
+  }
+
+  .c2-paso-simulador {
+    display: block;
+    padding: 1.6rem var(--c2-margen) 3rem;
+  }
+
+  .c2-sim-der {
+    margin-top: 1.6rem;
+    padding-top: 1.2rem;
+    border-top: 2px solid var(--line);
+  }
+
+  .c2-seccion {
+    padding: 12vh 4vw 6vh;
+  }
+
+  .c2-resultado {
+    grid-template-columns: repeat(2, auto);
+  }
+}
+
+@media (max-width: 520px) {
+  .c2-sim-controles {
+    gap: 8px;
+  }
+
+  .c2-sim-controles .c2-segmentado {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+  }
+
+  .c2-sim-controles .c2-segmentado button {
+    flex: 1;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .c2-campo input {
+    width: 8.5rem;
+  }
+
+  .c2-ficha-id {
+    font-size: 1.6rem;
+  }
+}
+
+/* --- Movimiento reducido ------------------------------------------------- */
+
+html[data-motion="reduce"] .c2-desliza::after,
+html[data-motion="reduce"] .c2-pin-halo,
+html[data-motion="reduce"] .c2-parcela path:first-child {
+  animation: none !important;
+}
+
+html[data-motion="reduce"] .c2-texto > *,
+html[data-motion="reduce"] .c2-sim-izq,
+html[data-motion="reduce"] .c2-sim-der {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}

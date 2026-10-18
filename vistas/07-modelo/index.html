@@ -4,41 +4,430 @@
   <base href="../../">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>El modelo · Barley Bot</title>
+  <title>Capítulo 2 · El modelo · Barley Bot</title>
+  <meta name="description" content="Cómo estimamos el rendimiento de 59 parcelas de cebada: el modelo, su prueba y un simulador que lo corre en el navegador." />
 
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=DM+Sans:wght@400;600&display=swap"
     rel="stylesheet"
   />
   <link rel="stylesheet" href="vistas/compartido/styles.css" />
-  <link rel="stylesheet" href="vistas/07-modelo/estilos.css" />
+  <link rel="stylesheet" href="vistas/compartido/diccionario.css" />
+  <link rel="stylesheet" href="vistas/07-modelo/capitulo2.css" />
 </head>
 
-<body data-page="modelo">
+<body data-page="modelo" data-cursor="on" class="c2">
   <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <!-- Cambio de capítulo: telón que se levanta al entrar -->
+  <div id="c2-telon" aria-hidden="true">
+    <span class="capitulo">Capítulo 2</span>
+    <span class="c2-telon-sub">El modelo</span>
+  </div>
+
+  <canvas id="mascot" aria-hidden="true"></canvas>
+  <div id="bubble" aria-hidden="true"><span class="typed"></span><span class="rest"></span></div>
+
   <nav id="nav" aria-label="Principal"></nav>
+  <div class="c2-progreso" aria-hidden="true"><i></i></div>
 
-  <main id="contenido" class="pagina">
-    <span class="kicker">Modelo</span>
-    <h1>Del dato al rendimiento</h1>
-    <p class="intro">
-      Recorre la línea del tiempo con los botones «Siguiente»: cómo se limpiaron los datos, qué
-      variables entran, por qué este modelo, cómo se construyó y cómo se probó. Todo se calcula
-      aquí mismo con las parcelas del reto.
-    </p>
+  <div class="c2-indice" role="navigation" aria-label="Secciones del capítulo 2">
+    <a href="vistas/07-modelo/index.html#c2-historia"><span>Las pistas</span></a>
+    <a href="vistas/07-modelo/index.html#c2-simulador"><span>Simulador</span></a>
+    <a href="vistas/07-modelo/index.html#c2-modelos"><span>Diez modelos</span></a>
+    <a href="vistas/07-modelo/index.html#c2-resultados"><span>Resultados</span></a>
+    <a href="vistas/07-modelo/index.html#c2-preguntas"><span>Preguntas guía</span></a>
+  </div>
 
-    <ol class="pasos" id="pasos" aria-label="Pasos del modelo"></ol>
-    <section id="paso" class="paso" aria-live="polite"></section>
+  <main id="contenido">
+    <!-- =========================================================== -->
+    <!-- Escena 3D a pantalla completa: las pistas y el simulador     -->
+    <!-- La escena se queda fija y el texto pasa a los lados.         -->
+    <!-- =========================================================== -->
+    <section class="c2-escena" id="c2-historia">
+      <div class="c2-escenario">
+        <div id="c2-mapa" class="c2-lienzo" role="img"
+          aria-label="Mapa en relieve con las 197 parcelas del reto: verdes las de rendimiento conocido, doradas y rayadas las que hay que predecir"></div>
+        <div class="c2-velo c2-velo-izq" aria-hidden="true"></div>
+        <div class="c2-velo c2-velo-der" aria-hidden="true"></div>
+        <div class="c2-velo c2-velo-sup" aria-hidden="true"></div>
+        <div class="c2-velo c2-velo-inf" aria-hidden="true"></div>
+        <div class="c2-pie-mapa">
+        <div class="c2-leyenda" id="c2-leyenda" aria-hidden="true">
+          <span class="c2-ley conocida">Rendimiento conocido</span>
+          <span class="c2-ley por-predecir">Por predecir</span>
+          <span class="c2-ley enlace-neutro">Vecina a menos de 1 km (distancia real)</span>
+          <span class="c2-ley enlace-sube">Vecina que sube la predicción</span>
+          <span class="c2-ley enlace-baja">Vecina que la baja</span>
+          <span class="c2-ley-rampa"><small>2 t/ha</small><i></i><small>5.5 t/ha</small></span>
+        </div>
+        <p class="c2-nota-mapa">
+          Mapa esquemático: juntamos las 197 parcelas (forma y tamaño reales) para verlas a la vez; las distancias
+          en pantalla no son las reales, las de las etiquetas sí. El modelo usa la ubicación real. Relieve según la
+          elevación INEGI de cada parcela, exagerado.
+        </p>
+        </div>
+      </div>
 
-    <div class="navegacion-pasos">
-      <button id="anterior">← Anterior</button>
-      <button id="siguiente" class="btn principal">Siguiente →</button>
-    </div>
+      <div class="c2-pasos">
+        <article class="c2-paso c2-portada" data-paso="portada"
+          data-say="Ya sabes cómo crece la cebada. Ahora vamos a adivinar cuánto rinden 59 parcelas… con pistas.">
+          <div class="c2-texto">
+            <span class="capitulo">Capítulo 2</span>
+            <h1>Del dato al rendimiento</h1>
+            <p class="c2-entrada">
+              Conocemos la cosecha de <b data-cifra="metricas.n_entren">138</b> parcelas y nos faltan
+              <b data-cifra="metricas.n_pred">59</b>. Baja para acercarte a ellas: verás cómo las estimamos y
+              después correrás el modelo tú.
+            </p>
+            <p class="c2-atajos">
+              <a href="vistas/07-modelo/index.html#c2-simulador" class="btn principal">Ir al simulador</a>
+              <a href="vistas/07-modelo/index.html#c2-preguntas" class="btn">Preguntas guía</a>
+            </p>
+            <span class="c2-desliza" aria-hidden="true">Desliza</span>
+          </div>
+        </article>
+
+        <article class="c2-paso" data-paso="pregunta"
+          data-say="Las doradas con rayas son el misterio. Fíjate qué cerca están de las verdes.">
+          <div class="c2-texto">
+            <h2>59 parcelas por descubrir</h2>
+            <p>
+              Las parcelas doradas y rayadas no tienen <span data-termino="rendimiento">rendimiento</span>.
+              No están en una zona aparte: están intercaladas con las conocidas. La mitad está a menos de
+              <b><span data-cifra="metricas.dist_mediana_km" data-formato="m">350</span> m</b> de una parcela
+              con cosecha registrada.
+            </p>
+            <p class="c2-pie">Ese detalle decide qué modelo conviene.</p>
+          </div>
+        </article>
+
+        <article class="c2-paso" data-paso="municipio"
+          data-say="Primera pista: dime en qué municipio estás y te diré, más o menos, cuánto rindes.">
+          <div class="c2-texto">
+            <span class="c2-pista-num">Pista 1</span>
+            <h2>El municipio</h2>
+            <p>
+              Cada municipio tiene su propio nivel. En Chignahuapan el promedio es
+              <b><span data-cifra="mun.Chignahuapan" data-dec="1">4.5</span> t/ha</b>; en Calpulalpan,
+              <b><span data-cifra="mun.Calpulalpan" data-dec="1">3.0</span> t/ha</b>.
+            </p>
+            <p>
+              Solo con saber el municipio se explica el
+              <b><span data-cifra="metricas.r2_base" data-formato="pct">64</span> %</b> de las diferencias entre
+              parcelas. Esa es la <span data-termino="linea-base">línea base</span> que todo modelo debe superar.
+            </p>
+          </div>
+        </article>
+
+        <article class="c2-paso" data-paso="vecinos"
+          data-say="Segunda pista: tus vecinas. Pero solo las que están cerca, cerca de verdad.">
+          <div class="c2-texto">
+            <span class="c2-pista-num">Pista 2</span>
+            <h2>Las vecinas</h2>
+            <p>
+              Dentro de un mismo municipio, las parcelas cercanas rinden parecido: comparten suelo, lluvia y,
+              muchas veces, manejo. El modelo aprendió de los datos cuánto dura ese parecido.
+            </p>
+            <div class="c2-curva-graf" id="c2-curva" aria-describedby="c2-curva-texto"></div>
+            <p id="c2-curva-texto" class="c2-pie">
+              A <span data-cifra="parecido.mitad" data-formato="m">290</span> m el parecido ya bajó a la mitad;
+              a <span data-cifra="parecido.casi" data-formato="m">820</span> m prácticamente desaparece
+              (<span data-termino="alcance">alcance espacial</span>).
+              En el mapa, las líneas unen la parcela con sus vecinas conocidas y marcan la distancia real.
+            </p>
+          </div>
+        </article>
+
+        <article class="c2-paso" data-paso="juntas"
+          data-say="Juntamos las dos pistas y, además, decimos qué tan seguros estamos.">
+          <div class="c2-texto">
+            <h2>Las dos pistas juntas</h2>
+            <div class="c2-formula" aria-label="Cómo se arma una predicción">
+              <span class="c2-termino base">Promedio de las parcelas conocidas <b data-cifra="modelo.mu" data-dec="2">3.96</b></span>
+              <span class="c2-op">+</span>
+              <span class="c2-termino mun">Efecto del municipio</span>
+              <span class="c2-op">+</span>
+              <span class="c2-termino vec">Ajuste de las vecinas</span>
+              <span class="c2-op">=</span>
+              <span class="c2-termino res">Predicción <small>con su rango de confianza</small></span>
+            </div>
+            <p>
+              Este modelo se llama <span data-termino="gp">proceso gaussiano jerárquico</span>. Sus cuatro
+              números (cuánto varían los municipios, cuánto las vecinas, a qué distancia y cuánto ruido hay)
+              los eligió el propio modelo con los datos, no nosotros.
+            </p>
+            <p class="c2-pie">Los arcos van de cada vecina a la parcela: verdes si suben la predicción, rosas si la bajan.</p>
+          </div>
+        </article>
+
+        <!-- Simulador: la misma escena, ahora con el control en tus manos -->
+        <article class="c2-paso c2-paso-simulador" data-paso="simulador" id="c2-simulador">
+          <div class="c2-sim-izq">
+            <span class="kicker">Simulador</span>
+            <h2>Corre el modelo</h2>
+            <p class="c2-entrada">
+              Toca una parcela del mapa o escribe su clave, y mira cómo se arma su predicción. Con una parcela
+              conocida puedes ponerlo a prueba: el modelo no ve su rendimiento y al final lo comparamos.
+            </p>
+            <div class="c2-sim-controles">
+              <div class="c2-segmentado" role="group" aria-label="Qué parcelas usar">
+                <button type="button" data-modo-sim="predecir" aria-pressed="true">Por predecir (59)</button>
+                <button type="button" data-modo-sim="prueba" aria-pressed="false">Ponerlo a prueba (138)</button>
+              </div>
+              <label class="c2-campo">
+                <span>Parcela</span>
+                <input id="c2-buscar" list="c2-lista-parcelas" autocomplete="off" spellcheck="false" inputmode="text" />
+                <datalist id="c2-lista-parcelas"></datalist>
+              </label>
+              <button type="button" id="c2-azar">Otra al azar</button>
+              <button type="button" id="c2-ejecutar" class="btn principal">▶ Ejecutar el modelo</button>
+            </div>
+            <div class="c2-lote">
+              <button type="button" id="c2-todas" class="btn">Predecir las 59 parcelas</button>
+              <button type="button" id="c2-ver-todo">Ver todo el mapa</button>
+              <p id="c2-todas-resultado">Corre el modelo sobre todas las parcelas por predecir y compáralo con lo que entregamos.</p>
+            </div>
+          </div>
+
+          <div class="c2-sim-der c2-ficha" aria-live="polite">
+            <header>
+              <span class="c2-ficha-id">AGC_000</span>
+              <span class="c2-ficha-meta"></span>
+              <span class="c2-ficha-estado"></span>
+            </header>
+            <ol class="c2-pasos-sim">
+              <li class="c2-paso-sim" data-detalle="Promedio de las parcelas conocidas.">
+                <span class="c2-paso-nombre">Punto de partida</span><span class="c2-paso-valor"></span>
+                <span class="c2-paso-detalle"></span>
+              </li>
+              <li class="c2-paso-sim" data-detalle="Cuánto sube o baja su municipio.">
+                <span class="c2-paso-nombre">Su municipio</span><span class="c2-paso-valor"></span>
+                <span class="c2-paso-detalle"></span>
+              </li>
+              <li class="c2-paso-sim" data-detalle="Ajuste por parcelas conocidas a menos de 1 km.">
+                <span class="c2-paso-nombre">Sus vecinas</span><span class="c2-paso-valor"></span>
+                <span class="c2-paso-detalle"></span>
+              </li>
+              <li class="c2-paso-sim" data-detalle="Dónde esperamos el valor real.">
+                <span class="c2-paso-nombre">Rango de confianza</span><span class="c2-paso-valor"></span>
+                <span class="c2-paso-detalle"></span>
+              </li>
+            </ol>
+            <div class="c2-regla"></div>
+            <p class="c2-regla-leyenda" aria-hidden="true">
+              <span class="r-base">punto de partida</span>
+              <span class="r-banda">rango P10–P90</span>
+              <span class="r-p20">P20</span>
+              <span class="r-real">real</span>
+            </p>
+            <div class="c2-resultado" hidden></div>
+            <p class="c2-sim-nota"></p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- Diez modelos, una misma prueba                              -->
+    <!-- =========================================================== -->
+    <section class="c2-seccion" id="c2-modelos"
+      data-say="¿Y por qué este modelo? Probamos diez con las mismas reglas.">
+      <div class="c2-ancho">
+        <span class="kicker">Por qué este modelo</span>
+        <h2>Diez modelos, una misma prueba</h2>
+        <p class="c2-entrada">
+          Escondimos parcelas conocidas, las predijimos y medimos el error. Lo repetimos
+          <span data-termino="validacion-cruzada">50 veces</span> con las mismas particiones para todos los
+          modelos. Gana el que se equivoca menos.
+        </p>
+
+        <div class="c2-segmentado" role="group" aria-label="Tipo de prueba">
+          <button type="button" data-esquema="main" aria-pressed="true">Parcelas intercaladas, como en el reto</button>
+          <button type="button" data-esquema="spatial" aria-pressed="false">Zonas sin parcelas conocidas</button>
+        </div>
+
+        <div class="c2-carrera" id="c2-carrera"></div>
+        <div class="c2-tipos" id="c2-tipos"></div>
+
+        <div class="c2-conclusion" data-esquema-texto="main">
+          <p>
+            <b>El GP jerárquico tiene el menor error:</b>
+            <span data-cifra="metricas.rmse" data-dec="3">0.503</span> t/ha contra
+            <span data-cifra="metricas.rmse_base" data-dec="3">0.509</span> del promedio municipal. La ventaja es
+            pequeña, y lo decimos tal cual. Lo elegimos porque gana en la prueba que se parece al reto y además
+            entrega un <span data-termino="intervalo">rango de confianza</span> calibrado, que es lo que necesita
+            un crédito.
+          </p>
+          <p>
+            Agregar índices de satélite, clima o suelo <b>empeoró</b> todos los modelos que ya conocían la
+            ubicación. Con 138 parcelas, esas variables solo ayudan a distinguir una zona de otra, y eso ya lo
+            sabe el municipio.
+          </p>
+        </div>
+        <div class="c2-conclusion" data-esquema-texto="spatial" hidden>
+          <p>
+            <b>En zonas sin parcelas conocidas cerca, todos empeoran</b> (alrededor de 0.65 t/ha) y ninguno
+            destaca. Los modelos que solo usan satélite son los peores: sin una parcela de referencia cerca,
+            los índices no alcanzan.
+          </p>
+          <p>
+            Por eso el modelo sirve para este reto, donde cada parcela desconocida tiene vecinas conocidas, y
+            no debe usarse en una región nueva sin datos de cosecha locales.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- Resultados                                                   -->
+    <!-- =========================================================== -->
+    <section class="c2-seccion" id="c2-resultados"
+      data-say="¿Y qué tan bien le atina? Mira los puntos: cada uno es una parcela que el modelo predijo sin verla.">
+      <div class="c2-ancho">
+        <span class="kicker">Resultados</span>
+        <h2>¿Qué tan bien le atina?</h2>
+
+        <div class="c2-cifras">
+          <div class="c2-cifra">
+            <b>±<span data-cifra="metricas.rmse" data-dec="2">0.50</span></b>
+            <span>t/ha de error típico (<span data-termino="rmse">RMSE</span>). El rendimiento varía ±<span data-cifra="metricas.sd_rendimiento" data-dec="2">0.85</span> entre parcelas.</span>
+          </div>
+          <div class="c2-cifra">
+            <b><span data-cifra="metricas.cobertura_p10_p90" data-formato="de10">8</span> de 10</b>
+            <span>parcelas cayeron dentro de su <span data-termino="intervalo">rango P10–P90</span>, como prometía.</span>
+          </div>
+          <div class="c2-cifra">
+            <b><span data-cifra="metricas.r2" data-formato="pct">65</span> %</b>
+            <span>de las diferencias entre parcelas explicadas (<span data-termino="r2">R²</span>).</span>
+          </div>
+        </div>
+
+        <div class="c2-dos">
+          <figure class="c2-fig">
+            <div id="c2-dispersion" class="c2-dispersion"></div>
+            <figcaption>
+              Cada punto es una parcela conocida predicha sin ver su rendimiento. Las filas horizontales en
+              2.5, 3.0 y 3.5 t/ha son <b><span data-cifra="metricas.redondeados">43</span> rendimientos
+              reportados en números redondos</b>. Los puntos rosas fallan por más de 1 t/ha; la mayoría son
+              parcelas que rindieron mucho menos que sus vecinas, algo que la ubicación no puede anticipar.
+            </figcaption>
+          </figure>
+          <figure class="c2-fig">
+            <div id="c2-oruga" class="c2-oruga-graf"></div>
+            <figcaption>
+              Las 59 predicciones entregadas, de menor a mayor. La línea es el rango P10–P90 y la marca corta,
+              el <span data-termino="p20">P20</span>. El color indica el
+              <span data-termino="riesgo">nivel de riesgo</span>:
+              <span class="c2-chip riesgo-bajo">Bajo</span>
+              <span class="c2-chip riesgo-medio">Medio</span>
+              <span class="c2-chip riesgo-alto">Alto</span>.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- Preguntas guía                                               -->
+    <!-- =========================================================== -->
+    <section class="c2-seccion" id="c2-preguntas"
+      data-say="Las tres preguntas guía del reto, contestadas con los mismos datos y la misma prueba.">
+      <div class="c2-ancho">
+        <span class="kicker">Preguntas guía</span>
+        <h2>Lo que nos preguntó el reto</h2>
+        <p class="c2-entrada">
+          Para contestar, pusimos a competir cada variable por separado <b>sin decirle al modelo dónde está la
+          parcela</b>, con la misma validación de 50 pruebas. Medimos cuánto mejora frente a no saber nada
+          (adivinar siempre el promedio).
+        </p>
+
+        <div class="c2-preguntas">
+          <article class="c2-pregunta">
+            <span class="c2-pregunta-num">1</span>
+            <h3>¿Qué índice es más importante?</h3>
+            <p class="c2-respuesta"><b data-cifra="q1.0.nombre">MSAVI</b>, seguido muy de cerca por SAVI y EVI.</p>
+            <div id="c2-q1"></div>
+            <p class="c2-pie">
+              Mejora del error frente a no saber nada. Los tres primeros son índices de vigor que corrigen el
+              brillo del suelo (<span data-termino="msavi">MSAVI</span>, <span data-termino="savi">SAVI</span>,
+              <span data-termino="evi">EVI</span>). El <span data-termino="ndvi">NDVI</span> queda abajo.
+            </p>
+          </article>
+
+          <article class="c2-pregunta">
+            <span class="c2-pregunta-num">2</span>
+            <h3>¿Qué variable climática tiene mayor peso?</h3>
+            <p class="c2-respuesta">La <b data-termino="amplitud">amplitud térmica</b>: la diferencia entre el día y la noche.</p>
+            <div id="c2-q2"></div>
+            <p class="c2-pie">
+              Le siguen la temperatura máxima y la <span data-termino="pet">evapotranspiración</span>. El clima
+              informa más que cualquier índice satelital, sobre todo porque cambia de una zona a otra.
+            </p>
+          </article>
+
+          <article class="c2-pregunta">
+            <span class="c2-pregunta-num">3</span>
+            <h3>¿Qué combinación funciona mejor?</h3>
+            <p class="c2-respuesta"><b>Clima + suelo.</b> Pero la ubicación sola le gana a todas.</p>
+            <div id="c2-q3"></div>
+            <p class="c2-pie">
+              La línea punteada es el error usando solo la ubicación. Sumar índices satelitales a clima y suelo
+              no mejora (0.556 contra 0.538 t/ha).
+            </p>
+          </article>
+        </div>
+
+        <aside class="c2-aviso">
+          <h3>Lo que hay que saber</h3>
+          <p>
+            Estas variables distinguen sobre todo una zona de otra. Dentro de un mismo municipio, ninguna de las
+            <span data-cifra="preguntas.permutacion.variables">264</span> variables se relacionó con el
+            rendimiento más de lo que daría el azar (prueba de permutación,
+            p = <span data-cifra="preguntas.permutacion.p" data-dec="2">0.39</span>). Por eso el modelo final
+            usa la ubicación y no los índices.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- Cierre                                                       -->
+    <!-- =========================================================== -->
+    <section class="c2-seccion c2-cierre" id="c2-cierre"
+      data-say="¡Listo! Ya tenemos una predicción y un rango para cada parcela. Ahora, ¿qué significa para un crédito?">
+      <div class="c2-ancho">
+        <span class="kicker">Fin del capítulo 2</span>
+        <ul class="c2-resumen">
+          <li><b>Ubicación primero.</b> El municipio y las vecinas explican la mayor parte del rendimiento.</li>
+          <li><b>Una prueba justa.</b> Diez modelos, 50 pruebas iguales; ganó el GP jerárquico.</li>
+          <li><b>Con rango.</b> Cada parcela tiene su P10–P90 y su P20, calibrados con errores reales.</li>
+        </ul>
+        <p class="c2-atajos">
+          <a class="btn principal" id="c2-siguiente" href="vistas/02-territorio/index.html" hidden>Capítulo 3: del rendimiento al crédito</a>
+          <a class="btn" href="vistas/01-introduccion/index.html">Volver al capítulo 1</a>
+        </p>
+      </div>
+    </section>
   </main>
 
+  <footer class="c2-fuentes">
+    Datos reales del Reto AgroCebada FIRA 2026: 197 polígonos, rendimientos de entrenamiento, Planet, Sentinel-2,
+    Landsat, CHIRPS, CHIRTS-ERA5 e INEGI CEM; suelo de SoilGrids 2.0. Modelo y validación: notebooks NB05–NB07
+    del equipo. Predicciones calculadas en el navegador con <code>motor-hgp.js</code>.
+    <a href="referencias.html">Referencias</a>.
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="vistas/compartido/common.js"></script>
-  <script src="vistas/compartido/data.js"></script>
-  <script src="vistas/compartido/modelo-core.js"></script>
-  <script src="vistas/07-modelo/modelo.js"></script>
+  <script src="vistas/compartido/mascota.js"></script>
+  <script src="vistas/compartido/diccionario.js"></script>
+  <script src="vistas/07-modelo/datos-modelo.js"></script>
+  <script src="vistas/07-modelo/motor-hgp.js"></script>
+  <script src="vistas/07-modelo/mapa-parcelas.js"></script>
+  <script src="vistas/07-modelo/escena-3d.js"></script>
+  <script src="vistas/07-modelo/graficas-c2.js"></script>
+  <script src="vistas/07-modelo/simulador.js"></script>
+  <script src="vistas/07-modelo/capitulo2.js"></script>
 </body>
 </html>

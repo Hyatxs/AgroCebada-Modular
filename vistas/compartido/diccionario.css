@@ -1,0 +1,155 @@
+/* Diccionario de variables: botón en la barra y panel lateral. */
+
+.dic-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.dic-icono {
+  font: 800 0.95rem "Fraunces", Georgia, serif;
+}
+
+.dic-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 70;
+  width: min(420px, 100vw);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 18px;
+  background: var(--sky);
+  border-left: 1px solid var(--line);
+  box-shadow: -18px 0 50px rgba(0, 0, 0, 0.18);
+  transform: translateX(104%);
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.dic-panel.abierto {
+  transform: none;
+}
+
+.dic-cabeza {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dic-panel .dic-cabeza h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.dic-cerrar {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 1rem;
+}
+
+.dic-buscar {
+  width: 100%;
+  font: 400 1rem "DM Sans", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--card);
+  border: 2px solid var(--green);
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+}
+
+.dic-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.dic-filtros button {
+  padding: 0.2rem 0.7rem;
+  font-size: 0.78rem;
+  border-width: 1.5px;
+}
+
+.dic-filtros button[aria-pressed="true"] {
+  background: var(--green);
+  color: var(--sky);
+}
+
+.dic-lista {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0;
+  padding-right: 4px;
+  overscroll-behavior: contain;
+}
+
+.dic-entrada {
+  padding: 0.7rem 0.8rem;
+  border-radius: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dic-entrada[hidden] {
+  display: none;
+}
+
+.dic-entrada dt {
+  font-weight: 600;
+  color: var(--green);
+}
+
+.dic-entrada dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.93rem;
+  line-height: 1.45;
+}
+
+.dic-aqui {
+  display: block;
+  margin-top: 0.3rem;
+  padding-left: 0.6rem;
+  border-left: 3px solid var(--gold);
+  font-size: 0.86rem;
+  opacity: 0.9;
+}
+
+.dic-entrada.destacada {
+  animation: dic-destaca 1.6s ease-out;
+}
+
+.dic-entrada:focus {
+  outline: none;
+}
+
+@keyframes dic-destaca {
+  0%,
+  40% {
+    background: color-mix(in srgb, var(--gold) 30%, transparent);
+  }
+}
+
+@media (max-width: 640px) {
+  .dic-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.72rem;
+  }
+
+  .dic-texto {
+    display: none;
+  }
+
+  .dic-panel {
+    top: auto;
+    height: 78vh;
+    width: 100vw;
+    border-left: none;
+    border-top: 1px solid var(--line);
+    border-radius: 22px 22px 0 0;
+    transform: translateY(104%);
+  }
+}
