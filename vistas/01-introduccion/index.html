@@ -1,286 +1,400 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <base href="../../">
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Barley Bot · FIRA 2026</title>
+    <base href="../../">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Barley Bot · FIRA 2026</title>
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=DM+Sans:wght@400;600&display=swap"
-    rel="stylesheet"
-  />
-  <link rel="stylesheet" href="vistas/compartido/styles.css" />
-  <link rel="stylesheet" href="vistas/01-introduccion/estilos.css" />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=DM+Sans:wght@400;600&display=swap"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="vistas/compartido/styles.css" />
+    <link rel="stylesheet" href="vistas/01-introduccion/estilos.css" />
 </head>
 
 <body data-page="home" data-cursor="on">
-  <a class="saltar" href="#contenido">Saltar al contenido</a>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
 
-  <div id="loader">
+<div id="loader">
     <span id="loader-count">0</span>
     <small>sembrando…</small>
-  </div>
+</div>
 
-  <div id="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div id="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
-  <canvas id="mascot" aria-hidden="true"></canvas>
+<canvas id="mascot" aria-hidden="true"></canvas>
 
-  <div id="bubble" aria-hidden="true">
-    <span class="typed"></span><span class="rest"></span>
-  </div>
+<div id="bubble">
+    <span class="texto" aria-hidden="true"><span class="typed"></span><span class="rest"></span></span>
+    <button type="button" id="bubble-toggle" class="bubble-btn" aria-controls="bubble" aria-expanded="true">Ocultar ✕</button>
+</div>
 
-  <nav id="nav" aria-label="Principal"></nav>
+<nav id="nav" aria-label="Principal"></nav>
 
-  <main id="contenido">
+<main id="contenido">
     <section
-      class="section hero"
-      data-say="¡Hola! Soy Barley Bot, una semilla de cebada. Te cuento la historia de mi familia y cómo podemos predecir cuánto rinde cada parcela."
+            class="section hero"
+            data-say="¡Hola! Soy Barley Bot, una semilla de cebada. Te cuento la historia de mi familia y cómo podemos predecir cuánto rinde cada parcela."
     >
-      <div class="block wide">
-        <span class="clip"><h1 id="hero-title" aria-label="Barley Bot"></h1></span>
-        <p class="tagline">
-          <b>De la semilla a la cosecha.</b>
-          Predicción de rendimiento de cebada con 197 parcelas · Reto FIRA 2026
-        </p>
-        <span class="kicker">Desplázate ↓</span>
-      </div>
-    </section>
-
-    <section
-      class="section"
-      data-say="Mi familia lleva unos diez mil años con la gente. Mira cómo crece una planta de cebada."
-    >
-      <div class="block">
-        <span class="kicker">01 · Origen</span>
-        <h2>Hace diez mil años</h2>
-        <span class="gigante" data-contar="10000" data-formato="miles">0</span>
-        <p>
-          años de cultivo. La cebada (<i>Hordeum vulgare</i>) fue de los primeros cereales
-          domesticados, en la Media Luna Fértil de Oriente Medio.
-        </p>
-      </div>
-    </section>
-
-    <section
-      class="section"
-      data-say="Estos números son de mi familia en el mundo y en México. Fíjate en el último: el rendimiento."
-    >
-      <div class="block">
-        <span class="kicker">02 · La cebada en números</span>
-        <h2>Pequeña, pero enorme</h2>
-        <div class="stats">
-          <div class="stat">
-            <b>4.º</b>
-            <span>
-              cereal más producido del mundo.
-              <small>Después del maíz, el arroz y el trigo (FAO).</small>
-            </span>
-          </div>
-          <div class="stat">
-            <b data-contar="900" data-prefijo="+" data-sufijo=" mil t">0</b>
-            <span>
-              de cebada al año en México desde 2016.
-              <small>INEGI, vía Cerveceros de México.</small>
-            </span>
-          </div>
-          <div class="stat">
-            <b data-contar="25" data-prefijo="+" data-sufijo=" mil">0</b>
-            <span>
-              familias productoras en el Altiplano, Durango y Zacatecas (SADER, 2021).
-            </span>
-          </div>
-          <div class="stat">
-            <b id="stat-rendimiento">2.6</b>
-            <span>
-              t/ha de rendimiento medio nacional (2013–2019).
-              <small id="stat-reto">Las mejores parcelas del reto llegan mucho más arriba.</small>
-            </span>
-          </div>
+        <div class="block wide">
+            <span class="clip"><h1 id="hero-title" aria-label="Barley Bot"></h1></span>
+            <p class="tagline">
+                <b>De la semilla a la cosecha.</b>
+                Predicción de rendimiento de cebada con 197 parcelas · Reto FIRA 2026
+            </p>
+            <span class="kicker">Desplázate ↓</span>
         </div>
-      </div>
     </section>
 
+    <!-- 01 · Origen -->
     <section
-      class="section"
-      data-say="Cada espiga guarda decenas de granos como yo. Al madurar nos soltamos y caemos al suelo, listos para volver a sembrarse."
+            class="section"
+            data-say="Mi familia es de las más antiguas que cultiva la gente: nacimos junto al trigo, entre los ríos Tigris y Éufrates. Mira cómo crece una planta de cebada."
     >
-      <div class="block">
-        <span class="kicker">03 · La espiga</span>
-        <h2>Los granos caen al suelo</h2>
-        <p>
-          Una espiga junta decenas de granos. Cuando maduran se sueltan y caen; los que se
-          cosechan se limpian y se clasifican según su calidad: de ahí salen la malta, el
-          forraje y la harina.
-        </p>
-      </div>
-    </section>
-
-    <section
-      class="section"
-      data-say="Esta es nuestra línea del tiempo. Desliza las tarjetas para ver cómo llegamos hasta México."
-    >
-      <div class="block wide historia">
-        <span class="kicker">04 · Línea del tiempo</span>
-        <h2>Un viaje milenario</h2>
-        <div class="historia-tira" id="historia-tira" tabindex="0" aria-label="Línea del tiempo de la cebada">
-          <article class="hito">
-            <span class="anio">~8000 a. C.</span>
-            <p>Se domestica en la Media Luna Fértil. Es de los primeros cereales que el ser humano siembra.</p>
-          </article>
-          <article class="hito">
-            <span class="anio">~1800 a. C.</span>
-            <p>En Mesopotamia se escribe el Himno a Ninkasi, un poema que a la vez describe cómo elaborar cerveza de cebada.</p>
-          </article>
-          <article class="hito">
-            <span class="anio">Antigüedad</span>
-            <p>Egipto, Grecia y Roma la usan para pan, papillas, cerveza y como alimento de animales.</p>
-          </article>
-          <article class="hito">
-            <span class="anio">Siglo XVI</span>
-            <p>Llega a México con la colonización española y se adapta a los valles altos del centro del país.</p>
-          </article>
-          <article class="hito">
-            <span class="anio">Siglo XX</span>
-            <p>El INIFAP desarrolla variedades malteras para los Valles Altos, como Adabella, resistentes a plagas y de buena calidad.</p>
-          </article>
-          <article class="hito">
-            <span class="anio">2023</span>
-            <p>Hidalgo se convierte en el mayor productor de cebada del país, según el SIAP.</p>
-          </article>
-          <article class="hito">
-            <span class="anio">2026</span>
-            <p>Reto FIRA AgroCebada: predecir el rendimiento de 197 parcelas con imágenes de satélite.</p>
-          </article>
+        <div class="block">
+            <h2>Nuestra huella ancestral</h2>
+            <span class="gigante" data-contar="10000">0</span>
+            <p>
+                años han pasado desde que nuestros ancestros silvestres (<i>Hordeum spontaneum</i>) comenzaron a convivir con la humanidad. Nacimos junto al trigo en la cuna de los grandes ríos Tigris y Éufrates, acompañando los primeros pasos de la agricultura en las antiguas civilizaciones babilónica, egipcia y china.
+            </p>
         </div>
-        <div class="historia-ctrl">
-          <button id="hist-prev" aria-label="Tarjeta anterior">←</button>
-          <button id="hist-next" aria-label="Tarjeta siguiente">→</button>
+    </section>
+    <section
+            class="section"
+            data-say="Estos números cuentan nuestra travesía por el mundo y por México. El cultivo se extiende con orgullo por distintas regiones del país."
+    >
+        <div class="block">
+            <h2>Pequeña, pero de gran peso</h2>
+            <div class="stats">
+                <div class="stat">
+                    <b>4.º</b>
+                    <span>
+                        cereal más cultivado en todo el planeta.
+                        <small>Solo detrás del maíz, el trigo y el arroz: 157 millones de toneladas en la campaña 2020/21 (USDA).</small>
+                    </span>
+                </div>
+                <div class="stat">
+                    <b data-contar="1082" data-sufijo=" mil t">0</b>
+                    <span>
+                        marcó nuestra producción récord en los campos de México.
+                        <small>Un gran logro impulsado por el esfuerzo y la demanda de nuestra industria maltera y cervecera.</small>
+                    </span>
+                </div>
+                <div class="stat">
+                    <b data-contar="300" data-sufijo=" mil ha">0</b>
+                    <span>
+                        es el lienzo verde que cubrimos cada año en el territorio nacional.
+                        <small>Cultivadas principalmente bajo el ciclo de temporal en primavera-verano.</small>
+                    </span>
+                </div>
+                <div class="stat">
+                    <b id="stat-rendimiento" class="largo">2.1 → 4.5</b>
+                    <span>
+                        t/ha: el latido promedio de nuestros campos frente a la alta tecnología agrícola.
+                        <small id="stat-reto">Las mejores parcelas del reto llegan mucho más arriba.</small>
+                    </span>
+                </div>
+            </div>
+            <span class="fuente">Fuentes: SIAP-SADER, FIRA y estadística agrícola nacional. Ver referencias.</span>
         </div>
-        <span class="fuente">Fechas de la Antigüedad aproximadas. Ver Referencias.</span>
-      </div>
     </section>
-
     <section
-      class="section"
-      data-say="Según cuánto y qué tan bien rinde una parcela, la cosecha va a lugares distintos. Luego te enseño ese viaje."
+            class="section"
+            data-say="Cada espiga guarda decenas de granos como yo. Prueba el interruptor: en unas espigas brotan seis hileras y en otras solo dos. Al madurar nos soltamos y caemos al suelo."
     >
-      <div class="block wide">
-        <span class="kicker">05 · Destinos</span>
-        <h2>¿Para qué se usa la cebada?</h2>
-        <p>Según lo que rinde y la calidad del grano, la cosecha toma uno de estos tres caminos.</p>
-        <div class="usos-lista">
-          <div class="uso">
-            <span class="icono" aria-hidden="true">🍺</span>
-            <span>
-              <b>Malta y cerveza</b>
-              Granos grandes y parejos, con poca proteína. Es el destino más exigente y mejor pagado.
-            </span>
-            <span class="rango">≥ 4.5 t/ha</span>
-          </div>
-          <div class="uso">
-            <span class="icono" aria-hidden="true">🥣</span>
-            <span>
-              <b>Alimento</b>
-              Hojuelas, harinas y alimentos balanceados para animales de granja.
-            </span>
-            <span class="rango">3.5 – 4.5 t/ha</span>
-          </div>
-          <div class="uso">
-            <span class="icono" aria-hidden="true">🐄</span>
-            <span>
-              <b>Forraje</b>
-              Grano y paja para el ganado, o ensilado cuando la cosecha no cumple para lo demás.
-            </span>
-            <span class="rango">&lt; 3.5 t/ha</span>
-          </div>
+        <div class="block">
+            <h2>El secreto de nuestras espigas</h2>
+            <p>
+                Cada una de nosotras nace protegida en una espiga que reúne de 10 a 30 nudos llenos de vida. Cuando llega el momento de la madurez, nos soltamos de la planta; las que el campo cosecha se limpian y transforman con esmero para dar vida a la maltas, alimentos y bebidas.
+            </p>
+            <div class="hileras vidrio" id="hileras" data-h="6">
+                <div class="hileras-botones" role="group" aria-label="Tipo de espiga">
+                    <button type="button" class="active" data-h="6" aria-pressed="true">6 hileras</button>
+                    <button type="button" data-h="2" aria-pressed="false">2 hileras</button>
+                </div>
+                <svg class="hileras-svg" viewBox="0 0 150 130" aria-hidden="true">
+                    <line class="raquis" x1="75" y1="8" x2="75" y2="122" />
+                    <g>
+                        <circle class="lat" cx="44" cy="24" r="10" />
+                        <circle class="cen" cx="75" cy="24" r="10" />
+                        <circle class="lat" cx="106" cy="24" r="10" />
+                        <circle class="lat" cx="44" cy="54" r="10" />
+                        <circle class="cen" cx="75" cy="54" r="10" />
+                        <circle class="lat" cx="106" cy="54" r="10" />
+                        <circle class="lat" cx="44" cy="84" r="10" />
+                        <circle class="cen" cx="75" cy="84" r="10" />
+                        <circle class="lat" cx="106" cy="84" r="10" />
+                        <circle class="lat" cx="44" cy="114" r="10" />
+                        <circle class="cen" cx="75" cy="114" r="10" />
+                        <circle class="lat" cx="106" cy="114" r="10" />
+                    </g>
+                </svg>
+                <p class="hileras-texto" id="hileras-texto" aria-live="polite"></p>
+            </div>
         </div>
-        <span class="fuente">Los rangos son una regla didáctica del proyecto, no una norma oficial.</span>
-      </div>
     </section>
-
     <section
-      class="section margen-mascota"
-      id="factores"
-      data-say="Una parcela no crece sola. Elige un estado y mira cómo el calor, la luz y el agua van moviendo sus índices de satélite durante 2025."
+            class="section linea"
+            data-say="Esta es nuestra línea del tiempo. Toca un año o usa las flechas para pasar de una época a la siguiente."
     >
-      <div class="block wide factores">
-        <span class="kicker">06 · Factores</span>
-        <h2>Qué hace crecer a la cebada</h2>
-        <p>
-          Una parcela real por estado, semana a semana de 2025. Mira qué factores se mueven
-          juntos y por qué.
-        </p>
-        <div class="factores-panel" id="factores-demo"></div>
-      </div>
-    </section>
+        <div class="block wide historia">
+            <h2>Un viaje milenario</h2>
 
-    <section
-      class="section"
-      data-say="Hasta aquí fue mi historia. Ahora empieza el capítulo 2: cómo convertimos todo esto en una predicción."
-    >
-      <div class="block">
-        <span class="kicker">Fin del capítulo 1</span>
-        <span class="capitulo">Capítulo 2</span>
-        <h2>Del dato al rendimiento</h2>
-        <p>
-          Ya viste qué mueve a una parcela. Ahora toca explicar cómo llegamos a lo que
-          estás a punto de ver en el mapa.
-        </p>
-      </div>
-    </section>
+            <div class="tl" id="tl">
+                <div class="tl-riel" id="tl-riel" aria-label="Épocas de la línea del tiempo">
+                    <span class="tl-linea" aria-hidden="true"><i class="tl-relleno" id="tl-relleno"></i></span>
+                </div>
 
-    <section
-      class="section margen-mascota"
-      id="capitulo2"
-      data-say="Antes de ir al mapa, te muestro por qué elegimos este modelo. Cuando quieras, actívalo y mira qué sale."
-    >
-      <div class="block wide">
-        <span class="kicker">Capítulo 2 · Cómo llegamos aquí</span>
-        <h2>Por qué este modelo</h2>
-        <div id="modelo-justificacion"></div>
-        <ol class="modelo-pasos" id="modelo-pasos" aria-label="Pasos del modelo"></ol>
-        <div class="acciones">
-          <button id="activar-modelo" class="btn principal">▶ Activar el modelo</button>
-          <a class="btn" href="modelo.html">Ver el modelo paso a paso</a>
+                <div class="historia-tira tl-track" id="historia-tira" tabindex="0" aria-label="Línea del tiempo de la cebada">
+                    <article class="hito tl-card" data-corto="Hace 5–10 mil años">
+                        <figure class="tl-media mapa">
+                            <span class="tl-icono" aria-hidden="true">🌾</span>
+                            <img
+                                    src="https://commons.wikimedia.org/wiki/Special:FilePath/Fertile_Crescent_map.png?width=800"
+                                    alt="Mapa del Creciente Fértil, donde se domesticó la cebada"
+                                    loading="lazy"
+                                    draggable="false"
+                                    onerror="this.parentNode.classList.add('sin-img')"
+                            />
+                            <figcaption>Mapa del Creciente Fértil · Wikimedia Commons</figcaption>
+                        </figure>
+                        <div class="tl-cuerpo">
+                            <span class="anio">Hace 5–10 mil años</span>
+                            <h3>Nacimiento junto al trigo</h3>
+                            <p>En los valles fluviales del Creciente Fértil comenzamos a ser cultivadas por las primeras comunidades humanas.</p>
+                        </div>
+                    </article>
+
+                    <article class="hito tl-card" data-corto="~1800 a. C.">
+                        <figure class="tl-media">
+                            <span class="tl-icono" aria-hidden="true">🌾</span>
+                            <img
+                                    src="https://commons.wikimedia.org/wiki/Special:FilePath/Sjb_whiskey_malt.jpg?width=800"
+                                    alt="Cebada malteada, la base de la cerveza"
+                                    loading="lazy"
+                                    draggable="false"
+                                    onerror="this.parentNode.classList.add('sin-img')"
+                            />
+                            <figcaption>Cebada malteada, base de la cerveza · Wikimedia Commons</figcaption>
+                        </figure>
+                        <div class="tl-cuerpo">
+                            <span class="anio">~1800 a. C.</span>
+                            <h3>El Himno a Ninkasi</h3>
+                            <p>En antigua Mesopotamia, un poema dedicado a la diosa de la cerveza inmortalizó nuestras virtudes y la receta de nuestra molienda.</p>
+                        </div>
+                    </article>
+
+                    <article class="hito tl-card" data-corto="Antigüedad">
+                        <figure class="tl-media">
+                            <span class="tl-icono" aria-hidden="true">🌾</span>
+                            <img
+                                    src="https://commons.wikimedia.org/wiki/Special:FilePath/Reaping_barley_harvest._LOC_matpc.05396.jpg?width=800"
+                                    alt="Trabajadores cosechando cebada a mano a inicios del siglo XX"
+                                    loading="lazy"
+                                    draggable="false"
+                                    onerror="this.parentNode.classList.add('sin-img')"
+                            />
+                            <figcaption>Cosecha de cebada, 1919 · Matson Collection, Library of Congress</figcaption>
+                        </figure>
+                        <div class="tl-cuerpo">
+                            <span class="anio">Antigüedad</span>
+                            <h3>Alimento de imperios</h3>
+                            <p>De faraones en Egipto a dinastías en China, fuimos el sustento diario en pan, sopas y celebraciones comunitarias.</p>
+                        </div>
+                    </article>
+
+                    <article class="hito tl-card" data-corto="~1602">
+                        <figure class="tl-media">
+                            <span class="tl-icono" aria-hidden="true">🌾</span>
+                            <img
+                                    src="https://commons.wikimedia.org/wiki/Special:FilePath/Hordeum_vulgare_in_Lancaster,_PA-001.jpg?width=800"
+                                    alt="Campo de cebada en Pensilvania, Estados Unidos"
+                                    loading="lazy"
+                                    draggable="false"
+                                    onerror="this.parentNode.classList.add('sin-img')"
+                            />
+                            <figcaption>Campo de cebada en Pensilvania, EE. UU. · Wikimedia Commons</figcaption>
+                        </figure>
+                        <div class="tl-cuerpo">
+                            <span class="anio">~1602</span>
+                            <h3>El gran cruce atlántico</h3>
+                            <p>Nuestra travesía continuó hacia el continente americano, sembradas por primera vez por manos de exploradores y colonos.</p>
+                        </div>
+                    </article>
+
+                    <article class="hito tl-card" data-corto="1975–2004">
+                        <figure class="tl-media">
+                            <span class="tl-icono" aria-hidden="true">🌾</span>
+                            <img
+                                    src="https://commons.wikimedia.org/wiki/Special:FilePath/Barley_ears.jpg?width=800"
+                                    alt="Espigas de cebada maduras"
+                                    loading="lazy"
+                                    draggable="false"
+                                    onerror="this.parentNode.classList.add('sin-img')"
+                            />
+                            <figcaption>Espigas de cebada · Wikimedia Commons</figcaption>
+                        </figure>
+                        <div class="tl-cuerpo">
+                            <span class="anio">1975–2004</span>
+                            <h3>Orgullo e innovación mexicana</h3>
+                            <p>El esfuerzo científico nacional dio fruto con variedades excepcionales (como Centinela, Esmeralda y Adabella) adaptadas a nuestros suelos y climas.</p>
+                        </div>
+                    </article>
+
+                    <article class="hito tl-card" data-corto="Reto 2026">
+                        <figure class="tl-media">
+                            <span class="tl-icono" aria-hidden="true">🌾</span>
+                            <img
+                                    src="https://commons.wikimedia.org/wiki/Special:FilePath/Barley.jpg?width=800"
+                                    alt="Campo de cebada"
+                                    loading="lazy"
+                                    draggable="false"
+                                    onerror="this.parentNode.classList.add('sin-img')"
+                            />
+                            <figcaption>Campo de cebada · USDA, dominio público</figcaption>
+                        </figure>
+                        <div class="tl-cuerpo">
+                            <span class="anio">2026</span>
+                            <h3>El futuro digital con FIRA</h3>
+                            <p>Hoy, la tecnología satelital y la ciencia de datos se unen para entender y predecir cada etapa de nuestro desarrollo en el campo.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="historia-ctrl">
+                <button id="hist-prev" type="button" aria-label="Tarjeta anterior">←</button>
+                <span class="tl-cuenta" id="tl-cuenta" aria-live="polite">1 / 6</span>
+                <button id="hist-next" type="button" aria-label="Tarjeta siguiente">→</button>
+            </div>
+            <span class="fuente">Fechas de la Antigüedad aproximadas. Ver Referencias.</span>
         </div>
-        <div class="modelo-resultados" id="modelo-resultados" aria-live="polite"></div>
-      </div>
     </section>
 
     <section
-      class="section"
-      id="tu-turno"
-      data-say="Ya tienes todo el contexto. Aquí me quedo esperándote: elige el mapa y entramos a las parcelas."
+            class="section margen-mascota"
+            data-say="Según cuánto y qué tan bien rinde una parcela, la cosecha va a lugares distintos. Mira cómo viaja el grano hasta su destino."
     >
-      <div class="block">
-        <span class="kicker">Tu turno</span>
-        <h2>Ahora, a las parcelas</h2>
-        <p>
-          Elige un estado en el mapa y entra a su campo, o repasa paso a paso cómo se limpiaron
-          los datos y se construyó el modelo.
-        </p>
-        <div class="acciones">
-          <a class="btn principal" href="mapa.html">Ir al mapa →</a>
-          <a class="btn" href="modelo.html">Ver el modelo</a>
+        <div class="block wide">
+            <h2>¿A dónde viajamos tras la cosecha?</h2>
+            <p>
+                El destino de cada grano depende de su calidad y de su esfuerzo bajo el sol. Al terminar el ciclo, tomamos caminos llenos de propósito:
+            </p>
+
+            <div class="destinos">
+                <div class="usos-lista">
+                    <div class="uso">
+                        <span class="icono" aria-hidden="true">🍺</span>
+                        <span>
+                            <b>Malta y cerveza</b>
+                            Granos robustos y de gran calidad que cumplen con los estándares más exigentes de la industria maltera.
+                        </span>
+                        <span class="rango">≥ 4.5 t/ha</span>
+                    </div>
+                    <div class="uso">
+                        <span class="icono" aria-hidden="true">🥣</span>
+                        <span>
+                            <b>Alimento nutritivo</b>
+                            Convertidas en hojuelas, harinas y nutritivos complementos para el consumo diario.
+                        </span>
+                        <span class="rango">3.5 – 4.5 t/ha</span>
+                    </div>
+                    <div class="uso">
+                        <span class="icono" aria-hidden="true">🐄</span>
+                        <span>
+                            <b>Forraje de apoyo</b>
+                            Grano y paja que nutren al ganado, aprovechando cada parte de nuestra noble planta.
+                        </span>
+                        <span class="rango">&lt; 3.5 t/ha</span>
+                    </div>
+                </div>
+
+                <div class="destinos-fotos">
+                    <figure class="foto3d">
+                        <img
+                                src="https://commons.wikimedia.org/wiki/Special:FilePath/Harvesting_barley_-_geograph.org.uk_-_1483283.jpg?width=720"
+                                alt="Cosecha de cebada con un remolque agrícola"
+                                loading="lazy"
+                                onerror="this.closest('figure').classList.add('sin-foto')"
+                        />
+                        <figcaption>Cosecha de cebada: el viaje comienza en el remolque · Wikimedia Commons</figcaption>
+                    </figure>
+                    <div class="ruta" aria-hidden="true">
+                        <span>🌾<small><br />Parcela</small></span>
+                        <i class="carretera"><b class="camion">🚚</b></i>
+                        <span>🏭<small><br />Maltería</small></span>
+                    </div>
+                </div>
+            </div>
+            <span class="fuente">Los rangos de t/ha son una regla didáctica del proyecto, no una norma oficial.</span>
         </div>
-      </div>
     </section>
-  </main>
 
-  <footer>
-    Reales: 197 polígonos, áreas, rendimientos de entrenamiento e índices Planet/Sentinel-2
-    (2025). Simulados: clima, GDD, suelo y eventos. Cifras de contexto: ver
-    <a href="referencias.html">Referencias</a>. 🌾
-  </footer>
+    <section
+            class="section divisor"
+            data-say="Pausa en la historia. Ahora no te cuento nada: tú mandas. Entra al laboratorio y mueve los factores."
+    >
+        <div class="block">
+            <h2>Cambio de ritmo</h2>
+            <div class="divisor-surcos" aria-hidden="true">
+                <span>🌱</span><span>🌱</span><span>🌾</span><span>🌱</span><span>🌱</span>
+            </div>
+            <p>
+                Aquí concluye mi relato histórico. Ahora te toca tomar el control: entra al laboratorio interactivo y descubre cómo reacciona una parcela real.
+            </p>
+            <span class="divisor-flecha" aria-hidden="true">↓</span>
+        </div>
+    </section>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="vistas/compartido/common.js"></script>
-  <script src="vistas/compartido/data.js"></script>
-  <script src="vistas/compartido/modelo-core.js"></script>
-  <script src="vistas/compartido/mascota.js"></script>
-  <script src="vistas/01-introduccion/factores.js"></script>
-  <script src="vistas/01-introduccion/capitulo2.js"></script>
-  <script src="vistas/01-introduccion/home.js"></script>
+    <section
+            class="section margen-mascota"
+            id="factores"
+            data-say="Una parcela no crece sola. Elige un estado y mira cómo el calor, la luz y el agua van moviendo sus índices de satélite durante 2025."
+    >
+        <div class="block wide factores">
+            <div class="lab">
+                <span class="lab-etiqueta">Laboratorio interactivo</span>
+                <h2>Qué hace crecer a la cebada</h2>
+                <p>
+                    Una parcela real por estado, semana a semana de 2025. Explora qué factores naturales se conectan y por qué moldean nuestro rendimiento.
+                </p>
+                <div class="factores-panel" id="factores-demo"></div>
+            </div>
+        </div>
+    </section>
+
+    <section
+            class="section"
+            id="continuar"
+            data-say="Esa fue mi historia. Sigue conmigo: en el capítulo 2 te cuento cómo convertimos todo esto en un modelo que predice el rendimiento."
+    >
+        <div class="block">
+            <span class="kicker">Fin del capítulo 1</span>
+            <h2>Del dato al modelo</h2>
+            <p>
+                Ya conoces nuestra travesía y lo que alimenta a cada planta. Ahora prepárate para ver cómo transformamos toda esta magia en un modelo predictivo inteligente.
+            </p>
+            <div class="acciones">
+                <a class="btn principal btn-grande" href="modelo.html">
+                    Continuar al capítulo 2<span class="flecha" aria-hidden="true">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    Proyecto desarrollado por integrantes del Equipo Representativo STEM · UDLAP 🌾<br />
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="vistas/compartido/common.js"></script>
+<script src="vistas/compartido/data.js"></script>
+<script src="vistas/compartido/modelo-core.js"></script>
+<script src="vistas/compartido/mascota.js"></script>
+<script src="vistas/01-introduccion/factores.js"></script>
+<script src="vistas/01-introduccion/home.js"></script>
 </body>
 </html>

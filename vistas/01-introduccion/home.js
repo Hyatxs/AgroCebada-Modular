@@ -8,7 +8,6 @@
 
 const escenaHome = crearEscenaMascota($("#mascot"));
 
-// La planta vive en el mismo lienzo que la mascota, un poco más al fondo
 const PROFUNDIDAD_PLANTA = 7.5;
 const MEDIO_ALTO_PLANTA = Math.tan(22.5 * D2R) * PROFUNDIDAD_PLANTA;
 
@@ -34,14 +33,12 @@ function actualizarPlanta(t, s) {
   contenedorPlanta.visible = crecer > 0 && escala > 0.01;
   contenedorPlanta.scale.setScalar(Math.max(0.001, escala));
   contenedorPlanta.position.x = MEDIO_ALTO_PLANTA * aspecto * (angosto ? 0.6 : 0.52);
-  // Un poco más arriba del borde, para que los granos caídos se vean
   contenedorPlanta.position.y = -MEDIO_ALTO_PLANTA * 0.84;
 
   planta.animar(t, crecer, soltar);
 }
 
-/** Qué tanto ha llegado el scroll a la última sección (0 a 1). */
-const seccionFinal = $("#tu-turno");
+const seccionFinal = $("#continuar");
 
 function llegadaAlFinal() {
   const caja = seccionFinal.getBoundingClientRect();
@@ -54,7 +51,6 @@ function actualizarMascotaHome(s) {
   const peso = suave(clamp((s - 0.4) / 1.2, 0, 1));
   const esquinaX = angosto ? -0.7 : -0.86;
 
-  // Del centro a la esquina, y al final al espacio en blanco junto al texto
   const llegada = llegadaAlFinal();
   const hueco = angosto ? { x: 0.6, y: -0.7, escala: 0.5 } : { x: 0.6, y: -0.2, escala: 0.95 };
 
@@ -73,7 +69,6 @@ function animar(milisegundos) {
 
   scrollSuave += (window.scrollY / window.innerHeight - scrollSuave) * 0.08;
 
-  // Las auroras de fondo se desplazan despacio con el scroll
   document.documentElement.style.setProperty("--aurora-y", scrollSuave.toFixed(3));
 
   actualizarMascotaHome(scrollSuave);
@@ -85,9 +80,7 @@ function animar(milisegundos) {
 }
 
 window.addEventListener("resize", escenaHome.ajustar);
-window.addEventListener("modelo-activado", () => escenaHome.saltito());
 
-/* --- Texto, contadores y diálogos ---------------------------------------- */
 
 $("#hero-title").innerHTML = "BARLEY BOT"
   .split("")
@@ -154,18 +147,140 @@ $$(".section").forEach((seccion) => {
   observarDialogo.observe(seccion);
 });
 
-/* --- Línea del tiempo horizontal ----------------------------------------- */
+function inclinar(elemento, maximo) {
+  if (Paleta.movimientoReducido()) return;
 
-const tira = $("#historia-tira");
-const desplazarTira = (direccion) => {
-  const tarjeta = tira.querySelector(".hito");
-  tira.scrollBy({ left: direccion * (tarjeta.offsetWidth + 16), behavior: "smooth" });
+  elemento.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse" || e.buttons) return;
+
+    const caja = elemento.getBoundingClientRect();
+    const x = (e.clientX - caja.left) / caja.width - 0.5;
+    const y = (e.clientY - caja.top) / caja.height - 0.5;
+
+    elemento.style.setProperty("--ry", `${(x * maximo * 2).toFixed(2)}deg`);
+    elemento.style.setProperty("--rx", `${(-y * maximo * 2).toFixed(2)}deg`);
+  });
+
+  elemento.addEventListener("pointerleave", () => {
+    elemento.style.setProperty("--rx", "0deg");
+    elemento.style.setProperty("--ry", "0deg");
+  });
+}
+
+$$(".foto3d").forEach((foto) => inclinar(foto, 6));
+
+const TEXTOS_HILERAS = {
+  6: "Seis hileras: las tres espiguillas de cada nudo son fértiles.",
+  2: "Dos hileras: solo la espiguilla central es fértil; las laterales quedan reducidas."
 };
 
-$("#hist-prev").addEventListener("click", () => desplazarTira(-1));
-$("#hist-next").addEventListener("click", () => desplazarTira(1));
+const panelHileras = $("#hileras");
 
-/* --- Carga --------------------------------------------------------------- */
+function elegirHileras(valor) {
+  panelHileras.dataset.h = valor;
+  $("#hileras-texto").textContent = TEXTOS_HILERAS[valor];
+
+  $$("button", panelHileras).forEach((boton) => {
+    const activo = boton.dataset.h === String(valor);
+    boton.classList.toggle("active", activo);
+    boton.setAttribute("aria-pressed", String(activo));
+  });
+}
+
+$$("button", panelHileras).forEach((boton) =>
+  boton.addEventListener("click", () => elegirHileras(Number(boton.dataset.h)))
+);
+elegirHileras(6);
+
+
+const tira = $("#historia-tira");
+const cartas = $$(".hito", tira);
+const riel = $("#tl-riel");
+const botonPrevio = $("#hist-prev");
+const botonSiguiente = $("#hist-next");
+
+let cartaActiva = -1;
+
+riel.style.setProperty("--n", cartas.length);
+
+cartas.forEach((carta, i) => {
+  const punto = document.createElement("button");
+  punto.type = "button";
+  punto.className = "tl-punto";
+  punto.setAttribute("aria-label", `${carta.dataset.corto}: ver esta época`);
+  punto.innerHTML = `<b>${carta.dataset.corto}</b>`;
+  punto.addEventListener("click", () => irACarta(i));
+  riel.appendChild(punto);
+
+  inclinar(carta, 4);
+});
+
+const puntos = $$(".tl-punto", riel);
+
+function irACarta(indice) {
+  const i = clamp(indice, 0, cartas.length - 1);
+  if (i === cartaActiva) return;
+
+  tira.dataset.dir = i > cartaActiva ? "sig" : "ant";
+  cartaActiva = i;
+
+  cartas.forEach((carta, k) => carta.classList.toggle("activo", k === i));
+  puntos.forEach((punto, k) => {
+    punto.classList.toggle("activo", k === i);
+    punto.classList.toggle("hecho", k < i);
+    if (k === i) punto.setAttribute("aria-current", "true");
+    else punto.removeAttribute("aria-current");
+  });
+
+  riel.style.setProperty("--p", cartas.length > 1 ? i / (cartas.length - 1) : 0);
+  $("#tl-cuenta").textContent = `${i + 1} / ${cartas.length}`;
+  botonPrevio.disabled = i === 0;
+  botonSiguiente.disabled = i === cartas.length - 1;
+}
+
+botonPrevio.addEventListener("click", () => irACarta(cartaActiva - 1));
+botonSiguiente.addEventListener("click", () => irACarta(cartaActiva + 1));
+
+tira.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight") {
+    e.preventDefault();
+    irACarta(cartaActiva + 1);
+  } else if (e.key === "ArrowLeft") {
+    e.preventDefault();
+    irACarta(cartaActiva - 1);
+  }
+});
+
+let gesto = null;
+
+tira.addEventListener("pointerdown", (e) => {
+  if (e.pointerType === "mouse" && e.button !== 0) return;
+  gesto = { x: e.clientX, y: e.clientY };
+});
+
+window.addEventListener("pointerup", (e) => {
+  if (!gesto) return;
+
+  const dx = e.clientX - gesto.x;
+  const dy = e.clientY - gesto.y;
+  gesto = null;
+
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+    irACarta(cartaActiva + (dx < 0 ? 1 : -1));
+  }
+});
+
+irACarta(0);
+
+const burbujaMascota = $("#bubble");
+const botonBurbuja = $("#bubble-toggle");
+
+botonBurbuja.addEventListener("click", () => {
+  const plegada = burbujaMascota.classList.toggle("plegada");
+
+  botonBurbuja.textContent = plegada ? "💬 Mostrar" : "Ocultar ✕";
+  botonBurbuja.setAttribute("aria-expanded", String(!plegada));
+});
 
 function terminarCarga() {
   $("#loader").classList.add("done");
