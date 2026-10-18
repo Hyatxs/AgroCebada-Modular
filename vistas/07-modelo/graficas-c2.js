@@ -144,29 +144,50 @@ const Graficas = (() => {
       });
     }
 
-    let actual = estadoDe(esquema);
+        // Antes de aparecer, todos los puntos esperan sobre la línea de referencia
+    let elegido = esquema;
+    let revelada = false;
+    const inicial = estadoDe(esquema);
+    let actual = { ...inicial, vals: inicial.vals.map(() => inicial.ref) };
     let animacion = 0;
-    function mover(nuevo, animar = true) {
-      const desde = actual, hasta = estadoDe(nuevo);
+
+    // escalon: retraso (ms) entre una fila y la siguiente, para que salgan una tras otra
+    function transicion(hasta, { animar = true, escalon = 0, dur = 900 } = {}) {
+      const desde = actual;
       cancelAnimationFrame(animacion);
       if (!animar || Paleta.movimientoReducido()) { actual = hasta; pintar(actual); return; }
-      const t0 = performance.now(), dur = 900;
+      const t0 = performance.now();
+      const fin = dur + escalon * (filas.length - 1);
+      const suave = (k) => 1 - Math.pow(1 - k, 3);
       const paso = (ahora) => {
-        const k = Util.clamp((ahora - t0) / dur, 0, 1);
-        const s = 1 - Math.pow(1 - k, 3);
-        const mezcla = (a, b) => a + (b - a) * s;
+        const t = ahora - t0;
+        const s = suave(Util.clamp(t / dur, 0, 1));
+        const mezcla = (a, b, k = s) => a + (b - a) * k;
         actual = {
           d0: mezcla(desde.d0, hasta.d0), d1: mezcla(desde.d1, hasta.d1), paso: hasta.paso,
-          ref: mezcla(desde.ref, hasta.ref), vals: hasta.vals.map((v, i) => mezcla(desde.vals[i], v)),
+          ref: mezcla(desde.ref, hasta.ref),
+          vals: hasta.vals.map((v, i) => mezcla(desde.vals[i], v, suave(Util.clamp((t - i * escalon) / dur, 0, 1)))),
         };
         pintar(actual);
-        if (k < 1) animacion = requestAnimationFrame(paso);
-        else actual = hasta;
+        if (t < fin) animacion = requestAnimationFrame(paso);
+        else { actual = hasta; pintar(actual); }
       };
       animacion = requestAnimationFrame(paso);
     }
+
+    function mover(nuevo, animar = true) {
+      elegido = nuevo;
+      if (revelada) transicion(estadoDe(nuevo), { animar });
+    }
+
+    /** Despliega los modelos desde la referencia (la página la llama cuando la gráfica se ve). */
+    function entrada(animar = true) {
+      revelada = true;
+      transicion(estadoDe(elegido), { animar, escalon: 70, dur: 800 });
+    }
+
     pintar(actual);
-    return { mover };
+    return { mover, entrada };
   }
 
     // Ejes con línea, marcas y títulos (comunes a las dos gráficas de resultados)
@@ -356,6 +377,7 @@ const Graficas = (() => {
     const izq = compacto ? 2 : Math.min(210, (contenedor.clientWidth || 400) * 0.45);
     const { svg, ancho } = lienzo(contenedor, items.length * altoFila + 8, etiqueta);
     const x = escala(0, maximo, izq, ancho - 54);
+    const rectangulos = [];
     items.forEach((it, i) => {
       const y = i * altoFila + 4;
       const yBarra = compacto ? y + 19 : y + (altoFila - grueso) / 2;
@@ -364,10 +386,19 @@ const Graficas = (() => {
       else texto(g, izq - 10, yBarra + grueso / 2 + 4, it.nombre, { "text-anchor": "end", class: "c2-fila-nombre" });
       const r = el("rect", { x: x(0), y: yBarra, height: grueso, width: 0, rx: 4 }, g);
       r.style.transitionDelay = `${i * 50}ms`;
-      requestAnimationFrame(() => requestAnimationFrame(() => r.setAttribute("width", Math.max(1, x(valor(it)) - x(0)))));
-      texto(g, x(valor(it)) + 8, yBarra + grueso / 2 + 4, formato(it), { class: "c2-fila-valor" });
+            r.style.transitionDelay = `${i * 60}ms`;
+      rectangulos.push([r, Math.max(1, x(valor(it)) - x(0))]);
+      const t = texto(g, x(valor(it)) + 8, yBarra + grueso / 2 + 4, formato(it), { class: "c2-fila-valor" });
+      t.style.animationDelay = `${500 + i * 60}ms`;
     });
-    return svg;
+        /** Las barras crecen desde cero (la página la llama cuando la gráfica se ve). */
+    function entrada(animar = true) {
+      rectangulos.forEach(([r, ancho]) => {
+        if (!animar) r.style.transition = "none";
+        r.setAttribute("width", ancho);
+      });
+    }
+    return { svg, entrada };
   }
 
   /* ---------------------------------------------------------------------- */
@@ -388,7 +419,8 @@ const Graficas = (() => {
     }
     items.forEach((it, i) => {
       const y = i * altoFila + (compacto ? altoFila - 8 : altoFila / 2 + 4);
-      const g = el("g", { class: "c2-fila" + (i === 0 ? " final" : "") }, svg);
+      const g = el("g", { class: "c2-fila c2-fila-q3" + (i === 0 ? " final" : "") }, svg);
+      g.style.animationDelay = `${i * 90}ms`;
       if (compacto) texto(g, izq, y - 15, it.nombre, { class: "c2-fila-nombre c2-con-halo" });
       else texto(g, izq - 12, y + 4, it.nombre, { "text-anchor": "end", class: "c2-fila-nombre c2-con-halo" });
       el("line", { x1: x(it.rmse - it.se), x2: x(it.rmse + it.se), y1: y, y2: y, class: "c2-error" }, g);

@@ -40,10 +40,20 @@
     else el.textContent = String(valor);
   });
 
-  if (CAPITULO_3) {
-    const siguiente = $("#c2-siguiente");
+  // Botón al capítulo 3: un telón sube antes de cambiar de página (cambio de vista completo)
+  const siguiente = $("#c2-siguiente");
+  if (CAPITULO_3 && siguiente) {
     siguiente.href = CAPITULO_3;
     siguiente.hidden = false;
+    siguiente.addEventListener("click", (e) => {
+      if (Paleta.movimientoReducido() || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      e.preventDefault();
+      const salida = document.createElement("div");
+      salida.className = "c2-salida";
+      salida.innerHTML = '<span class="capitulo">Capítulo 3</span><span class="c2-telon-sub">Del rendimiento al crédito</span>';
+      document.body.appendChild(salida);
+      setTimeout(() => (location.href = siguiente.href), 750);
+    });
   }
 
   /* --- Escena 3D a pantalla completa ------------------------------------ */
@@ -272,14 +282,13 @@
 
   let esquema = "main";
   let carrera = null;
-  const dibujarCarrera = () => (carrera = Graficas.carreraModelos($("#c2-carrera"), datos.modelos, esquema));
 
   $$("[data-esquema]").forEach((b) =>
     b.addEventListener("click", () => {
       esquema = b.dataset.esquema;
       $$("[data-esquema]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
       $$("[data-esquema-texto]").forEach((t) => (t.hidden = t.dataset.esquemaTexto !== esquema));
-      carrera.mover(esquema);
+      if (carrera) carrera.mover(esquema);
     })
   );
 
@@ -289,47 +298,97 @@
   ajustarSimulador();
   $("#c2-simulador").addEventListener("predicciones", () => pasoActual === "simulador" && leyendaSimulador());
 
-  /* --- Resultados y preguntas: se dibujan al llegar ----------------------- */
+  /* --- Gráficas: se preparan antes de llegar y se animan al aparecer ------ */
 
   const conocidas = datos.parcelas.filter((p) => !p.pred);
   const porPredecir = datos.parcelas.filter((p) => p.pred);
+  const P = datos.preguntas;
+  const opcionesBarras = (etiqueta) => ({
+    valor: (x) => x.mejora, maximo: 32, formato: (x) => `${fmt(x.mejora, 0)} %`, etiqueta,
+  });
 
-  const dibujos = {
-    "c2-modelos": dibujarCarrera,
-    "c2-resultados": () => {
-      Graficas.dispersion($("#c2-dispersion"), conocidas, datos.metricas.rmse);
-      Graficas.oruga($("#c2-oruga"), porPredecir, datos.modelo.q);
-    },
-    "c2-preguntas": () => {
-      const P = datos.preguntas;
-      Graficas.barras($("#c2-q1"), P.q1.slice(0, 8), {
-        valor: (x) => x.mejora, maximo: 32, formato: (x) => `${fmt(x.mejora, 0)} %`, etiqueta: "Mejora de cada índice",
-      });
-      Graficas.barras($("#c2-q2"), P.q2, {
-        valor: (x) => x.mejora, maximo: 32, formato: (x) => `${fmt(x.mejora, 0)} %`, etiqueta: "Mejora de cada variable climática",
-      });
-      const combos = [...P.q3.slice(0, 4), ...P.q3_solas.filter((s) => !P.q3.slice(0, 4).some((c) => c.nombre === s.nombre)).slice(0, 3)];
-      Graficas.puntosError($("#c2-q3"), combos, [
-        { valor: P.rmse_ubicacion, texto: "ubicación", clase: "" },
-      ]);
+  // Cada gráfica, por su id. Si devuelve { entrada }, esa función arranca su animación.
+  const GRAFICAS = {
+    "c2-carrera": () => (carrera = Graficas.carreraModelos($("#c2-carrera"), datos.modelos, esquema)),
+    "c2-dispersion": () => Graficas.dispersion($("#c2-dispersion"), conocidas, datos.metricas.rmse),
+    "c2-oruga": () => Graficas.oruga($("#c2-oruga"), porPredecir, datos.modelo.q),
+    "c2-q1": () => Graficas.barras($("#c2-q1"), P.q1.slice(0, 8), opcionesBarras("Mejora de cada índice")),
+    "c2-q2": () => Graficas.barras($("#c2-q2"), P.q2, opcionesBarras("Mejora de cada variable climática")),
+    "c2-q3": () => {
+      const primeras = P.q3.slice(0, 4);
+      const combos = [...primeras, ...P.q3_solas.filter((s) => !primeras.some((c) => c.nombre === s.nombre)).slice(0, 3)];
+      return Graficas.puntosError($("#c2-q3"), combos, [{ valor: P.rmse_ubicacion, texto: "ubicación", clase: "" }]);
     },
   };
-  const dibujado = new Set();
+  const estadoGrafica = new Map(); // id -> { entrada, revelada }
 
-  const observarSecciones = new IntersectionObserver(
-    (entradas) => {
-      entradas.forEach((e) => {
-        if (!e.isIntersecting) return;
-        const id = e.target.id;
-        if (dibujos[id] && !dibujado.has(id)) {
-          dibujado.add(id);
-          dibujos[id]();
-        }
-      });
-    },
-    { rootMargin: "0px 0px -20% 0px" }
+  // Se dibuja antes de entrar en pantalla, con sus animaciones en pausa (clase c2-en-espera),
+  // para que la página no salte; al volver a dibujar (cambio de tamaño) ya no se anima.
+  function dibujarGrafica(id, redibujo = false) {
+    const caja = document.getElementById(id);
+    const revelada = Boolean(estadoGrafica.get(id) && estadoGrafica.get(id).revelada);
+    caja.classList.toggle("c2-sin-animacion", redibujo && revelada);
+    const r = GRAFICAS[id]();
+    const entrada = r && typeof r.entrada === "function" ? r.entrada : null;
+    estadoGrafica.set(id, { entrada, revelada });
+    if (revelada) {
+      if (entrada) entrada(false);
+    } else caja.classList.add("c2-en-espera");
+  }
+
+  function revelarGrafica(id) {
+    const e = estadoGrafica.get(id);
+    if (!e || e.revelada) return;
+    e.revelada = true;
+    document.getElementById(id).classList.remove("c2-en-espera");
+    if (e.entrada) e.entrada(!Paleta.movimientoReducido());
+  }
+
+  const prepararGraficas = new IntersectionObserver(
+    (entradas) => entradas.forEach((e) => e.isIntersecting && !estadoGrafica.has(e.target.id) && dibujarGrafica(e.target.id)),
+    { rootMargin: "0px 0px 70% 0px" } // con casi una pantalla de anticipación
   );
-  Object.keys(dibujos).forEach((id) => observarSecciones.observe(document.getElementById(id)));
+  const revelarGraficas = new IntersectionObserver(
+    (entradas) => entradas.forEach((e) => {
+      if (!e.isIntersecting) return;
+      if (!estadoGrafica.has(e.target.id)) dibujarGrafica(e.target.id);
+      revelarGrafica(e.target.id);
+    }),
+    { threshold: 0.2 } // arranca cuando se ve una quinta parte de la gráfica
+  );
+  Object.keys(GRAFICAS).forEach((id) => {
+    const caja = document.getElementById(id);
+    prepararGraficas.observe(caja);
+    revelarGraficas.observe(caja);
+  });
+
+  // Cifras de resultados (±0.50, 8 de 10, 65 %): aparecen y cuentan desde cero
+  function contar(nodo, ms, retraso) {
+    const final = nodo.textContent.trim();
+    const valor = parseFloat(final);
+    if (!Number.isFinite(valor)) return;
+    const dec = (final.split(".")[1] || "").length;
+    nodo.textContent = fmt(0, dec);
+    setTimeout(() => {
+      const t0 = performance.now();
+      const paso = (ahora) => {
+        const k = Math.min(1, (ahora - t0) / ms);
+        nodo.textContent = k < 1 ? fmt(valor * (1 - Math.pow(1 - k, 3)), dec) : final;
+        if (k < 1) requestAnimationFrame(paso);
+      };
+      requestAnimationFrame(paso);
+    }, retraso);
+  }
+  const observarCifras = new IntersectionObserver(
+    (entradas, obs) => entradas.forEach((e) => {
+      if (!e.isIntersecting) return;
+      obs.unobserve(e.target);
+      e.target.classList.add("visible");
+      if (!Paleta.movimientoReducido()) $$("[data-cifra]", e.target).forEach((n, i) => contar(n, 1100, 150 + i * 180));
+    }),
+    { threshold: 0.4 }
+  );
+  $$(".c2-cifras").forEach((c) => observarCifras.observe(c));
 
   let temporizadorTamano;
   let anchoPrevio = window.innerWidth;
@@ -342,7 +401,7 @@
       const cruzaMovil = (anchoPrevio <= 900) !== movil();
       anchoPrevio = window.innerWidth;
       if (cruzaMovil) vigilarPasos();
-      dibujado.forEach((id) => dibujos[id]());
+      estadoGrafica.forEach((_, id) => dibujarGrafica(id, true));
       if (curvaDibujada) dibujarCurva();
     }, 250);
   });

@@ -298,8 +298,8 @@ function montarNavegacion() {
   const actual = document.body.dataset.page;
   const enlaces = [
     ["home", "index.html", "Introducción"],
-
     ["modelo", "modelo.html", "Modelo"],
+    ["credito", "credito.html", "Crédito"],
   ];
 
   const radios = (nombre, opciones, valorActual) =>
