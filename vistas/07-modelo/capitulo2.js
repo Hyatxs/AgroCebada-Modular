@@ -388,7 +388,13 @@
     let tPrevio = 0;
 
     const ancha = () => window.innerWidth >= 1000;
-    const ESCALA = 0.3;
+    const ESCALA = 0.3; // en reposo
+    const ESCALA_HABLANDO = 0.44; // mientras tiene globo de diálogo
+    let escalaActual = ESCALA;
+    let hablando = false;
+    let ultimoLugar = null;
+    // Tiempo para leer el globo después de que termina de escribirse: ~85 ms por letra, mínimo 6 s
+    const tiempoLectura = (texto) => Math.max(6000, texto.length * 85);
 
     function iniciar() {
       if (!disponible || !ancha()) return;
@@ -418,17 +424,17 @@
         const texto = $(".c2-paso.activo .c2-texto");
         if (!texto) return null;
         const r = texto.getBoundingClientRect();
-        const y = window.innerHeight - 64;
-        if (r.bottom > y - 150) return null; // el globo taparía el texto
-        return { x: r.left + 30, y };
+        const y = window.innerHeight - 80;
+        if (r.bottom > y - 170) return null; // el globo taparía el texto
+        return { x: r.left + 30, y, zona: "historia" };
       }
       // Arriba a la derecha de la etiqueta de la sección: el globo queda en el margen superior
       for (const id of ["c2-modelos", "c2-resultados", "c2-preguntas", "c2-cierre"]) {
         const etiqueta = document.querySelector(`#${id} .kicker`);
         const r = etiqueta.getBoundingClientRect();
-        if (r.top > 150 && r.top < window.innerHeight * 0.7) {
+        if (r.top > 90 && r.top < window.innerHeight * 0.85) {
           const ancho = document.querySelector(`#${id} .c2-ancho`).getBoundingClientRect();
-          return { x: ancho.right - 60, y: r.top - 24 };
+          return { x: ancho.right - 60, y: r.top - 24, zona: id };
         }
       }
       return null;
@@ -439,13 +445,20 @@
       const dt = Math.min(0.05, t - tPrevio);
       tPrevio = t;
       if (escena) {
-        const lugar = ancha() ? lugarLibre() : null;
+        // Mientras habla se queda en su último lugar libre, para no cortar el diálogo
+        // (solo dentro de la historia, donde la escena está fija y ese lugar sigue libre)
+        let lugar = ancha() ? lugarLibre() : null;
+        const enHistoria = $("#c2-historia").getBoundingClientRect().bottom > window.innerHeight * 0.6;
+        if (!lugar && hablando && enHistoria && ultimoLugar && ultimoLugar.zona === "historia") lugar = ultimoLugar;
+        if (lugar) ultimoLugar = lugar;
         escena.estado.visible = Boolean(lugar);
+        escalaActual += ((hablando ? ESCALA_HABLANDO : ESCALA) - escalaActual) * Math.min(1, dt * 5);
         if (lugar) {
           const n = aNdc(lugar);
-          escena.mover(n.x, n.y, ESCALA);
+          escena.mover(n.x, n.y, escalaActual);
         } else if (Narrador.escribiendo || $("#bubble").classList.contains("visible")) {
           Narrador.callar();
+          hablando = false;
         }
         escena.actualizar(t, dt);
         escena.render();
@@ -459,8 +472,14 @@
       if (dichos.has(clave)) return;
       dichos.add(clave);
       clearTimeout(temporizador);
-      Narrador.decir(elemento.dataset.say).then(() => {
-        temporizador = setTimeout(() => Narrador.callar(), 4200);
+      hablando = true;
+      const dicho = elemento.dataset.say;
+      Narrador.decir(dicho).then((completo) => {
+        if (!completo) return; // lo interrumpió otro diálogo
+        temporizador = setTimeout(() => {
+          Narrador.callar();
+          hablando = false;
+        }, tiempoLectura(dicho));
       });
       escena.saltito();
     }
