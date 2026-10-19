@@ -12,6 +12,8 @@
     />
     <link rel="stylesheet" href="vistas/compartido/styles.css" />
     <link rel="stylesheet" href="vistas/01-introduccion/estilos.css" />
+    <link rel="stylesheet" href="vistas/02-territorio/estilos.css" />
+    <link rel="stylesheet" href="vistas/03-crecimiento/estilos.css" />
 </head>
 
 <body data-page="home" data-cursor="on">
@@ -348,6 +350,36 @@
         </div>
     </section>
 
+     <!-- 02 · Territorio (código en vistas/02-territorio/) -->
+    <section
+            class="section margen-mascota"
+            id="territorio"
+            data-say="No en cualquier lugar crezco bien. Elige un estado y te cuento qué tiene su tierra que me gusta, y qué me complica."
+    >
+        <div class="block wide territorio">
+            <h2>¿Dónde crece mejor la cebada?</h2>
+            <p>
+                Las parcelas del reto están en Puebla, Tlaxcala e Hidalgo. Elige un estado y descubre qué tiene su tierra que le gusta a la cebada.
+            </p>
+            <div class="terr-panel" id="territorio-demo"></div>
+        </div>
+    </section>
+
+    <!-- 03 · Crecimiento (código en vistas/03-crecimiento/) -->
+    <section
+            class="section margen-mascota"
+            id="crecimiento"
+            data-say="Así crezco en un año: me siembran con las lluvias, llego a mi pico de verde y termino dorada, lista para la cosecha."
+    >
+        <div class="block wide crecimiento">
+            <h2>De la siembra a la cosecha</h2>
+            <p>
+                Una temporada de cebada de temporal, etapa por etapa. Avanza a tu ritmo.
+            </p>
+            <div class="crec-panel" id="crecimiento-demo"></div>
+        </div>
+    </section>
+    
     <section
             class="section margen-mascota"
             id="factores"
@@ -394,6 +426,10 @@
 <script src="vistas/compartido/data.js"></script>
 <script src="vistas/compartido/modelo-core.js"></script>
 <script src="vistas/compartido/mascota.js"></script>
+<script src="vistas/compartido/estados.js"></script>
+<script src="vistas/02-territorio/siluetas-estados.js"></script>
+<script src="vistas/02-territorio/seccion-territorio.js"></script>
+<script src="vistas/03-crecimiento/seccion-crecimiento.js"></script>
 <script src="vistas/01-introduccion/factores.js"></script>
 <script src="vistas/01-introduccion/home.js"></script>
 </body>

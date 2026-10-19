@@ -1,1 +1,358 @@
 /* Estilos propios de esta sección. Los estilos heredados viven en /styles.css. */
+/* Estilos propios de esta sección. Los estilos heredados viven en /styles.css. */
+
+/* ==========================================================================
+   Vista principal · sección «Territorio» (seccion-territorio.js)
+   Todas las clases empiezan con .terr- para no chocar con otras secciones.
+   ========================================================================== */
+
+/* A todo lo ancho de la pantalla */
+#territorio.section {
+  padding-inline: clamp(12px, 2.5vw, 40px);
+}
+
+#territorio .block {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+}
+
+.territorio h2 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
+.territorio > p {
+  max-width: 62ch;
+}
+
+.terr-panel {
+  pointer-events: auto;
+  margin-top: 1rem;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+}
+
+.terr-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: clamp(1rem, 2.5vw, 2.2rem);
+  align-items: center;
+}
+
+/* --- Mapa --- */
+
+.terr-mapa {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.terr-mapa svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  --escala: 1;
+}
+
+.terr-mar {
+  fill: var(--sky);
+}
+
+.terr-vecino {
+  fill: var(--line);
+  fill-opacity: 0.3;
+  stroke: var(--ink);
+  stroke-opacity: 0.22;
+  stroke-width: calc(0.8px * var(--escala));
+}
+
+.terr-vecino-nombre {
+  font: 600 calc(9px * var(--escala)) "DM Sans", sans-serif;
+  fill: var(--ink);
+  opacity: 0.4;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.terr-estado {
+  cursor: pointer;
+}
+
+.terr-estado path {
+  fill: var(--green);
+  fill-opacity: 0.5;
+  stroke: var(--sky);
+  stroke-width: calc(1.6px * var(--escala));
+  transition: fill 0.3s, fill-opacity 0.3s;
+}
+
+.terr-estado:hover path {
+  fill-opacity: 0.85;
+}
+
+.terr-estado.activo path {
+  fill: var(--gold);
+  fill-opacity: 1;
+  stroke: var(--ink);
+  stroke-width: calc(2px * var(--escala));
+}
+
+.terr-estado text {
+  font: 700 calc(12px * var(--escala)) "DM Sans", sans-serif;
+  fill: var(--ink);
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: var(--sky);
+  stroke-width: calc(3px * var(--escala));
+  pointer-events: none;
+}
+
+.terr-pin {
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.terr-pin circle {
+  fill: var(--sky);
+  stroke: var(--rosa);
+  stroke-width: 3;
+}
+
+.terr-pin text {
+  font-size: 20px;
+}
+
+.terr-tabs {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.terr-tabs button {
+  padding: 0.35rem 1rem;
+  background: var(--card);
+  backdrop-filter: blur(8px);
+}
+
+.terr-tabs button.active {
+  background: var(--green);
+  color: var(--sky);
+}
+
+.terr-alejar {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.82rem;
+  background: var(--card);
+}
+
+.terr-nota {
+  position: absolute;
+  left: 14px;
+  bottom: 10px;
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+/* --- Información --- */
+
+.terr-lema {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--rosa);
+}
+
+.terr-info h3 {
+  margin: 0.1rem 0 0.35rem;
+  font: 800 clamp(1.8rem, 3.6vw, 2.6rem) / 1 "Fraunces", Georgia, serif;
+  color: var(--green);
+}
+
+.terr-info p {
+  margin: 0 0 0.6rem;
+  line-height: 1.45;
+}
+
+.terr-pregunta {
+  margin-top: 1rem !important;
+  font-weight: 600;
+}
+
+.terr-factores {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.terr-factor {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.7rem 0.3rem 0.55rem;
+  border-radius: 16px;
+  font-size: 0.82rem;
+  transition: transform 0.2s;
+}
+
+.terr-factor:hover {
+  transform: translateY(-3px);
+}
+
+.terr-factor-icono {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.terr-marca {
+  position: absolute;
+  top: -7px;
+  right: -5px;
+  display: grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fdfbf7;
+  background: #5e7f57;
+  border: 2px solid var(--sky);
+}
+
+.terr-marca.ojo {
+  background: #e3a850;
+  color: #3f4a3c;
+}
+
+.terr-detalle {
+  margin-top: 0.8rem;
+  min-height: 7.5em;
+}
+
+.terr-detalle.entra {
+  animation: terr-entra 0.35s ease-out;
+}
+
+@keyframes terr-entra {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.terr-comparar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.terr-comparar div {
+  padding: 0.6rem 0.8rem;
+  background: var(--sky);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--green);
+  border-radius: 12px;
+}
+
+.terr-comparar div.ojo {
+  border-left-color: var(--gold);
+}
+
+.terr-comparar small {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+
+.terr-comparar b {
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.terr-porque {
+  margin: 0.5rem 0 0 !important;
+  font-size: 0.88rem;
+  opacity: 0.85;
+}
+
+.terr-pie {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.8rem;
+  font-size: 0.82rem;
+}
+
+.terr-pie b {
+  color: var(--green);
+}
+
+.terr-consejo-btn {
+  padding: 0.25rem 0.9rem;
+  font-size: 0.82rem;
+}
+
+.terr-consejo {
+  margin-top: 0.5rem !important;
+  padding: 0.55rem 0.8rem;
+  border-left: 5px solid var(--gold);
+  background: var(--sky);
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.territorio .fuente {
+  display: block;
+  margin-top: 0.8rem;
+}
+
+@media (max-width: 900px) {
+  .terr-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .terr-factores {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .terr-comparar {
+    grid-template-columns: 1fr;
+  }
+
+  .terr-mapa {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .terr-tabs {
+    position: static;
+    order: -1;
+    justify-content: center;
+    padding: 8px;
+  }
+
+  .terr-tabs button {
+    padding: 0.25rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
