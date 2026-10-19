@@ -1,1 +1,258 @@
 /* Estilos propios de esta sección. Los estilos heredados viven en /styles.css. */
+/* Estilos propios de esta sección. Los estilos heredados viven en /styles.css. */
+
+/* ==========================================================================
+   Vista principal · sección «Crecimiento» (seccion-crecimiento.js)
+   Todas las clases empiezan con .crec- para no chocar con otras secciones.
+   ========================================================================== */
+
+/* A todo lo ancho de la pantalla */
+#crecimiento.section {
+  padding-inline: clamp(12px, 2.5vw, 40px);
+}
+
+#crecimiento .block {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+}
+
+.crecimiento h2 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
+.crecimiento > p {
+  max-width: 62ch;
+}
+
+.crec-panel {
+  pointer-events: auto;
+  margin-top: 1rem;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+}
+
+.crec-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: center;
+}
+
+.crec-escena {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+
+.crec-escena text {
+  font: 600 11px "DM Sans", sans-serif;
+  fill: var(--ink);
+}
+
+/* --- Tarjeta de la etapa --- */
+
+.crec-tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  background: var(--sky);
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--gold);
+  border-radius: 20px;
+}
+
+.crec-tarjeta.entra {
+  animation: crec-entra 0.4s ease-out;
+}
+
+@keyframes crec-entra {
+  from {
+    opacity: 0.2;
+    transform: translateY(10px);
+  }
+}
+
+.crec-arriba {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  opacity: 0.85;
+}
+
+.crec-mes {
+  font-weight: 600;
+  color: var(--rosa);
+}
+
+.crec-marca {
+  align-self: flex-start;
+  padding: 0.05rem 0.6rem;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #3f4a3c;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.crec-tarjeta h3 {
+  margin: 0;
+  font: 800 clamp(1.7rem, 3.4vw, 2.4rem) / 1.05 "Fraunces", Georgia, serif;
+  color: var(--green);
+}
+
+.crec-tarjeta p {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  min-height: 4.5em;
+}
+
+.crec-botones {
+  display: flex;
+  gap: 8px;
+  margin-top: 0.3rem;
+}
+
+.crec-sig {
+  flex: 1;
+}
+
+.crec-sig.lista {
+  background: var(--green);
+  color: var(--sky);
+  animation: crec-latido 1.8s ease-in-out infinite;
+}
+
+@keyframes crec-latido {
+  50% {
+    box-shadow: 0 0 0 6px rgba(226, 125, 154, 0.25);
+  }
+}
+
+.crec-todo {
+  align-self: flex-start;
+  padding: 0.2rem 0.8rem;
+  border: 0;
+  background: transparent;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- Línea de pasos --- */
+
+.crec-pasos {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crec-pasos::before {
+  content: "";
+  position: absolute;
+  top: 2.05rem;
+  left: 6%;
+  right: 6%;
+  height: 3px;
+  background: var(--line);
+}
+
+.crec-pasos button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  width: 100%;
+  padding: 0.3rem 0.1rem;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
+.crec-pasos button:hover {
+  background: transparent;
+  color: var(--ink);
+}
+
+.crec-pasos em {
+  position: absolute;
+  top: -0.6rem;
+  font-size: 0.66rem;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--rosa);
+}
+
+.crec-punto {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-top: 0.5rem;
+  border-radius: 50%;
+  border: 2px solid var(--green);
+  background: var(--sky);
+  color: var(--green);
+  font-weight: 700;
+  transition: transform 0.25s;
+}
+
+.crec-pasos button:hover .crec-punto {
+  transform: scale(1.12);
+}
+
+.crec-pasos li.hecha .crec-punto {
+  background: var(--green);
+  color: var(--sky);
+}
+
+.crec-pasos li.activa .crec-punto {
+  background: var(--rosa);
+  border-color: var(--rosa);
+  color: #fdfbf7;
+  transform: scale(1.18);
+}
+
+.crec-paso-nombre {
+  font-weight: 600;
+}
+
+.crec-pasos small {
+  opacity: 0.65;
+}
+
+.crecimiento .fuente {
+  display: block;
+  margin-top: 0.8rem;
+}
+
+@media (max-width: 900px) {
+  .crec-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .crec-paso-nombre,
+  .crec-pasos small {
+    display: none;
+  }
+
+  .crec-pasos em {
+    font-size: 0.6rem;
+  }
+}
