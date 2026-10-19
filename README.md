@@ -1,136 +1,107 @@
-#  FIRA 2026 (Reto AgroCebada)
+# Cebada-verse · FIRA 2026 (Reto AgroCebada)
 
-Experiencia web para contar la historia de la cebada y predecir el rendimiento de 197 parcelas
-de Puebla, Tlaxcala e Hidalgo. Es HTML, CSS y JavaScript sin compilar: Three.js r128 se carga
-desde cdnjs y las fuentes desde Google Fonts, así que se necesita internet.
+Experiencia web en tres capítulos que cuenta la historia de la cebada y predice el rendimiento de las
+197 parcelas del reto en Puebla, Tlaxcala e Hidalgo (138 con rendimiento conocido y 59 por predecir).
+
+Es HTML, CSS y JavaScript sin compilar. Todo se calcula en el navegador: **no necesita backend**.
+Three.js r128 (la mascota) se carga desde cdnjs y las fuentes desde Google Fonts. Sin internet las
+páginas funcionan, pero sin la mascota y con otra tipografía.
+
+Proyecto del Equipo Representativo STEM · UDLAP.
 
 ## Cómo abrirlo
 
-1. Descomprime la carpeta.
-2. Abre `index.html` en el navegador (o sirve la carpeta: `python -m http.server`).
+Desde la raíz del proyecto:
+
+```
+python -m http.server 5500
+```
+
+y abre `http://localhost:5500/`. No lo abras con doble clic (`file://`): las páginas usan
+`<base href>` y rutas relativas que necesitan un servidor.
 
 ## Páginas
 
-| Página | Qué hace |
-| --- | --- |
-| `index.html` | Storytime. **Capítulo 1:** historia, números, espiga (los granos caen al suelo y se quedan), línea del tiempo, usos y factores de crecimiento. **Capítulo 2:** por qué este modelo y botón para activarlo. Al final, la mascota se coloca en el espacio en blanco de «Tu turno». |
-| `mapa.html` | Contexto de la parcela → mapa de México (arrastrable y con zoom libre) → salto de la mascota → campo con parcelas. Sin scroll. |
-| `modelo.html` | Línea del tiempo de 6 pasos con botones «Anterior / Siguiente» y botón **Iniciar modelo**. |
-| `glosario.html` | Términos de variables, datos y modelo, con buscador. |
-| `referencias.html` | Fuentes de cada cifra. |
+| Capítulo | Página | Qué cuenta |
+| --- | --- | --- |
+| 1 · La cebada y su territorio | `vistas/01-introduccion/index.html` (`index.html`) | Origen de la cebada con un globo que viaja del Creciente Fértil a México; qué es la cebada (2 y 6 hileras); producción en México; dónde están las parcelas del reto; cómo crece, de la siembra a la cosecha; y 2025, un año atípico (siembras tempranas y tardías). |
+| 2 · El modelo | `vistas/07-modelo/index.html` (`modelo.html`) | Las dos pistas del modelo (municipio y parcelas vecinas) en una maqueta 3D, un simulador que predice parcela por parcela, la comparación de 10 modelos, los resultados y las preguntas guía. |
+| 3 · Del rendimiento al crédito | `vistas/08-credito/index.html` (`credito.html`) | Cómo leería un banco las predicciones: P20, punto de equilibrio, cobertura del crédito y riesgo; simulador con precio, costo y tasa; y la cartera de las 59 parcelas, descargable en CSV. |
+| Referencias | `vistas/06-interpretacion/referencias.html` (`referencias.html`) | Única bibliografía del sitio: fuentes numeradas y agrupadas por tema. Los capítulos las citan con números pequeños que abren la fuente. |
 
-Menú desplegable (en todas): Glosario, Referencias, Tema (automático / claro / oscuro),
-Accesibilidad (daltonismo) y «Reducir movimiento».
+Los archivos `.html` de la raíz solo redirigen a la página de su carpeta. Para cambiar una página,
+edita la de `vistas/`.
 
-## Storytime
+**Barra superior (en todas):** Introducción, Modelo, Crédito, **Diccionario** (glosario de términos;
+las palabras marcadas en el texto se pueden tocar) y **Preferencias**: Referencias, tema
+(automático / claro / oscuro), daltonismo (protanopia, deuteranopia, tritanopia) y «Reducir movimiento».
 
-- **Cursor:** una semilla de cebada en 2D con contorno oscuro y halo claro; crece sobre botones,
-  enlaces y estados del mapa.
-- **Auroras:** cuatro manchas de color difuminadas, con movimiento lento y opacidad baja, que se
-  desplazan un poco con el scroll (`#aurora`). Se detienen con «Reducir movimiento».
-- **Espiga:** los granos se desprenden de arriba hacia abajo, caen con gravedad y rebote, y quedan
-  tirados de lado en el suelo (`crearPlanta` en `mascota.js`).
-- **Usos:** título «05 · Destinos» y tres filas unidas por un hilo, con el rango de rendimiento.
-- **Factores (`factores.js`):** una parcela real por estado (la conocida más cercana a la mediana
-  de su estado). Una planta crece con los índices de 2025, las curvas se dibujan con la semana y
-  cuatro tarjetas explican por qué se relacionan las variables, con la correlación calculada con
-  esa parcela. Si una relación sale débil o inversa, la tarjeta lo dice.
-- **Capítulo 2 (`capitulo2.js`):** justificación con cifras reales y botón «Activar el modelo».
-  Al activarlo se corre el modelo, se muestran R², RMSE, validación cruzada, rango de las
-  predicciones y las variables que más pesan, y se guarda en la sesión que el modelo ya corrió.
+## El modelo
 
-## Flujo del mapa
-
-1. **Contexto:** la primera mascota explica qué es una parcela con cifras reales.
-2. **Mapa:** México más grande, con los 32 estados. Se arrastra para moverlo, se hace zoom con la
-   rueda, el pellizco, las teclas `+` / `−` o los botones de la izquierda (⌂ restablece la vista).
-   Al acercarse aparecen los nombres de los estados. Se elige Puebla, Tlaxcala o Hidalgo en la
-   lista o tocando el estado sobre el mapa.
-3. **Viaje:** se resalta el estado, la cebada cuenta un dato suyo, salta girando y se encoge a la
-   escala del estado. Entra sola al campo (hay botón «Entrar ya»).
-4. **Campo:** la mascota cuenta cómo creció la cebada con la barra de semanas oculta. Mientras
-   tanto aparece el botón **«Saltar explicación»** (también con `Esc`).
-5. **Parcelas:** clic (o flechas ← →) para seleccionar. Las **rayadas** son las que hay que
-   predecir. Las acciones (cambiar estado, vista general, ver cómo creció, predecir todas) están
-   en un **menú lateral** de alto contraste que se puede ocultar con «◂ Ocultar menú».
-6. **Cosecha:** «¿A dónde va mi cosecha?» anima el viaje del grano según el rendimiento
-   (≥ 4.5 t/ha → maltería; 3.5–4.5 → alimento y harinas; < 3.5 → forraje). Es una regla didáctica.
-
-## El modelo (`modelo-core.js`)
-
-Regresión **ridge** sobre 7 variables: promedios de NDVI, EVI, LAI, FAPAR y DSWI en ventanas
-del ciclo (semanas 15–25, 31–41, 42–52). Se entrena solo con las 138 parcelas de rendimiento
-conocido. Todo se calcula en el navegador a partir de `data.js`.
-
-Resultados con los datos actuales (λ = 3):
-
-- Partición 70/30: R² ≈ 0.42, RMSE ≈ 0.58 t/ha.
-- Validación cruzada dejando una fuera: R² ≈ 0.35, RMSE ≈ 0.69 t/ha (la desviación natural es 0.85).
-
-Es una **línea base**. Las ventanas se eligieron explorando las mismas parcelas conocidas, así que
-estos números pueden salir algo optimistas.
-
-## Qué es real y qué es simulado
-
-- **Real:** 197 polígonos (IDs), áreas, rendimientos de entrenamiento, curvas semanales de NDVI,
-  EVI, LAI (Planet), FAPAR y DSWI (Sentinel-2) de 2025, nubosidad.
-- **Simulado:** clima semanal (Tmín, amplitud, GDD), tipo de suelo, eventos de estrés, y la
-  ilustración «datos crudos» del paso de limpieza.
-- **Ilustrativo:** la posición de las parcelas en el campo (los CSV no traen coordenadas).
-
-## Mapa de México
-
-`estados.js` define los 32 estados con **tramos de frontera compartidos** (`CADENAS`): dos vecinos
-usan exactamente los mismos puntos, así que no se empalman ni dejan huecos. Los estados costeros
-se extienden un poco al mar y se recortan con `CONTORNO_MEXICO`. En `mapa.js`, `dibujarTexturaMexico`
-pinta los estados en una textura de 4096 × 2048 que se pega sobre la esfera (relleno, fronteras y
-costa nítidos a cualquier zoom).
-
-Las fronteras están **dibujadas a mano y son aproximadas**. Para fronteras exactas, reemplaza
-`ESTADOS_MEXICO[].anillo` por coordenadas `[lon, lat]` de un GeoJSON de INEGI o Natural Earth
-(el resto del código no cambia).
-
-## Accesibilidad
-
-- Temas claro, oscuro y automático.
-- Daltonismo: protanopia, deuteranopia y tritanopia. Las parcelas por predecir llevan además un
-  **rayado**, para no depender solo del color.
-- Enlace «Saltar al contenido», foco visible, texto del narrador también para lectores de
-  pantalla, parcelas navegables con ← →, y «Reducir movimiento» (también respeta la preferencia
-  del sistema).
-- Las preferencias se guardan en el navegador.
-
-## Archivos
+El modelo final es un **GP jerárquico** (NB07):
 
 ```
-index.html  mapa.html  modelo.html  glosario.html  referencias.html
-styles.css           estilos compartidos
-common.js            utilidades, temas, daltonismo, menú, cursor de semilla
-mascota.js           grano de cebada 3D, planta con espiga, narrador
-home.js              storytelling (scroll, auroras, mascota)
-factores.js          animación de factores de la parcela (storytime)
-capitulo2.js         justificación y activación del modelo (storytime)
-mapa.js              globo, estados, zoom, campo, parcelas, predicción, cosecha
-estados.js           contorno de México y los 32 estados (fronteras compartidas)
-modelo-core.js       regresión ridge y métricas (sin dependencias)
-modelo.js            línea del tiempo del modelo
-data.js              datos (generado por prep_data.py)
-paises.js            contornos para el globo
-prep_data.py         genera data.js a partir de los CSV del reto
+rendimiento = promedio de las 138 conocidas + efecto del municipio + ajuste de las vecinas + ruido
 ```
+
+- Se calcula en el navegador con `vistas/07-modelo/motor-hgp.js` y reproduce las 59 predicciones
+  entregadas (diferencias ≤ 0.0002 t/ha).
+- Validación (10 repeticiones × 5 particiones): **RMSE 0.50 t/ha, R² 0.65**; el rendimiento varía
+  ±0.85 t/ha entre parcelas. El rango P10–P90 contuvo el valor real en 8 de cada 10 parcelas.
+- En zonas sin vecinas conocidas (validación espacial) el error sube a ±0.66 t/ha.
+- Todas las cifras salen de `vistas/07-modelo/datos-modelo.js`, generado a partir de las salidas
+  oficiales del NB07. No se edita a mano.
+
+Detalle completo en `vistas/07-modelo/LEEME.md`.
+
+## Datos
+
+- **Del reto:** 197 polígonos, áreas, rendimientos de entrenamiento e índices de satélite de 2025
+  (NDVI, EVI y LAI de Planet; FAPAR y DSWI de Sentinel-2).
+- **Clima:** lluvia CHIRPS y temperatura CHIRTS-ERA5 por parcela; altitud INEGI.
+- **Fenología:** fechas de inicio, pico y fin del verdor por parcela (NB03).
+- **Mapas:** contornos de Natural Earth (simplificados).
+- **Aproximado:** las etapas del cultivo (siembra, floración, cosecha) se reparten entre el inicio, el
+  pico y el fin del verdor, porque el reto no trae fechas de siembra ni de cosecha. En el capítulo 2 las
+  parcelas se acomodan en una maqueta compacta: su forma es real, pero las distancias en pantalla no
+  (el modelo usa siempre las coordenadas reales).
+
+Las cifras de contexto (producción, precios, costos, tasas) y su fuente están en `referencias.html`.
+
+## Estructura
+
+```
+index.html  modelo.html  credito.html  referencias.html    redirecciones a vistas/
+vistas/
+  01-introduccion/   capítulo 1: globo (d3-geo), índice, 2025 atípico
+  03-crecimiento/    campo pintado que crece (lo usa el capítulo 1)
+  02-territorio/     sección «¿Dónde crece mejor la cebada?» (hoy fuera del capítulo 1)
+  06-interpretacion/ referencias
+  07-modelo/         capítulo 2: motor del modelo, escena 3D, simulador, gráficas
+  08-credito/        capítulo 3: crédito, simulador y cartera
+  compartido/        estilos, utilidades, mascota, diccionario, datos (data.js)
+backend/             API de FastAPI de la versión anterior (las páginas actuales no la usan)
+```
+
+Cada carpeta de `vistas/` tiene un `LEEME.md` con sus archivos, decisiones y cómo regenerar sus datos.
 
 ## Regenerar los datos
 
-```
-pip install pandas numpy
-python prep_data.py carpeta_con_los_csv
-```
+- Capítulo 2 y 3 (modelo): ver `vistas/07-modelo/LEEME.md` (`exportar_datos_modelo.py` y `verificar_motor.js`).
+- Capítulo 1 (globo y 2025): `vistas/01-introduccion/herramientas/` (`exportar_mapa_inicio.py`, `exportar_temporada.py`).
+- Requieren `numpy` y `pandas`.
 
-## Cifras de contexto
+## Trabajo en equipo
 
-Las cifras del storytelling (4.º cereal, +900 mil t, +25 mil familias, 2.6 t/ha, participación
-de estados en 2011, Hidalgo mayor productor desde 2023) están en `referencias.html`. Revísalas
-antes de citarlas: algunas son de años distintos.
+- Una rama por cambio (`git switch -c nombre-del-cambio`) y pull request a `main`. No se hace push
+  directo a `main`.
+- Cada quien trabaja en su carpeta de `vistas/`. Los archivos de `vistas/compartido/` los usan todas
+  las páginas: avisa al equipo antes de cambiarlos.
+- No subir `.venv`, `__pycache__`, `.env` ni respaldos.
 
+## Accesibilidad
 
-**Nueva estructura por vistas:** leer `GUIA_SEPARACION_REAL.md`. Las páginas de raíz son redirecciones de compatibilidad.
+- Temas claro, oscuro y automático; tres modos de daltonismo.
+- «Reducir movimiento» detiene giros y animaciones (también respeta la preferencia del sistema).
+- Enlace «Saltar al contenido» y foco visible.
+- Las preferencias se guardan en el navegador.
