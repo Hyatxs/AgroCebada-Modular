@@ -82,7 +82,7 @@ function animar(milisegundos) {
 window.addEventListener("resize", escenaHome.ajustar);
 
 
-$("#hero-title").innerHTML = "BARLEY BOT"
+$("#hero-title").innerHTML = "CEBADA-VERSE"
   .split("")
   .map(
     (letra, i) =>
