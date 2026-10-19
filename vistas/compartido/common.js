@@ -329,7 +329,6 @@ function montarNavegacion() {
       <button id="menu-btn" class="ui" aria-haspopup="true" aria-expanded="false"
               aria-controls="menu-panel">Preferencias ▾</button>
       <div id="menu-panel" class="menu-panel" hidden>
-        <a href="glosario.html" class="menu-enlace">📖 Glosario</a>
         <a href="referencias.html" class="menu-enlace">🔗 Referencias</a>
         <fieldset>
           <legend>Tema</legend>
