@@ -56,7 +56,9 @@ function llegadaAlFinal() {
 }
 
 // Partes con animación a todo lo ancho («Cómo crece» y «2025»): ahí la mascota se encoge y se hace a un lado
-const seccionesAnimadas = ["#crecimiento", "#temporada"].map((s) => $(s)).filter(Boolean);
+// El pie de página (las referencias) también: ahí la mascota se despide y no tapa la bibliografía
+const seccionesAnimadas = ["#crecimiento", "#temporada", "footer"].map((s) => $(s)).filter(Boolean);
+let mascotaAparte = 0;
 function enAnimacion() {
   const H = window.innerHeight;
   let cubre = 0;
@@ -83,6 +85,7 @@ function actualizarMascotaHome(s) {
   const llegada = llegadaAlFinal();
   const hueco = angosto ? { x: 0.6, y: -0.7, escala: 0.5 } : { x: 0.6, y: -0.2, escala: 0.95 };
   const aparte = enAnimacion();
+  mascotaAparte = aparte;
 
   escenaHome.mover(
     mezcla(mezcla(0, esquina.x, peso), hueco.x, llegada),
@@ -97,6 +100,10 @@ function actualizarMascotaHome(s) {
 const burbujaHome = $("#bubble");
 const textosHome = $$("main .block > *");
 function ubicarBurbuja() {
+  if (burbujaHome && mascotaAparte > 0.5) {
+    burbujaHome.classList.add("sin-lugar");
+    return;
+  }
   if (!burbujaHome || pesoEsquina < 0.5 || !burbujaHome.classList.contains("visible")) {
     if (burbujaHome) burbujaHome.classList.remove("sin-lugar");
     return;

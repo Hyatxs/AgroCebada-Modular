@@ -1909,3 +1909,30 @@ html[data-motion="reduce"] #aurora i {
 .modelo-pasos {
   padding: 0;
 }
+
+/* --- Referencias: números pequeños en el texto que llevan a la lista única ------------- */
+
+sup.cita {
+  margin-left: 0.12em;
+  font-size: 0.62em;
+  line-height: 0;
+  white-space: nowrap;
+}
+
+sup.cita a {
+  color: var(--rosa);
+  font-weight: 700;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+sup.cita a:hover,
+sup.cita a:focus-visible {
+  text-decoration: underline;
+}
+
+footer.pie-referencias a {
+  color: var(--green);
+  font-weight: 600;
+  pointer-events: auto;
+}

@@ -24,7 +24,7 @@ const Diccionario = (() => {
 
   // [id, categoría, término, definición, en este proyecto]
   const TERMINOS = [
-    ["rendimiento", "rend", "Rendimiento (t/ha)", "Toneladas de grano cosechadas por cada hectárea sembrada.", "Es lo que el modelo predice. En las 138 parcelas conocidas va de 2.0 a 5.6 t/ha (ciclo 2025)."],
+    ["rendimiento", "rend", "Rendimiento (t/ha)", "Toneladas de grano que se obtienen por cada hectárea cosechada.", "Es lo que el modelo predice. En las 138 parcelas conocidas va de 2.0 a 5.6 t/ha (ciclo 2025)."],
     ["hectarea", "rend", "Hectárea (ha)", "Diez mil metros cuadrados: un cuadrado de 100 × 100 m.", "La parcela típica del reto mide 5.5 ha."],
     ["parcela", "rend", "Parcela", "Terreno agrícola con límites propios.", "Cada una trae su polígono real (shapefile del reto) y una clave de AGC_001 a AGC_197."],
     ["entrenamiento", "rend", "Parcelas conocidas y por predecir", "Las 138 parcelas con rendimiento conocido enseñan al modelo; las 59 restantes son las que hay que estimar.", "Están intercaladas: la mitad de las parcelas por predecir está a menos de 350 m de una conocida."],
@@ -42,8 +42,8 @@ const Diccionario = (() => {
     ["p20", "credito", "P20 · rendimiento financiable", "Rendimiento que la parcela alcanza o supera con 80 % de confianza.", "Es la cifra prudente para dimensionar un crédito."],
     ["riesgo", "credito", "Nivel de riesgo", "Bajo, medio o alto según cuánto podría caer el rendimiento por debajo de lo esperado.", "Se mide con la caída relativa del P20 frente a la predicción y se divide en tercios."],
     ["conformal", "credito", "Calibración conformal", "Ajuste del ancho del rango con los errores observados, para que cubra lo que promete.", ""],
-    ["equilibrio", "credito", "Punto de equilibrio", "Rendimiento con el que la venta de la cosecha apenas paga el costo de producción: costo por hectárea ÷ precio por tonelada.", "Con $15,755/ha (FIRA, 2025) y $7,500/t (precio pactado en 2025) es de 2.1 t/ha."],
-    ["cobertura", "credito", "Cobertura del costo", "Cuántas veces el valor de la cosecha en un mal año (con su P20) paga lo que cuesta producirla. 1.0 quiere decir que apenas alcanza.", "Con los supuestos de 2025, las 59 parcelas quedan entre 1.15 y 2.1 veces."],
+    ["equilibrio", "credito", "Punto de equilibrio", "Rendimiento con el que la venta de la cosecha apenas paga el crédito: costo de producción más intereses, por hectárea, entre el precio por tonelada.", "Con $15,755/ha (FIRA, Hidalgo 2025), 8.5 % anual a 10 meses y $7,500/t (precio pactado en 2025) es de 2.25 t/ha."],
+    ["cobertura", "credito", "Cobertura del crédito", "Cuántas veces el valor de la cosecha con su rendimiento financiable (P20) paga lo que se debe: costo de producción más intereses. 1.0 quiere decir que apenas alcanza.", "Con los supuestos de referencia, las 59 parcelas quedan entre 1.07 y 1.98 veces."],
     ["credito-avio", "credito", "Crédito de avío", "Crédito de corto plazo para los gastos de un ciclo de cultivo (semilla, fertilizante, labores), que se paga con la cosecha.", ""],
     ["fira", "credito", "FIRA", "Fideicomisos Instituidos en Relación con la Agricultura: cuatro fondos del Gobierno Federal que dan crédito, descuento y garantías al campo a través de bancos y otros intermediarios.", "Convoca el Reto AgroCebada 2026."],
     ["garantia", "credito", "Garantía de crédito", "Respaldo que cubre al banco una parte de la pérdida si un crédito no se paga. Anima a prestar a quien no tiene historial.", "En FIRA las otorga el FEGA."],
@@ -66,7 +66,7 @@ const Diccionario = (() => {
     ["suelo-agua", "suelo", "Agua disponible del suelo", "Agua que el suelo guarda y la planta puede aprovechar.", "Estimada con SoilGrids 2.0 y las ecuaciones de Saxton y Rawls (2006)."],
     ["elevacion", "suelo", "Elevación", "Altura sobre el nivel del mar (INEGI, Continuo de Elevaciones Mexicano).", "Las parcelas están entre unos 2,500 y 2,900 m."],
     ["pendiente", "suelo", "Pendiente", "Inclinación del terreno, en grados.", ""],
-    ["temporada", "ciclo", "Inicio, pico y fin de temporada", "Fechas en que el verdor de la parcela empieza a subir, llega a su máximo y vuelve al nivel del suelo.", "En 2025 la temporada real fue de junio a noviembre."],
+    ["temporada", "ciclo", "Inicio, pico y fin de temporada", "Fechas en que el verdor de la parcela empieza a subir, llega a su máximo y vuelve al nivel del suelo.", "En 2025, el verdor de las parcelas fue de junio a noviembre (mediana: del 18 de junio al 14 de noviembre)."],
   ];
 
   const porId = new Map(TERMINOS.map((t) => [t[0], t]));

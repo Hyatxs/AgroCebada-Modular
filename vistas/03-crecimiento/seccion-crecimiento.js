@@ -113,9 +113,9 @@
       <ol class="crec-pasos" id="crec-pasos" aria-label="Etapas del cultivo"></ol>
     </div>
     <span class="fuente">
-      Fechas y verdor: mediana de las 148 parcelas que reverdecieron primero (Planet, 2025). Nubes: nubosidad semanal
-      de las imágenes Planet. Lluvia: CHIRPS, promedio de la región del reto. Las etapas son aproximadas: el reto no
-      trae fechas de siembra ni de cosecha, así que se reparten entre el inicio, el pico y el fin del verdor.
+      Fechas y verdor: mediana de las 148 parcelas que reverdecieron primero.<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-3" target="_blank" rel="noopener" aria-label="Referencia 3">3</a>, <a href="vistas/06-interpretacion/referencias.html#ref-10" target="_blank" rel="noopener" aria-label="Referencia 10">10</a></sup> Nubes: nubosidad semanal de las
+      imágenes del satélite.<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-3" target="_blank" rel="noopener" aria-label="Referencia 3">3</a></sup> Lluvia: promedio de la región del reto.<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-6" target="_blank" rel="noopener" aria-label="Referencia 6">6</a></sup> Las etapas son aproximadas: el reto no
+      trae fechas de siembra ni de cosecha, así que se reparten entre el inicio, el pico y el fin del verdor.<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-20" target="_blank" rel="noopener" aria-label="Referencia 20">20</a>, <a href="vistas/06-interpretacion/referencias.html#ref-21" target="_blank" rel="noopener" aria-label="Referencia 21">21</a></sup>
     </span>`;
 
   const $c = (id) => document.getElementById(id);

@@ -64,7 +64,7 @@
         <p class="c2-nota-mapa">
           Mapa esquemático: juntamos las 197 parcelas (forma y tamaño reales) para verlas a la vez; las distancias
           en pantalla no son las reales, las de las etiquetas sí. El modelo usa la ubicación real. Relieve según la
-          elevación INEGI de cada parcela, exagerado.
+          elevación INEGI de cada parcela, exagerado.<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-8" target="_blank" rel="noopener" aria-label="Referencia 8">8</a></sup>
         </p>
         </div>
       </div>
@@ -78,7 +78,7 @@
             <p class="c2-entrada">
               Conocemos la cosecha de <b data-cifra="metricas.n_entren">138</b> parcelas y nos faltan
               <b data-cifra="metricas.n_pred">59</b>. Baja para acercarte a ellas: verás cómo las estimamos y
-              después correrás el modelo tú.
+              después correrás el modelo tú.<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-1" target="_blank" rel="noopener" aria-label="Referencia 1">1</a></sup>
             </p>
             <p class="c2-atajos">
               <a href="vistas/07-modelo/index.html#c2-simulador" class="btn principal">Ir al simulador</a>
@@ -151,7 +151,7 @@
             <p>
               Este modelo se llama <span data-termino="gp">proceso gaussiano jerárquico</span>. Sus cuatro
               números (cuánto varían los municipios, cuánto las vecinas, a qué distancia y cuánto ruido hay)
-              los eligió el propio modelo con los datos.
+              los eligió el propio modelo con los datos.<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-10" target="_blank" rel="noopener" aria-label="Referencia 10">10</a>, <a href="vistas/06-interpretacion/referencias.html#ref-22" target="_blank" rel="noopener" aria-label="Referencia 22">22</a></sup>
             </p>
             <p class="c2-pie">Los arcos van de cada vecina a la parcela: verdes si suben la predicción, rosas si la bajan.</p>
           </div>
@@ -235,7 +235,7 @@
         <p class="c2-entrada">
           Escondimos parcelas conocidas, las predijimos y medimos el error. Lo repetimos
           <span data-termino="validacion-cruzada">50 veces</span> con las mismas particiones para todos los
-          modelos. Gana el que se equivoca menos.
+          modelos. Gana el que se equivoca menos.<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-10" target="_blank" rel="noopener" aria-label="Referencia 10">10</a></sup>
         </p>
 
         <div class="c2-segmentado" role="group" aria-label="Tipo de prueba">
@@ -253,12 +253,12 @@
             <span data-cifra="metricas.rmse_base" data-dec="3">0.509</span> del promedio municipal. La ventaja es
             pequeña, y lo decimos tal cual. Lo elegimos porque gana en la prueba que se parece al reto y además
             entrega un <span data-termino="intervalo">rango de confianza</span> calibrado, que es lo que necesita
-            un crédito.
+            un crédito.<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-23" target="_blank" rel="noopener" aria-label="Referencia 23">23</a></sup>
           </p>
           <p>
             Agregar índices de satélite, clima o suelo <b>empeoró</b> todos los modelos que ya conocían la
             ubicación. Con 138 parcelas, esas variables solo ayudan a distinguir una zona de otra, y eso ya lo
-            sabe el municipio.
+            sabe el municipio.<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-3" target="_blank" rel="noopener" aria-label="Referencia 3">3</a>, <a href="vistas/06-interpretacion/referencias.html#ref-4" target="_blank" rel="noopener" aria-label="Referencia 4">4</a>, <a href="vistas/06-interpretacion/referencias.html#ref-5" target="_blank" rel="noopener" aria-label="Referencia 5">5</a>, <a href="vistas/06-interpretacion/referencias.html#ref-6" target="_blank" rel="noopener" aria-label="Referencia 6">6</a>, <a href="vistas/06-interpretacion/referencias.html#ref-7" target="_blank" rel="noopener" aria-label="Referencia 7">7</a>, <a href="vistas/06-interpretacion/referencias.html#ref-9" target="_blank" rel="noopener" aria-label="Referencia 9">9</a></sup>
           </p>
         </div>
         <div class="c2-conclusion" data-esquema-texto="spatial" hidden>
@@ -335,7 +335,7 @@
         <p class="c2-entrada">
           Para contestar, pusimos a competir cada variable por separado <b>sin decirle al modelo dónde está la
           parcela</b>, con la misma validación de 50 pruebas. Medimos cuánto mejora frente a no saber nada
-          (adivinar siempre el promedio).
+          (adivinar siempre el promedio).<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-2" target="_blank" rel="noopener" aria-label="Referencia 2">2</a>, <a href="vistas/06-interpretacion/referencias.html#ref-10" target="_blank" rel="noopener" aria-label="Referencia 10">10</a></sup>
         </p>
 
         <div class="c2-preguntas">
@@ -358,7 +358,7 @@
             <div id="c2-q2"></div>
             <p class="c2-pie">
               Le siguen la temperatura máxima y la <span data-termino="pet">evapotranspiración</span>. El clima
-              informa más que cualquier índice satelital, sobre todo porque cambia de una zona a otra.
+              informa más que cualquier índice satelital, sobre todo porque cambia de una zona a otra.<sup class="cita"><a href="vistas/06-interpretacion/referencias.html#ref-6" target="_blank" rel="noopener" aria-label="Referencia 6">6</a>, <a href="vistas/06-interpretacion/referencias.html#ref-7" target="_blank" rel="noopener" aria-label="Referencia 7">7</a></sup>
             </p>
           </article>
 
@@ -413,11 +413,10 @@
     </section>
   </main>
 
-  <footer class="c2-fuentes">
-    Datos reales del Reto AgroCebada FIRA 2026: 197 polígonos, rendimientos de entrenamiento, Planet, Sentinel-2,
-    Landsat, CHIRPS, CHIRTS-ERA5 e INEGI CEM; suelo de SoilGrids 2.0. Modelo y validación: notebooks NB05–NB07
-    del equipo. Predicciones calculadas en el navegador con <code>motor-hgp.js</code>.
-    <a href="referencias.html">Referencias</a>.
+  <footer class="c2-fuentes pie-referencias">
+    Datos reales del Reto AgroCebada FIRA 2026; modelo y validación: cuadernos NB05–NB07 del equipo. Las predicciones
+    se calculan en el navegador con <code>motor-hgp.js</code>. Los números del texto llevan a las
+    <a href="vistas/06-interpretacion/referencias.html">referencias</a>, una sola lista para los tres capítulos.
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>

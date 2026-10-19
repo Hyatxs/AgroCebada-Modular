@@ -876,11 +876,11 @@ html[data-motion="reduce"] #c1-telon {
   }
 }
 
-/* Título de la portada: cada letra es una pieza aparte, así que sin esto «BARLEY BOT» se partía en
-   «BARLEY BO / T». Se mantiene en una línea y el tamaño se ajusta al ancho. */
+/* Título de la portada: cada letra es una pieza aparte, así que se mantiene en una línea y el tamaño se
+   ajusta al ancho. Medido para «CEBADA-VERSE» (12 letras), para que no se corte a la derecha. */
 .hero #hero-title {
   white-space: nowrap;
-  font-size: clamp(3rem, 12.5vw, 13rem);
+  font-size: clamp(2.4rem, 9.6vw, 11rem);
 }
 
 /* ==========================================================================
@@ -1812,5 +1812,44 @@ main [data-termino] {
 
   .tm-cursor-texto {
     font-size: 14px;
+  }
+}
+
+/* ==========================================================================
+   «Desliza» de la portada: el mismo indicador que en los capítulos 2 y 3
+   ========================================================================== */
+
+.c1-desliza {
+  display: block;
+  margin-top: 6vh;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.c1-desliza::after {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 46px;
+  margin: 10px 0 0 1.2em;
+  background: linear-gradient(var(--rosa), transparent);
+  animation: c1-goteo 1.8s ease-in-out infinite;
+}
+
+@keyframes c1-goteo {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+html[data-motion="reduce"] .c1-desliza::after {
+  animation: none;
+}
+
+@media (max-width: 760px) {
+  .c1-desliza {
+    margin-top: 1.2rem;
   }
 }

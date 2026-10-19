@@ -5,8 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Referencias · Barley Bot</title>
-  <meta name="description" content="De dónde sale cada dato del sitio: datos del reto, capítulo 1 (la cebada), capítulo 2 (el modelo) y capítulo 3 (el crédito)." />
-
+  <meta name="description" content="De dónde sale cada dato del sitio: datos del reto, capítulo 1 (la cebada), capítulo 2 (el modelo), capítulo 3 (el crédito) y documento técnico." />
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=DM+Sans:wght@400;600&display=swap"
     rel="stylesheet"
@@ -15,6 +14,11 @@
   <link rel="stylesheet" href="vistas/compartido/diccionario.css" />
   <style>
     /* Solo para esta página: secciones por capítulo y un índice corto */
+    /* styles.css desactiva los clics en <main> (en los capítulos lo cruzan escenas 3D); aquí no hay escena,
+       así que los enlaces deben poder tocarse */
+    main.pagina {
+      pointer-events: auto;
+    }
     .ref-indice {
       display: flex;
       flex-wrap: wrap;
@@ -23,7 +27,6 @@
       padding: 0;
       list-style: none;
     }
-
     .ref-indice a {
       display: inline-block;
       padding: 0.3rem 0.9rem;
@@ -34,40 +37,65 @@
       font-size: 0.85rem;
       text-decoration: none;
     }
-
     .ref-indice a:hover {
       background: var(--green);
       color: var(--sky);
     }
-
     .ref-seccion {
       margin-top: 2.6rem;
       padding-top: 1rem;
       border-top: 2px solid var(--line);
       scroll-margin-top: 80px;
     }
-
     .ref-seccion h2 {
       margin: 0 0 0.3rem;
       font-size: clamp(1.5rem, 3.6vw, 2.2rem);
     }
-
     .ref-seccion > p {
       max-width: 680px;
       margin: 0 0 1rem;
     }
-
     .lista-referencias small {
       color: var(--rosa);
       font-weight: 600;
     }
-
+    .lista-referencias {
+      padding-left: 2.2rem;
+    }
+    .lista-referencias li {
+      margin: 0.55rem 0;
+      line-height: 1.5;
+      scroll-margin-top: 96px;
+      border-radius: 6px;
+    }
+    .lista-referencias li::marker {
+      font-weight: 700;
+      color: var(--rosa);
+    }
+    /* Al llegar desde un número del texto, la fuente se ilumina un momento */
+    .lista-referencias li:target {
+      animation: ref-llega 2.6s ease-out;
+    }
+    @keyframes ref-llega {
+      from { background: color-mix(in srgb, var(--gold) 35%, transparent); }
+      to { background: transparent; }
+    }
     .lista-referencias a {
       overflow-wrap: anywhere;
     }
+    .ref-cap {
+      display: inline-block;
+      margin-left: 0.3rem;
+      padding: 0 0.5rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--green);
+      white-space: nowrap;
+    }
   </style>
 </head>
-
 <body data-page="referencias">
   <a class="saltar" href="#contenido">Saltar al contenido</a>
   <nav id="nav" aria-label="Principal"></nav>
@@ -76,161 +104,126 @@
     <span class="kicker">Referencias</span>
     <h1>De dónde sale cada dato</h1>
     <p class="intro">
-      Las cifras del sitio salen de los datos del reto, de los cálculos del equipo y de estas fuentes públicas.
-      Están agrupadas por capítulo. Los precios, costos y tasas del capítulo 3 son supuestos que el simulador deja
-      cambiar.
+      Una sola lista unificada para los tres capítulos y la memoria técnica: los números pequeños del texto (<sup class="cita">1</sup>) traen aquí
+      a la fuente con ese número. Cada fuente aparece una vez en formato APA 7 y dice en qué capítulos o secciones se usa. Las cifras de 2025
+      son datos del reto procesados por el equipo; los precios, costos y tasas del capítulo 3 son supuestos que el
+      simulador deja cambiar.
     </p>
+
     <ul class="ref-indice" aria-label="Secciones">
-      <li><a href="vistas/06-interpretacion/referencias.html#datos">Datos del reto</a></li>
-      <li><a href="vistas/06-interpretacion/referencias.html#capitulo-1">1 · La cebada</a></li>
-      <li><a href="vistas/06-interpretacion/referencias.html#capitulo-2">2 · El modelo</a></li>
-      <li><a href="vistas/06-interpretacion/referencias.html#capitulo-3">3 · El crédito</a></li>
+      <li><a href="vistas/06-interpretacion/referencias.html#datos">Datos del reto y satélites</a></li>
+      <li><a href="vistas/06-interpretacion/referencias.html#cebada">La cebada y su producción</a></li>
+      <li><a href="vistas/06-interpretacion/referencias.html#cultivo">El cultivo</a></li>
+      <li><a href="vistas/06-interpretacion/referencias.html#modelo">El modelo</a></li>
+      <li><a href="vistas/06-interpretacion/referencias.html#credito">El crédito</a></li>
       <li><a href="vistas/06-interpretacion/referencias.html#herramientas">Mapas y herramientas</a></li>
+      <li><a href="vistas/06-interpretacion/referencias.html#memoria">Literatura científica adicional (Memoria técnica)</a></li>
     </ul>
 
     <section class="ref-seccion" id="datos">
-      <h2>Datos del reto</h2>
-      <p>Todo lo que el modelo aprende y predice sale de aquí.</p>
-      <ul class="lista-referencias">
-        <li><b>Reto AgroCebada FIRA 2026</b> <small>(FIRA)</small><br>Bases de participación y conjuntos de datos:
-          197 parcelas (shapefile con áreas y polígonos), rendimientos del ciclo abril–octubre de 2025 de 138 parcelas,
-          índices Sentinel-2 y Landsat de 2022 a 2025 (datos básicos), índices Planet de 2025 (datos PRO),
-          precipitación y temperatura mensual de 2022 a 2025 y topografía.<br>
-          <a href="https://www.fira.gob.mx" target="_blank" rel="noopener">https://www.fira.gob.mx</a></li>
-        <li><b>Sentinel-2</b> <small>(Copernicus, Agencia Espacial Europea)</small><br>Imágenes multiespectrales de 10 a 20 m.<br>
-          <a href="https://sentinels.copernicus.eu" target="_blank" rel="noopener">https://sentinels.copernicus.eu</a></li>
-        <li><b>Landsat</b> <small>(NASA y USGS)</small><br>Imágenes de 30 m con banda térmica.<br>
-          <a href="https://www.usgs.gov/landsat-missions" target="_blank" rel="noopener">https://www.usgs.gov/landsat-missions</a></li>
-        <li><b>Planet</b> <small>(Planet Labs)</small><br>Imágenes casi diarias de unos 3 m.<br>
-          <a href="https://www.planet.com" target="_blank" rel="noopener">https://www.planet.com</a></li>
-        <li><b>CHIRPS y CHIRTS-ERA5</b> <small>(Climate Hazards Center, UC Santa Barbara)</small><br>Precipitación y temperatura mensual.<br>
-          <a href="https://www.chc.ucsb.edu/data" target="_blank" rel="noopener">https://www.chc.ucsb.edu/data</a></li>
-        <li><b>Continuo de Elevaciones Mexicano</b> <small>(INEGI)</small><br>Altura de cada parcela (de 2,500 a 2,900 m).<br>
-          <a href="https://www.inegi.org.mx/app/geo2/elevacionesmex/" target="_blank" rel="noopener">https://www.inegi.org.mx/app/geo2/elevacionesmex/</a></li>
-        <li><b>SoilGrids 2.0</b> <small>(ISRIC)</small><br>Propiedades del suelo usadas en las pruebas del capítulo 2.<br>
-          <a href="https://soilgrids.org" target="_blank" rel="noopener">https://soilgrids.org</a></li>
-      </ul>
+      <h2>Datos del reto y satélites</h2>
+      <ol class="lista-referencias" start="1">
+        <li id="ref-1">FIRA. (2026a). <i>Reto AgroCebada 2026: bases de participación y conjunto de datos</i>. Fideicomisos Instituidos en Relación con la Agricultura. 197 parcelas con su polígono y área; rendimientos del ciclo abril–octubre de 2025 de 138 parcelas; índices Sentinel-2 y Landsat 2022–2025 y Planet 2025; precipitación y temperatura mensual 2022–2025; elevación y pendiente. <a href="https://www.fira.gob.mx" target="_blank" rel="noopener">https://www.fira.gob.mx</a> <span class="ref-cap">Capítulos 1, 2, 3 · Doc</span></li>
+        <li id="ref-2">FIRA. (2026b). <i>Diccionario de índices satelitales</i> [Material técnico del Reto AgroCebada 2026]. Fideicomisos Instituidos en Relación con la Agricultura. Definición de NDVI, MSAVI, SAVI, EVI, LAI y los demás índices de los conjuntos básico y PRO. <span class="ref-cap">Capítulo 2</span></li>
+        <li id="ref-3">Planet Labs. (2017–2025). <i>PlanetScope y Planet Application Program Interface: In space for life on Earth</i> (imágenes casi diarias de ~3 m, datos PRO del reto). Planet Labs PBC. <a href="https://www.planet.com" target="_blank" rel="noopener">https://www.planet.com</a> · <a href="https://api.planet.com" target="_blank" rel="noopener">https://api.planet.com</a> <span class="ref-cap">Capítulos 1, 2 · Doc</span></li>
+        <li id="ref-4">Agencia Espacial Europea. (s. f.). <i>Sentinel-2: Copernicus optical high-resolution mission</i> (imágenes multiespectrales de 10 a 20 m). Programa Copernicus. <a href="https://sentinels.copernicus.eu/web/sentinel/copernicus/sentinel-2" target="_blank" rel="noopener">https://sentinels.copernicus.eu/web/sentinel/copernicus/sentinel-2</a> <span class="ref-cap">Capítulos 1, 2</span></li>
+        <li id="ref-5">NASA y USGS. (s. f.). <i>Landsat Missions: imágenes de 30 m con banda térmica</i>. U.S. Geological Survey. <a href="https://www.usgs.gov/landsat-missions" target="_blank" rel="noopener">https://www.usgs.gov/landsat-missions</a> <span class="ref-cap">Capítulo 2</span></li>
+        <li id="ref-6">Climate Hazards Center. (2025a). <i>CHIRPS: Climate Hazards Group InfraRed Precipitation with Station data</i> [Conjunto de datos de precipitación diaria y mensual]. University of California, Santa Barbara. <a href="https://www.chc.ucsb.edu/data/chirps" target="_blank" rel="noopener">https://www.chc.ucsb.edu/data/chirps</a> <span class="ref-cap">Capítulos 1, 2</span></li>
+        <li id="ref-7">Climate Hazards Center. (2025b). <i>CHIRTS-ERA5 data repository</i> [Conjunto de datos de temperatura máxima y mínima]. University of California, Santa Barbara. <a href="https://doi.org/10.15780/G2F08J" target="_blank" rel="noopener">https://doi.org/10.15780/G2F08J</a> · <a href="https://www.chc.ucsb.edu/data/chirts-era5" target="_blank" rel="noopener">https://www.chc.ucsb.edu/data/chirts-era5</a> <span class="ref-cap">Capítulos 1, 2 · Doc</span></li>
+        <li id="ref-8">INEGI. (s. f.). <i>Continuo de Elevaciones Mexicano 4.0 (CEM 4.0)</i> [Modelo digital de elevación, 120 m]. Instituto Nacional de Estadística y Geografía. <a href="https://www.inegi.org.mx/app/geo2/elevacionesmex/" target="_blank" rel="noopener">https://www.inegi.org.mx/app/geo2/elevacionesmex/</a> <span class="ref-cap">Capítulos 1, 2 · Doc</span></li>
+        <li id="ref-9">ISRIC – World Soil Information. (s. f.). <i>SoilGrids 2.0: propiedades del suelo de 0 a 30 cm a 250 m</i> [Conjunto de datos, servicio WCS]. <a href="https://soilgrids.org" target="_blank" rel="noopener">https://soilgrids.org</a> · <a href="https://maps.isric.org/" target="_blank" rel="noopener">https://maps.isric.org/</a> <span class="ref-cap">Capítulo 2 · Doc</span></li>
+        <li id="ref-10">Equipo AgroCebada. (2026). <i>Cuadernos de trabajo NB01 a NB07: limpieza de las series de satélite, inicio, pico y fin del verdor de cada parcela (NB03), clima y relieve de cada parcela (NB04), validación cruzada de 10 repeticiones × 5 particiones y modelo final con rangos calibrados (NB05 a NB07)</i>. Universidad de las Américas Puebla. <span class="ref-cap">Capítulos 1, 2, 3</span></li>
+      </ol>
     </section>
 
-    <section class="ref-seccion" id="capitulo-1">
-      <h2>Capítulo 1 · La cebada y su territorio</h2>
-      <ul class="lista-referencias">
-        <li><b>Producción, superficie y rendimiento de 2024</b> <small>(SADER-SIAP)</small><br>827,490 t en el país,
-          300,558 ha cosechadas, 2.8 t/ha de promedio y precio medio de $6,077 por tonelada; Hidalgo 195,412 t,
-          Puebla 133,352 t y Tlaxcala 128,892 t (juntos, el 55 %). Resumen de la estadística del SIAP en Blog
-          Agricultura.<br>
-          <a href="https://blogagricultura.com/estadisticas-cebada-grano-mexico/" target="_blank" rel="noopener">https://blogagricultura.com/estadisticas-cebada-grano-mexico/</a><br>
-          Estadística oficial: <a href="https://www.gob.mx/siap" target="_blank" rel="noopener">https://www.gob.mx/siap</a></li>
-        <li><b>Cuarto cereal del mundo</b> <small>(INIFAP)</small><br>Evaluación agronómica y física en líneas
-          avanzadas de cebada maltera, Revista Mexicana de Ciencias Agrícolas: «ocupa el cuarto lugar en importancia
-          en el mundo», después del trigo, el arroz y el maíz.<br>
-          <a href="https://www.redalyc.org/pdf/2631/263144153014.pdf" target="_blank" rel="noopener">https://www.redalyc.org/pdf/2631/263144153014.pdf</a></li>
-        <li><b>Mejoramiento genético de la cebada en el INIFAP (1985–2020)</b> <small>(Revista Mexicana de Ciencias Agrícolas)</small><br>
-          El Programa Nacional de Cebada ha liberado 22 variedades desde 1959 (17 malteras y 5 forrajeras), entre
-          ellas Esperanza y Esmeralda; autosuficiencia nacional en 2000.<br>
-          <a href="https://cienciasagricolas.inifap.gob.mx/index.php/agricolas/article/view/2807" target="_blank" rel="noopener">https://cienciasagricolas.inifap.gob.mx/index.php/agricolas/article/view/2807</a></li>
-        <li><b>Agricultura y ganadería en la Nueva España</b> <small>(SEP · Nueva Escuela Mexicana)</small><br>
-          El trigo y la cebada no existían en América: los introdujeron los españoles (siglos XV y XVI). A México
-          llegaron después de 1519, en el siglo XVI.<br>
-          <a href="https://nuevaescuelamexicana.sep.gob.mx/contenido/coleccion/agricultura-y-ganaderia-en-la-nueva-espana/" target="_blank" rel="noopener">https://nuevaescuelamexicana.sep.gob.mx/contenido/coleccion/agricultura-y-ganaderia-en-la-nueva-espana/</a></li>
-        <li><b>Barley (<i>Hordeum vulgare</i>)</b> <small>(FAO, Ecocrop)</small><br>Temperatura óptima de 15 a 20 °C,
-          lluvia óptima de 500 a 1,000 mm al año, sensible a la helada al inicio del ciclo; en el trópico prospera
-          arriba de 1,800 m.<br>
-          <a href="https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1232" target="_blank" rel="noopener">https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1232</a><br>
-          <a href="https://ecocrop.apps.fao.org/ecocrop/srv/en/cropView?id=1232" target="_blank" rel="noopener">https://ecocrop.apps.fao.org/ecocrop/srv/en/cropView?id=1232</a></li>
-        <li><b>Maravilla: variedad de cebada forrajera para Valles Altos de México</b> <small>(Zamora Díaz et al., INIFAP ·
-          Revista Mexicana de Ciencias Agrícolas 8(6), 2017)</small><br>Zonas por lluvia (más de 500 mm, buena
-          productividad; menos de 450 mm, baja), siembra del 1 de mayo al 30 de junio según la zona, floración de 45
-          a 57 días y madurez de 94 a 115 días; heladas tempranas.<br>
-          <a href="https://cienciasagricolas.inifap.gob.mx/index.php/agricolas/article/download/317/547/1917" target="_blank" rel="noopener">https://cienciasagricolas.inifap.gob.mx/index.php/agricolas/article/download/317/547/1917</a></li>
-        <li><b>Rendimiento de grano y características fisicoquímicas de cebada en función de la fecha de siembra</b>
-          <small>(Gómez-Espinoza et al. · Revista Fitotecnia Mexicana 48(3), 2025)</small><br>Rinde mejor cuando el
-          espigamiento y el llenado de grano ocurren con temperaturas moderadas; arriba de 30 °C sube la proteína del
-          grano. Usado en «Cómo crece».<br>
-          <a href="https://revistafitotecniamexicana.org/documentos/48-3/9a.pdf" target="_blank" rel="noopener">https://revistafitotecniamexicana.org/documentos/48-3/9a.pdf</a></li>
-        <li><b>Cómo crece y por qué 2025 fue distinto</b> <small>(cuadernos del equipo)</small><br>Fechas de inicio, pico
-          y fin del verdor por parcela (Planet y Sentinel-2, NB03), comparación con 2022–2024 (Sentinel-2) y clima de
-          cada parcela (CHIRPS y CHIRTS-ERA5). Las curvas semanales y la nubosidad vienen de los datos Planet del
-          reto. La lluvia mensual de la gráfica es el promedio regional que trae el inventario CHIRPS del reto. El
-          campo animado es una ilustración: su verdor, sus nubes y su lluvia siguen esos datos semana a semana.</li>
-        <li><b>Origen y domesticación de la cebada</b> <small>(Wikipedia; Plant Breeding and Genomics, eXtension)</small><br>
-          Domesticada hace unos 10 mil años en el Creciente Fértil a partir de la cebada silvestre; la silvestre suelta
-          sus granos al madurar y la cultivada no. Seis hileras: las tres espiguillas de cada nudo son fértiles; dos
-          hileras: solo la central. Es una fecha aproximada.<br>
-          <a href="https://en.wikipedia.org/wiki/Barley" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Barley</a><br>
-          <a href="https://en.wikipedia.org/wiki/Hordeum_spontaneum" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Hordeum_spontaneum</a><br>
-          <a href="https://plant-breeding-genomics.extension.org/whats-so-interesting-about-barley" target="_blank" rel="noopener">https://plant-breeding-genomics.extension.org/whats-so-interesting-about-barley</a></li>
-        <li><b><i>Hordeum vulgare</i></b> <small>(KPU Plant Database)</small><br>Espiga de 10 a 30 nudos, con tres
-          espiguillas por nudo.<br>
-          <a href="https://plantdatabase.kpu.ca/PlantPrint/hord" target="_blank" rel="noopener">https://plantdatabase.kpu.ca/PlantPrint/hord</a></li>
-      </ul>
+    <section class="ref-seccion" id="cebada">
+      <h2>La cebada y su producción</h2>
+      <ol class="lista-referencias" start="11">
+        <li id="ref-11">Wikipedia. (2026a). <i>Barley</i>. En <i>Wikipedia, The Free Encyclopedia</i>. Domesticación en el Creciente Fértil, papel en Mesopotamia y espiga que no suelta el grano. <a href="https://en.wikipedia.org/wiki/Barley" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Barley</a> <span class="ref-cap">Capítulo 1</span></li>
+        <li id="ref-12">Wikipedia. (2026b). <i>Hordeum spontaneum</i>. En <i>Wikipedia, The Free Encyclopedia</i>. La cebada silvestre y su domesticación hace unos 10 mil años. <a href="https://en.wikipedia.org/wiki/Hordeum_spontaneum" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Hordeum_spontaneum</a> <span class="ref-cap">Capítulo 1</span></li>
+        <li id="ref-13">Plant Breeding and Genomics. (s. f.). <i>What's so interesting about barley?</i> eXtension. Domesticación y espigas de dos y seis hileras. <a href="https://plant-breeding-genomics.extension.org/whats-so-interesting-about-barley" target="_blank" rel="noopener">https://plant-breeding-genomics.extension.org/whats-so-interesting-about-barley</a> <span class="ref-cap">Capítulo 1</span></li>
+        <li id="ref-14">Kwantlen Polytechnic University. (s. f.). <i>Hordeum vulgare</i> [Ficha botánica]. KPU Plant Database. Espiga de 10 a 30 nudos con tres espiguillas por nudo. <a href="https://plantdatabase.kpu.ca/PlantPrint/hord" target="_blank" rel="noopener">https://plantdatabase.kpu.ca/PlantPrint/hord</a> <span class="ref-cap">Capítulo 1</span></li>
+        <li id="ref-15">Secretaría de Educación Pública [SEP]. (s. f.). <i>Agricultura y ganadería en la Nueva España</i>. Nueva Escuela Mexicana. El trigo y la cebada llegaron a América con los españoles. <a href="https://nuevaescuelamexicana.sep.gob.mx/contenido/coleccion/agricultura-y-ganaderia-en-la-nueva-espana/" target="_blank" rel="noopener">https://nuevaescuelamexicana.sep.gob.mx/contenido/coleccion/agricultura-y-ganaderia-en-la-nueva-espana/</a> <span class="ref-cap">Capítulo 1</span></li>
+        <li id="ref-16">González González, M., Zamora Díaz, M. R., Solano Hernández, S., Huerta Zurita, R., Gómez Mercado, R. y Rojas Martínez, I. (2021). Mejoramiento genético de cebada en el INIFAP (1985-2020). <i>Revista Mexicana de Ciencias Agrícolas</i>, <i>12</i>(25), 15–20. <a href="https://doi.org/10.29312/remexca.v12i25.2807" target="_blank" rel="noopener">https://doi.org/10.29312/remexca.v12i25.2807</a> <span class="ref-cap">Capítulo 1</span></li>
+        <li id="ref-17">González González, M., Zamora Díaz, M. y Solano Hernández, S. (2016). Evaluación agronómica y física en líneas avanzadas de cebada maltera. <i>Revista Mexicana de Ciencias Agrícolas</i>, <i>7</i>(1), 159–171. <a href="https://www.redalyc.org/pdf/2631/263144153014.pdf" target="_blank" rel="noopener">https://www.redalyc.org/pdf/2631/263144153014.pdf</a> <span class="ref-cap">Capítulo 1 · Doc</span></li>
+        <li id="ref-18">SADER-SIAP. (2024–2025). <i>Anuario estadístico de la producción agrícola (cierres 2023 y 2024: cebada grano)</i> [Base de datos]. Servicio de Información Agroalimentaria y Pesquera. Cierre 2024: 827,490 t, 300,558 ha cosechadas, 2.8 t/ha y precio medio rural de $6,077/t; Hidalgo 195,412 t, Puebla 133,352 t y Tlaxcala 128,892 t. Estadística oficial: <a href="https://nube.siap.gob.mx/cierreagricola/" target="_blank" rel="noopener">https://nube.siap.gob.mx/cierreagricola/</a> · <a href="https://www.gob.mx/siap" target="_blank" rel="noopener">https://www.gob.mx/siap</a> · Resumen: <a href="https://blogagricultura.com/estadisticas-cebada-grano-mexico/" target="_blank" rel="noopener">https://blogagricultura.com/estadisticas-cebada-grano-mexico/</a> <span class="ref-cap">Capítulos 1, 3 · Doc</span></li>
+      </ol>
     </section>
 
-    <section class="ref-seccion" id="capitulo-2">
-      <h2>Capítulo 2 · El modelo</h2>
-      <p>
-        Las métricas, predicciones, rangos y respuestas a las preguntas guía son del equipo: notebooks NB05 a NB07,
-        con validación cruzada agrupada (10 repeticiones × 5 particiones) y calibración conformal.
-      </p>
-      <ul class="lista-referencias">
-        <li><b>Gaussian Processes for Machine Learning</b> <small>(Rasmussen y Williams, MIT Press, 2006)</small><br>
-          Base del GP jerárquico (núcleo Matérn 3/2).<br>
-          <a href="http://gaussianprocess.org/gpml/" target="_blank" rel="noopener">http://gaussianprocess.org/gpml/</a></li>
-        <li><b>A Gentle Introduction to Conformal Prediction</b> <small>(Angelopoulos y Bates, 2021)</small><br>
-          Cómo se ajustan los rangos P10–P90 y el P20 con los errores observados.<br>
-          <a href="https://arxiv.org/abs/2107.07511" target="_blank" rel="noopener">https://arxiv.org/abs/2107.07511</a></li>
-        <li><b>Diccionario de índices satelitales</b> <small>(material del reto)</small><br>Definición de NDVI,
-          MSAVI, SAVI, EVI, LAI y los demás índices de las preguntas guía.</li>
-      </ul>
+    <section class="ref-seccion" id="cultivo">
+      <h2>El cultivo</h2>
+      <ol class="lista-referencias" start="19">
+        <li id="ref-19">FAO. (s. f.). <i>Ecocrop: Hordeum vulgare</i> (ID 1232). Organización de las Naciones Unidas para la Alimentación y la Agricultura. Temperatura óptima de 15 a 20 °C; en el trópico, arriba de 1,800 m. Ficha: <a href="https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1232" target="_blank" rel="noopener">https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1232</a> · Descripción: <a href="https://ecocrop.apps.fao.org/ecocrop/srv/en/cropView?id=1232" target="_blank" rel="noopener">https://ecocrop.apps.fao.org/ecocrop/srv/en/cropView?id=1232</a> <span class="ref-cap">Capítulo 1</span></li>
+        <li id="ref-20">Zamora Díaz, M. R., Pérez Ruiz, J. A., Huerta Zurita, R., López Cano, M. L., Gómez Mercado, R. y Rojas Martínez, I. (2017). Maravilla: variedad de cebada forrajera para Valles Altos de México. <i>Revista Mexicana de Ciencias Agrícolas</i>, <i>8</i>(6), 1449–1454. <a href="https://cienciasagricolas.inifap.gob.mx/index.php/agricolas/article/download/317/547/1917" target="_blank" rel="noopener">https://cienciasagricolas.inifap.gob.mx/index.php/agricolas/article/download/317/547/1917</a> <span class="ref-cap">Capítulo 1</span></li>
+        <li id="ref-21">Gómez-Espinoza, J., Avila-Perches, M. A., Gómez-Vázquez, A. J., Covarrubias-Prieto, J., Ramírez-Pimentel, J. G. y Aguirre-Mancilla, C. L. (2025). Rendimiento de grano y características fisicoquímicas de cebada en función de la fecha de siembra. <i>Revista Fitotecnia Mexicana</i>, <i>48</i>(3), 285–292. <a href="https://doi.org/10.35196/rfm.2025.3.285" target="_blank" rel="noopener">https://doi.org/10.35196/rfm.2025.3.285</a> · PDF: <a href="https://revistafitotecniamexicana.org/documentos/48-3/9a.pdf" target="_blank" rel="noopener">https://revistafitotecniamexicana.org/documentos/48-3/9a.pdf</a> <span class="ref-cap">Capítulo 1</span></li>
+      </ol>
     </section>
 
-    <section class="ref-seccion" id="capitulo-3">
-      <h2>Capítulo 3 · El crédito</h2>
-      <ul class="lista-referencias">
-        <li><b>FIRA y FEGA</b> <small>(SHCP · Cuenta Pública 2024)</small><br>Los cuatro fondos de FIRA y las
-          garantías del FEGA.<br>
-          <a href="https://www.cuentapublica.hacienda.gob.mx/work/models/CP/2024/tomo/VII/MAT_Print.6HAS.01.INTRO.pdf" target="_blank" rel="noopener">https://www.cuentapublica.hacienda.gob.mx/work/models/CP/2024/tomo/VII/MAT_Print.6HAS.01.INTRO.pdf</a></li>
-        <li><b>Costo de producción: $15,755 por hectárea</b> <small>(FIRA, cebada de Hidalgo, primavera-verano 2025)</small><br>
-          Citado en Research, Society and Development (2025), tabla de costos por cultivo.<br>
-          <a href="https://rsdjournal.org/rsd/article/download/50771/39806/515061" target="_blank" rel="noopener">https://rsdjournal.org/rsd/article/download/50771/39806/515061</a></li>
-        <li><b>Precio 2025: $7,500 por tonelada</b> <small>(La Jornada, 4 de mayo de 2025)</small><br>Acuerdo entre
-          productores de Hidalgo y Grupo Modelo, con participación de FIRA. Según los productores, la cervecera
-          quería bajar de $8,252 (lo que pagó en 2023) a $4,500.<br>
-          <a href="https://www.jornada.com.mx/noticia/2025/05/04/estados/productores-de-hidalgo-y-modelo-fijan-precio-precio-de-cebada-finaliza-conflicto" target="_blank" rel="noopener">https://www.jornada.com.mx/noticia/2025/05/04/estados/productores-de-hidalgo-y-modelo-fijan-precio-precio-de-cebada-finaliza-conflicto</a></li>
-        <li><b>Precio 2026: $7,000 por tonelada</b> <small>(La Silla Rota, 11 de mayo de 2026)</small><br>
-          <a href="https://lasillarota.com/hidalgo/estado/2026/5/11/logran-acuerdos-comerciales-para-productores-de-cebada-son-mil-pesos-por-tonelada-509532.html" target="_blank" rel="noopener">https://lasillarota.com/hidalgo/estado/2026/5/11/logran-acuerdos-comerciales-para-productores-de-cebada-son-mil-pesos-por-tonelada-509532.html</a></li>
-        <li><b>Tasa de 8.5 % anual · Cosechando Soberanía</b> <small>(Luz Noticias, 14 de octubre de 2026; Imagen Agropecuaria, 2026)</small><br>
-          Programa federal para pequeños y medianos productores, con seguro incluido.<br>
-          <a href="https://www.luznoticias.mx/2026-10-14/sinaloa/piden-a-agricultores-de-sinaloa-tramitar-creditos-con-fira-para-evitar-intereses-mas-altos/309833" target="_blank" rel="noopener">https://www.luznoticias.mx/2026-10-14/sinaloa/piden-a-agricultores-de-sinaloa-tramitar-creditos-con-fira-para-evitar-intereses-mas-altos/309833</a><br>
-          <a href="https://imagenagropecuaria.com/2026/a-traves-de-cosechando-soberania-se-han-canalizado-creditos-por-4500-mdp-c-lopez/" target="_blank" rel="noopener">https://imagenagropecuaria.com/2026/a-traves-de-cosechando-soberania-se-han-canalizado-creditos-por-4500-mdp-c-lopez/</a></li>
-        <li><b>Cultivos de Cosechando Soberanía</b> <small>(Tus Buenas Noticias, abril de 2025)</small><br>Maíz, frijol,
-          arroz, trigo, café, leche y pesca. No encontramos que incluya la cebada: por eso la tasa es una referencia.<br>
-          <a href="https://www.tusbuenasnoticias.com/amp/noticias/economia/2025/04/11/43856-cosechando-soberania-creditos-accesibles-para-el-campo-mexicano" target="_blank" rel="noopener">https://www.tusbuenasnoticias.com/amp/noticias/economia/2025/04/11/43856-cosechando-soberania-creditos-accesibles-para-el-campo-mexicano</a></li>
-        <li><b>Tasa máxima de 17.5 % en créditos de 10 meses</b> <small>(Los Noticieristas, septiembre de 2026)</small><br>
-          Dato de la residencia estatal de FIRA en Sinaloa.<br>
-          <a href="https://losnoticieristas.com/agricola/2026/09/presenta-fira-alternativas-de-credito-para-pequenos-y-medianos-productores-de-guasave-sinaloa-1138803/" target="_blank" rel="noopener">https://losnoticieristas.com/agricola/2026/09/presenta-fira-alternativas-de-credito-para-pequenos-y-medianos-productores-de-guasave-sinaloa-1138803/</a></li>
-        <li><b>FIRA financia de 80 a 90 % del costo a pequeños productores</b> <small>(BBVA)</small><br>
-          <a href="https://www.bbva.com/es/mx/empresas/financiamiento-agropecuario-en-mexico-como-funciona-el-credito-fira/" target="_blank" rel="noopener">https://www.bbva.com/es/mx/empresas/financiamiento-agropecuario-en-mexico-como-funciona-el-credito-fira/</a></li>
-      </ul>
+    <section class="ref-seccion" id="modelo">
+      <h2>El modelo</h2>
+      <ol class="lista-referencias" start="22">
+        <li id="ref-22">Rasmussen, C. E. y Williams, C. K. I. (2006). <i>Gaussian processes for machine learning</i>. MIT Press. Base del GP jerárquico (núcleo Matérn 3/2). <a href="https://gaussianprocess.org/gpml/" target="_blank" rel="noopener">https://gaussianprocess.org/gpml/</a> <span class="ref-cap">Capítulo 2 · Doc</span></li>
+        <li id="ref-23">Angelopoulos, A. N. y Bates, S. (2021). <i>A gentle introduction to conformal prediction and distribution-free uncertainty quantification</i> (arXiv:2107.07511). arXiv. Cómo se calibran los rangos P10–P90 y el P20. <a href="https://arxiv.org/abs/2107.07511" target="_blank" rel="noopener">https://arxiv.org/abs/2107.07511</a> <span class="ref-cap">Capítulos 2, 3</span></li>
+      </ol>
+    </section>
+
+    <section class="ref-seccion" id="credito">
+      <h2>El crédito</h2>
+      <ol class="lista-referencias" start="24">
+        <li id="ref-24">Secretaría de Hacienda y Crédito Público [SHCP]. (2025). <i>Cuenta Pública 2024: Fondo Especial de Asistencia Técnica y Garantía para Créditos Agropecuarios (FEGA)</i>. Gobierno de México. Los cuatro fondos de FIRA y sus garantías. <a href="https://www.cuentapublica.hacienda.gob.mx/work/models/CP/2024/tomo/VII/MAT_Print.6HAS.01.INTRO.pdf" target="_blank" rel="noopener">https://www.cuentapublica.hacienda.gob.mx/work/models/CP/2024/tomo/VII/MAT_Print.6HAS.01.INTRO.pdf</a> <span class="ref-cap">Capítulo 3</span></li>
+        <li id="ref-25">Hernández Espinosa, A. P., Santana Robles, F. y Granillo Macías, R. (2026). Modelo matemático para determinar la rentabilidad de cultivos en el estado de Hidalgo. <i>Research, Society and Development</i>, <i>15</i>(3), e7315350771. Tabla de costos: cebada de Hidalgo, primavera-verano 2025 (FIRA), $15,755 por hectárea. <a href="https://rsdjournal.org/rsd/article/download/50771/39806/515061" target="_blank" rel="noopener">https://rsdjournal.org/rsd/article/download/50771/39806/515061</a> <span class="ref-cap">Capítulo 3</span></li>
+        <li id="ref-26">Montoya, R. (4 de mayo de 2025). Productores de Hidalgo y Modelo fijan precio de cebada; finaliza conflicto. <i>La Jornada</i>. $7,500 por tonelada en 2025; $8,252 en 2023; la cervecera quería pagar $4,500. <a href="https://www.jornada.com.mx/noticia/2025/05/04/estados/productores-de-hidalgo-y-modelo-fijan-precio-precio-de-cebada-finaliza-conflicto" target="_blank" rel="noopener">https://www.jornada.com.mx/noticia/2025/05/04/estados/productores-de-hidalgo-y-modelo-fijan-precio-precio-de-cebada-finaliza-conflicto</a> <span class="ref-cap">Capítulo 3</span></li>
+        <li id="ref-27">Guadarrama, M. (11 de mayo de 2026). Logran acuerdos comerciales para productores de cebada; son 7 mil pesos por tonelada. <i>La Silla Rota</i>. <a href="https://lasillarota.com/hidalgo/estado/2026/5/11/logran-acuerdos-comerciales-para-productores-de-cebada-son-mil-pesos-por-tonelada-509532.html" target="_blank" rel="noopener">https://lasillarota.com/hidalgo/estado/2026/5/11/logran-acuerdos-comerciales-para-productores-de-cebada-son-mil-pesos-por-tonelada-509532.html</a> <span class="ref-cap">Capítulo 3</span></li>
+        <li id="ref-28">Perea, E. (11 de agosto de 2026). A través de Cosechando Soberanía se han canalizado créditos por 4,500 mdp: C. López. <i>Imagen Agropecuaria</i>. Crédito al 8.5 % anual con seguro incluido. <a href="https://imagenagropecuaria.com/2026/a-traves-de-cosechando-soberania-se-han-canalizado-creditos-por-4500-mdp-c-lopez/" target="_blank" rel="noopener">https://imagenagropecuaria.com/2026/a-traves-de-cosechando-soberania-se-han-canalizado-creditos-por-4500-mdp-c-lopez/</a> <span class="ref-cap">Capítulo 3</span></li>
+        <li id="ref-29">García, E. (14 de octubre de 2026). Piden a agricultores de Sinaloa tramitar créditos con FIRA para evitar intereses más altos. <i>Luz Noticias</i>. Tasa preferencial de 8.5 % anual para el ciclo 2026-2027. <a href="https://www.luznoticias.mx/2026-10-14/sinaloa/piden-a-agricultores-de-sinaloa-tramitar-creditos-con-fira-para-evitar-intereses-mas-altos/309833" target="_blank" rel="noopener">https://www.luznoticias.mx/2026-10-14/sinaloa/piden-a-agricultores-de-sinaloa-tramitar-creditos-con-fira-para-evitar-intereses-mas-altos/309833</a> <span class="ref-cap">Capítulo 3</span></li>
+        <li id="ref-30">Tus Buenas Noticias. (11 de abril de 2025). Lo que debes saber sobre Cosechando Soberanía: créditos accesibles para fortalecer al campo mexicano. <i>Tus Buenas Noticias</i>. Cultivos del programa: maíz, frijol, arroz, trigo, café, leche y pesca. <a href="https://www.tusbuenasnoticias.com/amp/noticias/economia/2025/04/11/43856-cosechando-soberania-creditos-accesibles-para-el-campo-mexicano" target="_blank" rel="noopener">https://www.tusbuenasnoticias.com/amp/noticias/economia/2025/04/11/43856-cosechando-soberania-creditos-accesibles-para-el-campo-mexicano</a> <span class="ref-cap">Capítulo 3</span></li>
+        <li id="ref-31">García, F. (29 de septiembre de 2026). Presenta FIRA alternativas de crédito para pequeños y medianos productores de Guasave, Sinaloa. <i>Los Noticieristas</i>. Tasa máxima de 17.5 % a 10 meses. <a href="https://losnoticieristas.com/agricola/2026/09/presenta-fira-alternativas-de-credito-para-pequenos-y-medianos-productores-de-guasave-sinaloa-1138803/" target="_blank" rel="noopener">https://losnoticieristas.com/agricola/2026/09/presenta-fira-alternativas-de-credito-para-pequenos-y-medianos-productores-de-guasave-sinaloa-1138803/</a> <span class="ref-cap">Capítulo 3</span></li>
+        <li id="ref-32">BBVA México. (16 de julio de 2026). <i>Financiamiento agropecuario en México: ¿cómo funciona el crédito FIRA?</i> BBVA. FIRA financia de 80 a 90 % del costo a pequeños productores. <a href="https://www.bbva.com/es/mx/empresas/financiamiento-agropecuario-en-mexico-como-funciona-el-credito-fira/" target="_blank" rel="noopener">https://www.bbva.com/es/mx/empresas/financiamiento-agropecuario-en-mexico-como-funciona-el-credito-fira/</a> <span class="ref-cap">Capítulo 3</span></li>
+      </ol>
     </section>
 
     <section class="ref-seccion" id="herramientas">
       <h2>Mapas y herramientas</h2>
-      <ul class="lista-referencias">
-        <li><b>Natural Earth</b> <small>(dominio público)</small><br>Contornos de los países y de los estados de México
-          del globo de la portada. Están simplificados: cerca de las fronteras se corren de 1 a 5 km.<br>
-          <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">https://www.naturalearthdata.com</a></li>
-        <li><b>datamaps 0.5.10</b> <small>(MIT)</small> y <b>world-atlas 2.0.2</b> <small>(ISC)</small><br>Paquetes
-          con los contornos de Natural Earth ya preparados.<br>
-          <a href="https://github.com/markmarkoh/datamaps" target="_blank" rel="noopener">https://github.com/markmarkoh/datamaps</a> ·
-          <a href="https://github.com/topojson/world-atlas" target="_blank" rel="noopener">https://github.com/topojson/world-atlas</a></li>
-        <li><b>d3-geo 3.1.1 y d3-array 3.2.4</b> <small>(ISC)</small><br>Proyección ortográfica del globo que gira.<br>
-          <a href="https://d3js.org/d3-geo" target="_blank" rel="noopener">https://d3js.org/d3-geo</a></li>
-        <li><b>Three.js r128</b> <small>(MIT)</small><br>Mascota y maqueta 3D.<br>
-          <a href="https://threejs.org" target="_blank" rel="noopener">https://threejs.org</a></li>
-        <li><b>Fraunces y DM Sans</b> <small>(Google Fonts, SIL Open Font License)</small><br>
-          <a href="https://fonts.google.com" target="_blank" rel="noopener">https://fonts.google.com</a></li>
-      </ul>
+      <ol class="lista-referencias" start="33">
+        <li id="ref-33">Natural Earth. (s. f.). <i>Free vector and raster map data</i> (contornos de países y estados en dominio público, simplificados). <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">https://www.naturalearthdata.com</a> <span class="ref-cap">Capítulo 1</span></li>
+        <li id="ref-34">Markoh, M. y Bostock, M. (s. f.). <i>datamaps (v0.5.10, MIT) y world-atlas (v2.0.2, ISC)</i>: contornos de Natural Earth ya preparados. <a href="https://github.com/markmarkoh/datamaps" target="_blank" rel="noopener">https://github.com/markmarkoh/datamaps</a> · <a href="https://github.com/topojson/world-atlas" target="_blank" rel="noopener">https://github.com/topojson/world-atlas</a> <span class="ref-cap">Capítulo 1</span></li>
+        <li id="ref-35">Bostock, M. y colaboradores. (2023). <i>d3-geo (v3.1.1) y d3-array (v3.2.4)</i> (ISC): proyección del globo de la portada. <a href="https://d3js.org/d3-geo" target="_blank" rel="noopener">https://d3js.org/d3-geo</a> <span class="ref-cap">Capítulo 1</span></li>
+        <li id="ref-36">Three.js Authors. (2021). <i>Three.js (r128)</i> (MIT): mascota y escenas 3D. <a href="https://threejs.org" target="_blank" rel="noopener">https://threejs.org</a> <span class="ref-cap">Capítulos 1, 2, 3</span></li>
+        <li id="ref-37">Google. (s. f.). <i>Fraunces y DM Sans</i> (SIL Open Font License). Google Fonts. <a href="https://fonts.google.com" target="_blank" rel="noopener">https://fonts.google.com</a> <span class="ref-cap">Capítulos 1, 2, 3</span></li>
+      </ol>
+    </section>
+
+    <section class="ref-seccion" id="memoria">
+      <h2>Literatura científica y fuentes adicionales (Memoria técnica y módulos)</h2>
+      <p>Fuentes citadas en el documento de desarrollo técnico, en el diccionario de variables y en los módulos territoriales del repositorio.</p>
+      <ol class="lista-referencias" start="38">
+        <li id="ref-38">Allen, R. G., Pereira, L. S., Raes, D. y Smith, M. (1998). <i>Crop evapotranspiration: Guidelines for computing crop water requirements</i> (FAO Irrigation and Drainage Paper 56). FAO. <a href="https://www.fao.org/3/x0490e/x0490e00.htm" target="_blank" rel="noopener">https://www.fao.org/3/x0490e/x0490e00.htm</a> <span class="ref-cap">Doc · Diccionario</span></li>
+        <li id="ref-39">Benami, E., Jin, Z., Carter, M. R., Ghosh, A., Hijmans, R. J., Hobbs, A., Kenduiywo, B. y Lobell, D. B. (2021). Uniting remote sensing, crop modelling and economics for agricultural risk management. <i>Nature Reviews Earth &amp; Environment</i>, <i>2</i>(2), 140–159. <a href="https://doi.org/10.1038/s43017-020-00122-y" target="_blank" rel="noopener">https://doi.org/10.1038/s43017-020-00122-y</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-40">Breiman, L. (2001). Random forests. <i>Machine Learning</i>, <i>45</i>(1), 5–32. <a href="https://doi.org/10.1023/A:1010933404324" target="_blank" rel="noopener">https://doi.org/10.1023/A:1010933404324</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-41">Burke, M. y Lobell, D. B. (2017). Satellite-based assessment of yield variation and its determinants in smallholder African systems. <i>Proceedings of the National Academy of Sciences</i>, <i>114</i>(9), 2189–2194. <a href="https://doi.org/10.1073/pnas.1616919114" target="_blank" rel="noopener">https://doi.org/10.1073/pnas.1616919114</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-42">Carter, M., de Janvry, A., Sadoulet, E. y Sarris, A. (2017). Index insurance for developing country agriculture: A reassessment. <i>Annual Review of Resource Economics</i>, <i>9</i>, 421–438. <a href="https://doi.org/10.1146/annurev-resource-100516-053352" target="_blank" rel="noopener">https://doi.org/10.1146/annurev-resource-100516-053352</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-43">Drusch, M., Del Bello, U., Carlier, S., Colin, O., Fernandez, V., Gascon, F., Hoersch, B., Isola, C., Laberinti, P., Martimort, P., Meygret, A., Spoto, F., Sy, O., Marchese, F. y Bargellini, P. (2012). Sentinel-2: ESA's optical high-resolution mission for GMES operational services. <i>Remote Sensing of Environment</i>, <i>120</i>, 25–36. <a href="https://doi.org/10.1016/j.rse.2011.11.026" target="_blank" rel="noopener">https://doi.org/10.1016/j.rse.2011.11.026</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-44">Eilers, P. H. C. (2003). A perfect smoother. <i>Analytical Chemistry</i>, <i>75</i>(14), 3631–3636. <a href="https://doi.org/10.1021/ac034173t" target="_blank" rel="noopener">https://doi.org/10.1021/ac034173t</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-45">Funk, C., Peterson, P., Landsfeld, M., Pedreros, D., Verdin, J., Shukla, S., Husak, G., Rowland, J., Harrison, L., Hoell, A. y Michaelsen, J. (2015). The climate hazards infrared precipitation with stations—a new environmental record for monitoring extremes. <i>Scientific Data</i>, <i>2</i>, 150066. <a href="https://doi.org/10.1038/sdata.2015.66" target="_blank" rel="noopener">https://doi.org/10.1038/sdata.2015.66</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-46">Gómez Mercado, R., Zamora Díaz, M. R., Rojas Martínez, I. et al. (2009). Comportamiento agronómico de genotipos de cebada en el estado de Hidalgo. <i>Agricultura Técnica en México</i>, <i>35</i>(1). <span class="ref-cap">Territorio</span></li>
+        <li id="ref-47">Hargreaves, G. H. y Samani, Z. A. (1985). Reference crop evapotranspiration from temperature. <i>Applied Engineering in Agriculture</i>, <i>1</i>(2), 96–99. <a href="https://doi.org/10.13031/2013.26773" target="_blank" rel="noopener">https://doi.org/10.13031/2013.26773</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-48">Hispanopedia. (s. f.). <i>Valle de Apan: municipios de los Llanos de Apan (Hidalgo, Tlaxcala, Puebla y Estado de México)</i>. <span class="ref-cap">Territorio</span></li>
+        <li id="ref-49">Huete, A. R. (1988). A soil-adjusted vegetation index (SAVI). <i>Remote Sensing of Environment</i>, <i>25</i>(3), 295–309. <a href="https://doi.org/10.1016/0034-4257(88)90106-X" target="_blank" rel="noopener">https://doi.org/10.1016/0034-4257(88)90106-X</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-50">INEGI. (2025). <i>Encuesta Nacional de Inclusión Financiera (ENIF) 2024</i> [Comunicado de prensa 49/25]. Instituto Nacional de Estadística y Geografía. <a href="https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2025/enif/ENIF2024_CP.pdf" target="_blank" rel="noopener">https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2025/enif/ENIF2024_CP.pdf</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-51">Jönsson, P. y Eklundh, L. (2004). TIMESAT—a program for analyzing time-series of satellite sensor data. <i>Computers &amp; Geosciences</i>, <i>30</i>(8), 833–845. <a href="https://doi.org/10.1016/j.cageo.2004.05.006" target="_blank" rel="noopener">https://doi.org/10.1016/j.cageo.2004.05.006</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-52">Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q. y Liu, T.-Y. (2017). LightGBM: A highly efficient gradient boosting decision tree. <i>Advances in Neural Information Processing Systems</i>, <i>30</i>, 3146–3154. <a href="https://proceedings.neurips.cc/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html" target="_blank" rel="noopener">https://proceedings.neurips.cc/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-53">Lei, J., G'Sell, M., Rinaldo, A., Tibshirani, R. J. y Wasserman, L. (2018). Distribution-free predictive inference for regression. <i>Journal of the American Statistical Association</i>, <i>113</i>(523), 1094–1111. <a href="https://doi.org/10.1080/01621459.2017.1307116" target="_blank" rel="noopener">https://doi.org/10.1080/01621459.2017.1307116</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-54">Lobell, D. B., Thau, D., Seifert, C., Engle, E. y Little, B. (2015). A scalable satellite-based crop yield mapper. <i>Remote Sensing of Environment</i>, <i>164</i>, 324–333. <a href="https://doi.org/10.1016/j.rse.2015.04.021" target="_blank" rel="noopener">https://doi.org/10.1016/j.rse.2015.04.021</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-55">Nadeau, C. y Bengio, Y. (2003). Inference for the generalization error. <i>Machine Learning</i>, <i>52</i>(3), 239–281. <a href="https://doi.org/10.1023/A:1024068626366" target="_blank" rel="noopener">https://doi.org/10.1023/A:1024068626366</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-56">Ploton, P., Mortier, F., Réjou-Méchain, M., Barbier, N., Picard, N., Rossi, V., Dormann, C., Cornu, G., Viennois, G., Bayol, N., Lyapustin, A., Gourlet-Fleury, S. y Pélissier, R. (2020). Spatial validation reveals poor predictive performance of large-scale ecological mapping models. <i>Nature Communications</i>, <i>11</i>, 4540. <a href="https://doi.org/10.1038/s41467-020-18321-y" target="_blank" rel="noopener">https://doi.org/10.1038/s41467-020-18321-y</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-57">Poggio, L., de Sousa, L. M., Batjes, N. H., Heuvelink, G. B. M., Kempen, B., Ribeiro, E. y Rossiter, D. (2021). SoilGrids 2.0: Producing soil information for the globe with quantified spatial uncertainty. <i>SOIL</i>, <i>7</i>(1), 217–240. <a href="https://doi.org/10.5194/soil-7-217-2021" target="_blank" rel="noopener">https://doi.org/10.5194/soil-7-217-2021</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-58">Qi, J., Chehbouni, A., Huete, A. R., Kerr, Y. H. y Sorooshian, S. (1994). A modified soil adjusted vegetation index. <i>Remote Sensing of Environment</i>, <i>48</i>(2), 119–126. <a href="https://doi.org/10.1016/0034-4257(94)90134-1" target="_blank" rel="noopener">https://doi.org/10.1016/0034-4257(94)90134-1</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-59">Roberts, D. R., Bahn, V., Ciuti, S., Boyce, M. S., Elith, J., Guillera-Arroita, G., Hauenstein, S., Lahoz-Monfort, J. J., Schröder, B., Thuiller, W., Warton, D. I., Wintle, B. A., Hartig, F. y Dormann, C. F. (2017). Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure. <i>Ecography</i>, <i>40</i>(8), 913–929. <a href="https://doi.org/10.1111/ecog.02881" target="_blank" rel="noopener">https://doi.org/10.1111/ecog.02881</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-60">Saxton, K. E. y Rawls, W. J. (2006). Soil water characteristic estimates by texture and organic matter for hydrologic solutions. <i>Soil Science Society of America Journal</i>, <i>70</i>(5), 1569–1578. <a href="https://doi.org/10.2136/sssaj2005.0117" target="_blank" rel="noopener">https://doi.org/10.2136/sssaj2005.0117</a> <span class="ref-cap">Doc · Diccionario</span></li>
+        <li id="ref-61">van Klompenburg, T., Kassahun, A. y Catal, C. (2020). Crop yield prediction using machine learning: A systematic literature review. <i>Computers and Electronics in Agriculture</i>, <i>177</i>, 105709. <a href="https://doi.org/10.1016/j.compag.2020.105709" target="_blank" rel="noopener">https://doi.org/10.1016/j.compag.2020.105709</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-62">Wulder, M. A., Loveland, T. R., Roy, D. P., Crawford, C. J., Masek, J. G., Woodcock, C. E., Allen, R. G., Anderson, M. C., Belward, A. S., Cohen, W. B., Dwyer, J., Erb, A., Gao, F., Griffiths, P., Helder, D., Hermosilla, T., Hipple, J. D., Hostert, P., Hughes, M. J., ... Zhu, Z. (2019). Current status of Landsat program, science, and applications. <i>Remote Sensing of Environment</i>, <i>225</i>, 127–147. <a href="https://doi.org/10.1016/j.rse.2019.02.015" target="_blank" rel="noopener">https://doi.org/10.1016/j.rse.2019.02.015</a> <span class="ref-cap">Doc</span></li>
+        <li id="ref-63">Zamora Díaz, M. R., Ibáñez Carranza, A. et al. (2008). Adaptación de cebada maltera a climas con precipitación mayor a 500 mm anuales en Valles Altos. <i>Agricultura Técnica en México</i>, <i>34</i>(4). <span class="ref-cap">Territorio</span></li>
+      </ol>
     </section>
 
     <p class="aviso">

@@ -30,7 +30,7 @@ FIRA, garantía, inclusión financiera).
 ## Supuestos y fuentes
 
 - **Costo de producción:** $15,755 por hectárea (FIRA, cebada de Hidalgo, primavera-verano 2025; citado en
-  *Research, Society and Development*, 2025). Se usa también para las parcelas de Puebla y Tlaxcala. Editable.
+  *Research, Society and Development*, 2026; Hernández Espinosa et al.). Se usa también para las parcelas de Puebla y Tlaxcala. Editable.
 - **Precio de la cebada:** $7,500 por tonelada, pactado en 2025 entre productores de Hidalgo y Grupo
   Modelo (La Jornada, 4 may 2025). Referencias: $8,252 (2023) y $4,500 (lo que, según los productores, quería pagar Modelo en 2025),
   $7,000 (2026, La Silla Rota), $6,077 (promedio nacional 2024, SIAP). Editable.
