@@ -1951,3 +1951,92 @@ html[data-motion="reduce"] .c2-sim-der {
   transform: none;
   transition: none;
 }
+
+/* --- Repositorios (al final del cierre) --- */
+
+.c2-repos {
+  max-width: 44rem;
+  margin-top: 2.6rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+}
+
+.c2-repos h3 {
+  margin: 0 0 0.3rem;
+  font: 800 1.5rem "Fraunces", Georgia, serif;
+  color: var(--green);
+}
+
+.c2-repos > p {
+  margin: 0 0 1rem;
+}
+
+.c2-repos-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.c2-repo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.1rem 1.2rem 1.1rem 1.2rem;
+  background: var(--card);
+  border: 2px solid var(--green);
+  border-radius: 22px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform 0.2s, background 0.2s;
+}
+
+a.c2-repo:hover,
+a.c2-repo:focus-visible {
+  transform: translateY(-3px);
+  background: var(--green);
+  color: var(--sky);
+}
+
+.c2-repo-icono {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+  opacity: 0.8;
+}
+
+.c2-repo-tipo {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rosa);
+}
+
+a.c2-repo:hover .c2-repo-tipo {
+  color: inherit;
+}
+
+.c2-repo-nombre {
+  font: 800 1.25rem "Fraunces", Georgia, serif;
+}
+
+.c2-repo-texto {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.c2-repo-enlace {
+  margin-top: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.c2-repo-pronto {
+  border-style: dashed;
+  opacity: 0.7;
+}

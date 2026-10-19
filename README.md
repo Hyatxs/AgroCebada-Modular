@@ -9,6 +9,15 @@ páginas funcionan, pero sin la mascota y con otra tipografía.
 
 Proyecto del Equipo Representativo STEM · UDLAP.
 
+## El reto
+
+FIRA entregó 197 parcelas de cebada del ciclo 2025: 138 con su rendimiento real (t/ha) y 59 sin él,
+junto con su polígono y sus índices de satélite. Hay que **predecir el rendimiento de las 59** y
+explicar cómo se llegó a la predicción. Este sitio cuenta ese proceso para un público general y muestra
+cómo podría usarse la predicción para dar crédito agrícola.
+
+**En línea:** [completar con el enlace donde se publique]
+
 ## Cómo abrirlo
 
 Desde la raíz del proyecto:
@@ -19,6 +28,10 @@ python -m http.server 5500
 
 y abre `http://localhost:5500/`. No lo abras con doble clic (`file://`): las páginas usan
 `<base href>` y rutas relativas que necesitan un servidor.
+
+**Requisitos:** Python 3 (solo para servir la carpeta) y un navegador actual con WebGL (Chrome, Edge,
+Firefox o Safari). Si el equipo no tiene WebGL, el capítulo 2 muestra un mapa plano en lugar de la
+maqueta 3D.
 
 ## Páginas
 
@@ -92,7 +105,7 @@ Cada carpeta de `vistas/` tiene un `LEEME.md` con sus archivos, decisiones y có
 - Requieren `numpy` y `pandas`.
 
 ## Trabajo en equipo
-
+ 
 - Una rama por cambio (`git switch -c nombre-del-cambio`) y pull request a `main`. No se hace push
   directo a `main`.
 - Cada quien trabaja en su carpeta de `vistas/`. Los archivos de `vistas/compartido/` los usan todas
@@ -105,3 +118,23 @@ Cada carpeta de `vistas/` tiene un `LEEME.md` con sus archivos, decisiones y có
 - «Reducir movimiento» detiene giros y animaciones (también respeta la preferencia del sistema).
 - Enlace «Saltar al contenido» y foco visible.
 - Las preferencias se guardan en el navegador.
+
+## Repositorios relacionados
+
+Las cifras del sitio salen de los cuadernos del equipo (NB03 fenología, NB04 clima, NB07 modelo final):
+
+- Modelo predictivo (cuadernos): [completar enlace]
+- Simulador biofísico: [completar enlace]
+
+## Créditos y licencias
+
+- **Datos del reto:** proporcionados por FIRA para el Reto AgroCebada 2026; se usan solo para este proyecto.
+- **Imágenes de satélite:** Planet y Sentinel-2 (Copernicus, ESA).
+- **Clima:** CHIRPS y CHIRTS-ERA5. **Altitud:** INEGI.
+- **Contornos:** Natural Earth (dominio público).
+- **Bibliotecas:** Three.js r128 (licencia MIT) y d3-geo / d3-array (licencia ISC, en
+  `vistas/01-introduccion/lib/LICENCIA-d3.txt`).
+
+## Equipo
+
+Equipo Representativo STEM · UDLAP: [completar nombres y qué hizo cada quien]
