@@ -122,8 +122,12 @@
   stroke-width: 3;
 }
 
-.terr-pin text {
-  font-size: 20px;
+.terr-pin-icono {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .terr-tabs {
@@ -212,8 +216,16 @@
 }
 
 .terr-factor-icono {
-  font-size: 1.7rem;
+  display: block;
+  width: 1.7rem;
+  height: 1.7rem;
   line-height: 1;
+}
+
+.terr-factor-icono svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .terr-marca {
@@ -355,4 +367,37 @@
     padding: 0.25rem 0.8rem;
     font-size: 0.85rem;
   }
+}
+
+/* Cada estado con su color, igual que en el globo y las gráficas del capítulo:
+   Puebla oro, Tlaxcala rosa, Hidalgo verde */
+.terr-estado[data-zona="0"] path { fill: color-mix(in srgb, var(--gold) 85%, var(--sky)); }
+.terr-estado[data-zona="1"] path { fill: color-mix(in srgb, var(--rosa) 85%, var(--sky)); }
+.terr-estado[data-zona="2"] path { fill: color-mix(in srgb, var(--green) 85%, var(--sky)); }
+
+.terr-estado.activo[data-zona="0"] path { fill: color-mix(in srgb, var(--gold) 85%, var(--sky)); }
+.terr-estado.activo[data-zona="1"] path { fill: color-mix(in srgb, var(--rosa) 85%, var(--sky)); }
+.terr-estado.activo[data-zona="2"] path { fill: color-mix(in srgb, var(--green) 85%, var(--sky)); }
+
+.terr-estado:not(.activo) path {
+  fill-opacity: 0.35;
+}
+
+/* Lo medido en las parcelas del reto, debajo de «lo ideal» y «en este estado» */
+.terr-medido {
+  margin: 8px 0 0 !important;
+  padding: 0.55rem 0.8rem;
+  border: 1.5px dashed color-mix(in srgb, var(--rosa) 70%, transparent);
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.terr-medido small {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--rosa);
 }

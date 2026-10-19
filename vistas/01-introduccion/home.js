@@ -4,6 +4,8 @@
  * Página de inicio (storytelling): la mascota brota de la tierra, una planta
  * de cebada crece al hacer scroll, sus granos caen al suelo y se quedan ahí.
  * Al final, la mascota se coloca en el espacio en blanco de «Tu turno».
+ * El globo de la portada vive en mapa-inicio.js; aquí la planta se recorre para que crezca en
+ * «¿Qué es la cebada?» (las espigas), cuando el globo ya se desvaneció, y se vaya antes de que vuelva.
  */
 
 const escenaHome = crearEscenaMascota($("#mascot"));
@@ -20,13 +22,21 @@ escenaHome.escena.add(contenedorPlanta);
 let scrollSuave = 0;
 let tiempoPrevio = 0;
 
-function actualizarPlanta(t, s) {
+// Pantallas antes de «¿Qué es la cebada?»: la planta crece ahí, sin encimarse con el globo
+let desfasePlanta = 0;
+function medirDesfase() {
+  const espigas = $("#espigas");
+  desfasePlanta = espigas ? Math.max(0, (espigas.getBoundingClientRect().top + window.scrollY) / window.innerHeight - 1) : 0;
+}
+
+function actualizarPlanta(t, sReal) {
+  const s = sReal - desfasePlanta;
   const aspecto = escenaHome.camara.aspect;
   const angosto = aspecto < 1;
 
-  const crecer = clamp((s - 0.6) / 0.9, 0, 1);
-  const soltar = clamp((s - 1.7) / 1.0, 0, 1);
-  const sale = suave(clamp((s - 3.3) / 0.6, 0, 1));
+  const crecer = clamp((s - 0.6) / 0.7, 0, 1);
+  const soltar = clamp((s - 1.35) / 0.5, 0, 1);
+  const sale = suave(clamp((s - 1.9) / 0.4, 0, 1)); // se va antes de que el globo regrese en «Pequeña, pero de gran peso»
 
   const escala = (angosto ? 0.42 : 0.62) * (1 - sale);
 
@@ -45,21 +55,87 @@ function llegadaAlFinal() {
   return suave(clamp((window.innerHeight * 0.8 - caja.top) / (window.innerHeight * 0.5), 0, 1));
 }
 
+// Partes con animación a todo lo ancho («Cómo crece» y «2025»): ahí la mascota se encoge y se hace a un lado
+const seccionesAnimadas = ["#crecimiento", "#temporada"].map((s) => $(s)).filter(Boolean);
+function enAnimacion() {
+  const H = window.innerHeight;
+  let cubre = 0;
+  seccionesAnimadas.forEach((n) => {
+    const r = n.getBoundingClientRect();
+    // Qué tanto ocupa la sección la parte baja de la pantalla, donde vive la mascota
+    cubre = Math.max(cubre, clamp((Math.min(r.bottom, H) - Math.max(r.top, H * 0.5)) / (H * 0.35), 0, 1));
+  });
+  return suave(cubre);
+}
+
+let pesoEsquina = 0;
+
 function actualizarMascotaHome(s) {
   const aspecto = escenaHome.camara.aspect;
   const angosto = aspecto < 1;
-  const peso = suave(clamp((s - 0.4) / 1.2, 0, 1));
-  const esquinaX = angosto ? -0.7 : -0.86;
+  // Después de la portada, la mascota se va a la esquina inferior derecha: los textos del capítulo
+  // van a la izquierda, así que ahí no tapa nada
+  const peso = suave(clamp((s - 0.25) / 0.65, 0, 1));
+  pesoEsquina = peso;
+  // En celular se asoma desde la esquina, medio fuera de la pantalla, para no tapar las líneas de texto
+  const esquina = angosto ? { x: 0.88, y: -0.84, escala: 0.32 } : { x: 0.86, y: -0.68, escala: 0.5 };
 
   const llegada = llegadaAlFinal();
   const hueco = angosto ? { x: 0.6, y: -0.7, escala: 0.5 } : { x: 0.6, y: -0.2, escala: 0.95 };
+  const aparte = enAnimacion();
 
   escenaHome.mover(
-    mezcla(mezcla(0, esquinaX, peso), hueco.x, llegada),
-    mezcla(mezcla(-0.3, -0.7, peso), hueco.y, llegada),
-    mezcla(mezcla(1.25, 0.55, peso), hueco.escala, llegada)
+    mezcla(mezcla(0, esquina.x, peso), hueco.x, llegada),
+    mezcla(mezcla(-0.3, esquina.y, peso), hueco.y, llegada),
+    mezcla(mezcla(1.25, esquina.escala, peso), hueco.escala, llegada) * (1 - 0.999 * aparte)
   );
   escenaHome.estado.monticulo = 1 - peso;
+}
+
+// El globo de diálogo busca un hueco sin texto: primero a la izquierda de la mascota y, si no cabe, arriba
+// de ella. Si en ningún lado hay espacio (pasa en celular), espera escondido a que el texto se recorra.
+const burbujaHome = $("#bubble");
+const textosHome = $$("main .block > *");
+function ubicarBurbuja() {
+  if (!burbujaHome || pesoEsquina < 0.5 || !burbujaHome.classList.contains("visible")) {
+    if (burbujaHome) burbujaHome.classList.remove("sin-lugar");
+    return;
+  }
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  const e = escenaHome.estado;
+  const px = (e.ndcX * 0.5 + 0.5) * W;
+  const py = (-e.ndcY * 0.5 + 0.5) * H;
+  const radio = ((e.escala * 0.6) / MEDIO_ALTO) * (H / 2);
+  const alto = burbujaHome.offsetHeight;
+  const margen = 14;
+  const cajas = textosHome.map((n) => n.getBoundingClientRect()).filter((r) => r.width && r.bottom > 0 && r.top < H);
+  // Lo más a la derecha que llega el texto dentro de una franja horizontal de la pantalla
+  const bordeTexto = (arriba, abajo, hasta) =>
+    cajas.reduce((max, r) => (r.bottom > arriba - 8 && r.top < abajo + 8 && r.left < hasta ? Math.max(max, r.right + 18) : max), margen);
+
+  const colocar = (derecha, abajo, ancho) => {
+    burbujaHome.classList.add("izq");
+    burbujaHome.classList.remove("sin-lugar");
+    burbujaHome.style.left = "auto";
+    burbujaHome.style.right = Math.round(W - derecha) + "px";
+    burbujaHome.style.top = Math.round(abajo) + "px";
+    burbujaHome.style.maxWidth = Math.round(ancho) + "px";
+  };
+
+  // 1) A la izquierda de la mascota
+  const orilla = px - radio * 0.75 - 12;
+  const abajoA = Math.min(H - margen, py + radio * (W < 720 ? 0.6 : 0.1));
+  const anchoA = Math.min(W < 720 ? 300 : 380, orilla - bordeTexto(abajoA - alto, abajoA, orilla));
+  if (anchoA >= (W < 720 ? 170 : 230)) return colocar(orilla, abajoA, anchoA);
+
+  // 2) Arriba de la mascota, pegado al borde derecho
+  const abajoB = py - radio - 6;
+  const anchoB = Math.min(360, W - margen - bordeTexto(abajoB - alto, abajoB, W));
+  if (anchoB >= 200) return colocar(W - margen, abajoB, anchoB);
+
+  // 3) Sin lugar: se esconde un momento
+  burbujaHome.classList.add("sin-lugar");
 }
 
 function animar(milisegundos) {
@@ -74,15 +150,21 @@ function animar(milisegundos) {
   actualizarMascotaHome(scrollSuave);
   actualizarPlanta(t, scrollSuave);
   escenaHome.actualizar(t, dt);
+  ubicarBurbuja();
   escenaHome.render();
 
   requestAnimationFrame(animar);
 }
 
-window.addEventListener("resize", escenaHome.ajustar);
+window.addEventListener("resize", () => {
+  escenaHome.ajustar();
+  medirDesfase();
+});
+window.addEventListener("load", medirDesfase);
+medirDesfase();
 
 
-$("#hero-title").innerHTML = "CEBADA-VERSE"
+$("#hero-title").innerHTML = "Cebada-verse"
   .split("")
   .map(
     (letra, i) =>
@@ -124,22 +206,42 @@ const observarSecciones = new IntersectionObserver(
       }
     });
   },
-  { threshold: 0.35 }
+  // Con rootMargin y no con un porcentaje: las secciones altas (la gráfica de 2025) nunca muestran el 35 %
+  { rootMargin: "0px 0px -22% 0px", threshold: 0 }
 );
 
 let temporizadorDialogo;
+let temporizadorOcultar;
 let listo = false;
+
+// El globo de diálogo se oculta solo unos segundos después de terminar de escribir, para no tapar el texto
+function decirYOcultar(texto) {
+  clearTimeout(temporizadorOcultar);
+  Narrador.decir(texto).then((completo) => {
+    if (completo) temporizadorOcultar = setTimeout(() => Narrador.callar(), 6500);
+  });
+}
 
 const observarDialogo = new IntersectionObserver(
   (entradas) => {
     entradas.forEach((entrada) => {
       if (!entrada.isIntersecting || !listo) return;
 
+      // El globo de diálogo taparía la animación del campo y la gráfica de 2025 (y, en celular, el mapa): ahí calla
+      if (entrada.target.matches(".temporada, #crecimiento") || (entrada.target.matches(".donde, .margen-mascota") && window.innerWidth < 760)) {
+        clearTimeout(temporizadorDialogo);
+        clearTimeout(temporizadorOcultar);
+        Narrador.callar();
+        return;
+      }
+
       clearTimeout(temporizadorDialogo);
-      temporizadorDialogo = setTimeout(() => Narrador.decir(entrada.target.dataset.say), 600);
+      clearTimeout(temporizadorOcultar);
+      temporizadorDialogo = setTimeout(() => decirYOcultar(entrada.target.dataset.say), 600);
     });
   },
-  { threshold: 0.6 }
+  // Habla cuando la sección cruza la franja central de la pantalla, sea corta o larga
+  { rootMargin: "-42% 0px -42% 0px", threshold: 0 }
 );
 
 $$(".section").forEach((seccion) => {
@@ -193,84 +295,87 @@ $$("button", panelHileras).forEach((boton) =>
 elegirHileras(6);
 
 
-const tira = $("#historia-tira");
-const cartas = $$(".hito", tira);
-const riel = $("#tl-riel");
-const botonPrevio = $("#hist-prev");
-const botonSiguiente = $("#hist-next");
+// Línea del tiempo: el capítulo ya no la usa (la historia la cuenta el globo), pero el código queda por si vuelve
+if ($("#historia-tira")) {
+  const tira = $("#historia-tira");
+  const cartas = $$(".hito", tira);
+  const riel = $("#tl-riel");
+  const botonPrevio = $("#hist-prev");
+  const botonSiguiente = $("#hist-next");
 
-let cartaActiva = -1;
+  let cartaActiva = -1;
 
-riel.style.setProperty("--n", cartas.length);
+  riel.style.setProperty("--n", cartas.length);
 
-cartas.forEach((carta, i) => {
-  const punto = document.createElement("button");
-  punto.type = "button";
-  punto.className = "tl-punto";
-  punto.setAttribute("aria-label", `${carta.dataset.corto}: ver esta época`);
-  punto.innerHTML = `<b>${carta.dataset.corto}</b>`;
-  punto.addEventListener("click", () => irACarta(i));
-  riel.appendChild(punto);
+  cartas.forEach((carta, i) => {
+    const punto = document.createElement("button");
+    punto.type = "button";
+    punto.className = "tl-punto";
+    punto.setAttribute("aria-label", `${carta.dataset.corto}: ver esta época`);
+    punto.innerHTML = `<b>${carta.dataset.corto}</b>`;
+    punto.addEventListener("click", () => irACarta(i));
+    riel.appendChild(punto);
 
-  inclinar(carta, 4);
-});
-
-const puntos = $$(".tl-punto", riel);
-
-function irACarta(indice) {
-  const i = clamp(indice, 0, cartas.length - 1);
-  if (i === cartaActiva) return;
-
-  tira.dataset.dir = i > cartaActiva ? "sig" : "ant";
-  cartaActiva = i;
-
-  cartas.forEach((carta, k) => carta.classList.toggle("activo", k === i));
-  puntos.forEach((punto, k) => {
-    punto.classList.toggle("activo", k === i);
-    punto.classList.toggle("hecho", k < i);
-    if (k === i) punto.setAttribute("aria-current", "true");
-    else punto.removeAttribute("aria-current");
+    inclinar(carta, 4);
   });
 
-  riel.style.setProperty("--p", cartas.length > 1 ? i / (cartas.length - 1) : 0);
-  $("#tl-cuenta").textContent = `${i + 1} / ${cartas.length}`;
-  botonPrevio.disabled = i === 0;
-  botonSiguiente.disabled = i === cartas.length - 1;
+  const puntos = $$(".tl-punto", riel);
+
+  function irACarta(indice) {
+    const i = clamp(indice, 0, cartas.length - 1);
+    if (i === cartaActiva) return;
+
+    tira.dataset.dir = i > cartaActiva ? "sig" : "ant";
+    cartaActiva = i;
+
+    cartas.forEach((carta, k) => carta.classList.toggle("activo", k === i));
+    puntos.forEach((punto, k) => {
+      punto.classList.toggle("activo", k === i);
+      punto.classList.toggle("hecho", k < i);
+      if (k === i) punto.setAttribute("aria-current", "true");
+      else punto.removeAttribute("aria-current");
+    });
+
+    riel.style.setProperty("--p", cartas.length > 1 ? i / (cartas.length - 1) : 0);
+    $("#tl-cuenta").textContent = `${i + 1} / ${cartas.length}`;
+    botonPrevio.disabled = i === 0;
+    botonSiguiente.disabled = i === cartas.length - 1;
+  }
+
+  botonPrevio.addEventListener("click", () => irACarta(cartaActiva - 1));
+  botonSiguiente.addEventListener("click", () => irACarta(cartaActiva + 1));
+
+  tira.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      irACarta(cartaActiva + 1);
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      irACarta(cartaActiva - 1);
+    }
+  });
+
+  let gesto = null;
+
+  tira.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    gesto = { x: e.clientX, y: e.clientY };
+  });
+
+  window.addEventListener("pointerup", (e) => {
+    if (!gesto) return;
+
+    const dx = e.clientX - gesto.x;
+    const dy = e.clientY - gesto.y;
+    gesto = null;
+
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      irACarta(cartaActiva + (dx < 0 ? 1 : -1));
+    }
+  });
+
+  irACarta(0);
 }
-
-botonPrevio.addEventListener("click", () => irACarta(cartaActiva - 1));
-botonSiguiente.addEventListener("click", () => irACarta(cartaActiva + 1));
-
-tira.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowRight") {
-    e.preventDefault();
-    irACarta(cartaActiva + 1);
-  } else if (e.key === "ArrowLeft") {
-    e.preventDefault();
-    irACarta(cartaActiva - 1);
-  }
-});
-
-let gesto = null;
-
-tira.addEventListener("pointerdown", (e) => {
-  if (e.pointerType === "mouse" && e.button !== 0) return;
-  gesto = { x: e.clientX, y: e.clientY };
-});
-
-window.addEventListener("pointerup", (e) => {
-  if (!gesto) return;
-
-  const dx = e.clientX - gesto.x;
-  const dy = e.clientY - gesto.y;
-  gesto = null;
-
-  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-    irACarta(cartaActiva + (dx < 0 ? 1 : -1));
-  }
-});
-
-irACarta(0);
 
 const burbujaMascota = $("#bubble");
 const botonBurbuja = $("#bubble-toggle");
@@ -278,30 +383,28 @@ const botonBurbuja = $("#bubble-toggle");
 botonBurbuja.addEventListener("click", () => {
   const plegada = burbujaMascota.classList.toggle("plegada");
 
-  botonBurbuja.textContent = plegada ? "💬 Mostrar" : "Ocultar ✕";
+  botonBurbuja.textContent = plegada ? "Mostrar" : "Ocultar ✕";
   botonBurbuja.setAttribute("aria-expanded", String(!plegada));
 });
 
 function terminarCarga() {
-  $("#loader").classList.add("done");
   document.body.classList.add("ready");
   $$(".section")[0].classList.add("in");
   listo = true;
 
   escenaHome.brotar(performance.now() / 1000 + 0.4);
-  setTimeout(() => Narrador.decir($$(".section")[0].dataset.say), 2600);
+  // Solo saluda si la persona sigue en la portada
+  setTimeout(() => window.scrollY < window.innerHeight * 0.5 && decirYOcultar($$(".section")[0].dataset.say), 2600);
 }
 
-let progresoCarga = 0;
-const intervaloCarga = setInterval(() => {
-  progresoCarga = Math.min(100, progresoCarga + 4);
-  $("#loader-count").textContent = progresoCarga;
+// Entrada: el telón verde se levanta y la mascota brota (sin telón si se pidió reducir movimiento)
+const telon = $("#c1-telon");
+const sinMovimiento = Paleta.movimientoReducido();
+setTimeout(terminarCarga, sinMovimiento ? 0 : 1100);
+setTimeout(() => telon && telon.remove(), sinMovimiento ? 0 : 1800);
 
-  if (progresoCarga >= 100) {
-    clearInterval(intervaloCarga);
-    terminarCarga();
-  }
-}, 45);
+// Al capítulo 2 se pasa con un enlace normal: el telón de entrada del capítulo 2 hace la transición.
+// (Antes aquí subía otro telón antes de cambiar de página y se veían dos seguidos.)
 
 escenaHome.ajustar();
 escenaHome.estado.monticulo = 1;

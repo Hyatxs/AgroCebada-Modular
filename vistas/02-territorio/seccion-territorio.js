@@ -8,19 +8,25 @@
  * esencial. El detalle se abre tocando un factor (altura, lluvia,
  * temperatura, heladas): «lo ideal» frente a «en este estado».
  *
- * Depende de (vistas/compartido): common.js ($, Util, Paleta), data.js (DATA),
- * estados.js (ESTADOS_MEXICO). No modifica ninguno de ellos.
+ * Depende de (vistas/compartido): common.js ($, Util, Paleta), estados.js (ESTADOS_MEXICO),
+ * vistas/07-modelo/datos-modelo.js (MODELO_HGP: estado y rendimiento de cada parcela) y
+ * vistas/01-introduccion/temporada-datos.js (TEMPORADA.por_estado: altura, lluvia y temperatura
+ * medidas en las parcelas de cada estado en 2025). No modifica ninguno de ellos.
  * Contenedor: <div id="territorio-demo"></div> dentro de <section id="territorio">.
  *
  * Fuentes (ver también referencias.html):
  *  [1] Zamora Díaz et al. (2017). Maravilla: variedad de cebada forrajera para
  *      Valles Altos de México. Rev. Mex. Cienc. Agríc. 8(6). → lluvia por zona,
  *      siembra de temporal, heladas tempranas, suelos.
- *  [2] Gómez Mercado et al. (2009). Agric. Téc. Méx. 35(1). → altitudes y
- *      temperaturas de Apan, Almoloya y Villa de Tezontepec (Hidalgo).
- *  [3] Gómez-Espinoza et al. (2025). Rev. Fitotec. Mex. 48(3). → calor > 30 °C.
- *  [4] Zamora Díaz et al. (2008). Agric. Téc. Méx. 34(4). → ≥ 500 mm de lluvia.
- *  [5] SIAP (ya citado en el proyecto) → participación de cada estado.
+ *  [2] Gómez Mercado et al. (2009). Agric. Téc. Méx. 35(1). → ensayos en Villa de Tezontepec (2,355 m),
+ *      Apan (2,547 m) y Almoloya (2,730 m); media de 12.2 a 15.5 °C en el ciclo; en Almoloya la
+ *      madurez fisiológica llegó del 20 al 27 de octubre.
+ *  [3] Gómez-Espinoza et al. (2025). Rev. Fitotec. Mex. 48(3). → rinde mejor si espiga y llena
+ *      el grano con temperaturas moderadas; arriba de 30 °C sube la proteína del grano.
+ *  [6] FAO Ecocrop (Hordeum vulgare). → óptimo de 15 a 20 °C; en el trópico, arriba de 1,800 m.
+ *  [4] Zamora Díaz et al. (2008). Agric. Téc. Méx. 34(4). → se adapta a climas con ≥ 500 mm anuales.
+ *  [7] Hispanopedia, «Valle de Apan» → municipios de los Llanos de Apan (Hidalgo, Tlaxcala, Puebla, Edomex).
+ *  [5] SIAP 2024 (ya citado en el proyecto) → participación de cada estado.
  *
  */
 
@@ -29,15 +35,24 @@
   if (!contenedor) return;
 
   const ESTADOS = ["Puebla", "Tlaxcala", "Hidalgo"];
-  const POR_ZONA = 66; // data.js: zona 0 = Puebla, 1 = Tlaxcala, 2 = Hidalgo
 
   /* --- Factores: lo ideal (igual para todos) ----------------------------- */
 
+  // Íconos de línea (24 × 24), dibujados con el color del texto
+  const ICONOS = {
+    altura: '<path d="M2.5 19.5 9 8.5l3.4 5.6 2.9-4.1 6.2 9.5Z"/><path d="m7.2 11.6 1.8 1.2 1.6-1.4"/>',
+    lluvia: '<path d="M7 14.5h9.6a3.4 3.4 0 0 0 .5-6.8 5 5 0 0 0-9.6-.4A3.6 3.6 0 0 0 7 14.5Z"/><path d="m8.5 17.5-1 2.5M12.5 17.5l-1 2.5M16.5 17.5l-1 2.5"/>',
+    temp: '<path d="M10 13.6V5a2 2 0 0 1 4 0v8.6a4 4 0 1 1-4 0Z"/><path d="M12 9.5v6.8"/>',
+    heladas: '<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="m9.6 4.6 2.4 2 2.4-2M9.6 19.4l2.4-2 2.4 2M4.6 10.8l3.1-.6-1-3M19.4 13.2l-3.1.6 1 3M6.7 16.8l1-3-3.1-.6M17.3 7.2l-1 3 3.1.6"/>',
+  };
+  const icono = (clave) =>
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONOS[clave]}</svg>`;
+
   const FACTORES = [
-    { clave: "altura", icono: "⛰️", nombre: "Altura", ideal: "Valles altos, arriba de 2,200 m", porque: "El fresco de la altura le da más tiempo al grano para llenarse." },
-    { clave: "lluvia", icono: "🌧️", nombre: "Lluvia", ideal: "500 mm o más en el año", porque: "Es cultivo de temporal: con menos de 450 mm el rendimiento baja." },
-    { clave: "temp", icono: "🌡️", nombre: "Temperatura", ideal: "Fresca, sin pasar de 30 °C", porque: "El calor fuerte cuando sale la espiga deja el grano chico." },
-    { clave: "heladas", icono: "❄️", nombre: "Heladas", ideal: "Que no lleguen antes de cosechar", porque: "Una helada temprana daña el grano que aún está lleno de agua." },
+    { clave: "altura", nombre: "Altura", ideal: "Fresco de altura: en el trópico, arriba de 1,800 m", porque: "El fresco de la altura le da más tiempo al grano para llenarse." },
+    { clave: "lluvia", nombre: "Lluvia", ideal: "500 mm o más en el año", porque: "Es cultivo de temporal: con menos de 450 mm el rendimiento baja." },
+    { clave: "temp", nombre: "Temperatura", ideal: "Templada: lo óptimo es de 15 a 20 °C", porque: "Rinde mejor si espiga y llena el grano con temperaturas moderadas; arriba de 30 °C el grano acumula más proteína." },
+    { clave: "heladas", nombre: "Heladas", ideal: "Que no lleguen antes de cosechar", porque: "Una helada temprana daña el grano que aún está lleno de agua." },
   ];
 
   /* --- Cada estado (corto). "si" = cumple, "ojo" = depende del año ------- */
@@ -45,17 +60,17 @@
   const INFO = {
     Puebla: {
       lema: "Llanos altos y de temporal",
-      frase: "Cerca del 10% de la cebada del país (SIAP, 2011). Se siembra en los llanos altos del estado (verificar municipios).",
-      altura: ["si", "Sus llanos cebaderos están arriba de 2,200 m."],
+      frase: "El 16 % de la cebada del país en 2024 (SIAP). Las 100 parcelas del reto están en Chignahuapan, en la Sierra Norte.",
+      altura: ["si", "Sus parcelas están en lo alto de la Sierra Norte."],
       lluvia: ["ojo", "Depende del año: si las lluvias se atrasan, la siembra también."],
       temp: ["si", "Templado y fresco durante el temporal."],
-      heladas: ["ojo", "En los llanos más altos pueden caer en octubre."],
+      heladas: ["ojo", "Las heladas tempranas de otoño son un riesgo en las partes altas (INIFAP)."],
       consejo: "Sembrar en cuanto se asienten las lluvias de junio, para cosechar antes de las heladas.",
     },
     Tlaxcala: {
       lema: "Pequeño, pero muy cebadero",
-      frase: "Cerca del 13% de la cebada del país (SIAP, 2011). Su poniente comparte los Llanos de Apan con Hidalgo (verificar).",
-      altura: ["si", "Casi todo el estado está arriba de 2,200 m."],
+      frase: "El 16 % de la cebada del país en 2024 (SIAP). Sus parcelas del reto están en Calpulalpan y Nanacamilpa, en los Llanos de Apan que comparte con Hidalgo.",
+      altura: ["si", "Está en el Altiplano, en tierras altas y frescas."],
       lluvia: ["ojo", "Un año seco o con lluvias irregulares se nota en la cosecha."],
       temp: ["si", "Valles frescos: el grano se llena sin calor."],
       heladas: ["ojo", "Riesgo en otoño en las partes más altas."],
@@ -63,26 +78,41 @@
     },
     Hidalgo: {
       lema: "El mayor productor del país",
-      frase: "Primer lugar nacional desde 2023 (SIAP). Su cebada está en el Altiplano: Apan, Almoloya, Zempoala y Singuilucan.",
-      altura: ["si", "Entre 2,350 y 2,730 m en las zonas cebaderas."],
+      frase: "El mayor productor del país en 2024: el 24 % de la cebada (SIAP). Sus parcelas del reto están en seis municipios del sureste del estado: Almoloya, Apan, Cuautepec, Emiliano Zapata, Singuilucan y Tepeapulco; todos menos Singuilucan, en los Llanos de Apan.",
+      altura: ["si", "Los ensayos de cebada del INIFAP en Hidalgo se hicieron entre 2,355 y 2,730 m."],
       lluvia: ["ojo", "Clima templado seco: cuenta mucho que el suelo guarde agua."],
-      temp: ["si", "De 12 a 15 °C en promedio durante el ciclo."],
-      heladas: ["ojo", "En Almoloya, lo más alto, el grano madura hasta fines de octubre."],
+      temp: ["si", "Templado: en esos ensayos, de 12 a 15.5 °C de media durante el ciclo."],
+      heladas: ["ojo", "En Almoloya (2,730 m), el sitio más alto de esos ensayos, el grano maduró hasta fines de octubre."],
       consejo: "En las partes altas, sembrar temprano; en las bajas, cuidar el agua del suelo.",
     },
   };
 
   /* --- Datos reales del reto por estado --------------------------------- */
 
-  const RETO = ESTADOS.map((_, zona) => {
-    const parcelas = DATA.P.slice(zona * POR_ZONA, (zona + 1) * POR_ZONA);
-    const conocidas = parcelas.filter((p) => !p.p).map((p) => p.y);
+  // Cada parcela trae su estado en MODELO_HGP (data.js va ordenado por clave, no por estado)
+  const PARCELAS = (window.MODELO_HGP && MODELO_HGP.parcelas) || [];
+  const MEDIDO = (window.TEMPORADA && TEMPORADA.por_estado) || {};
+  const RETO = ESTADOS.map((nombre) => {
+    const parcelas = PARCELAS.filter((p) => p.edo === nombre);
+    const conocidas = parcelas.filter((p) => !p.pred && p.y_obs !== null).map((p) => p.y_obs);
     return {
       parcelas: parcelas.length,
-      hectareas: parcelas.reduce((suma, p) => suma + p.a, 0),
-      promedio: conocidas.reduce((a, b) => a + b, 0) / conocidas.length,
+      hectareas: parcelas.reduce((suma, p) => suma + (p.ha || 0), 0),
+      promedio: conocidas.length ? conocidas.reduce((a, b) => a + b, 0) / conocidas.length : NaN,
     };
   });
+
+  // Lo que se midió en sus parcelas en 2025, por factor
+  const miles = (v) => Math.round(v).toLocaleString("es-MX");
+  function medido(nombre, clave) {
+    const m = MEDIDO[nombre];
+    if (!m) return "";
+    if (clave === "altura") return `De ${miles(m.elev_min)} a ${miles(m.elev_max)} m de altura (INEGI).`;
+    if (clave === "lluvia") return `${miles(m.lluvia_temporada)} mm en la temporada de 2025 (mediana, CHIRPS).`;
+    if (clave === "temp") return `${Util.fmt(m.tmedia_temporada, 1)} °C de media en la temporada de 2025 (CHIRTS-ERA5).`;
+    if (clave === "heladas") return `Mínima promedio de ${Util.fmt(m.tmin_tardia, 1)} °C en el tramo final de la temporada de 2025, del llenado del grano al fin del verdor (mediana, CHIRTS-ERA5). Son datos mensuales: una helada de una noche no se ve.`;
+    return "";
+  }
 
   /* --- Mapa SVG ----------------------------------------------------------- */
 
@@ -139,7 +169,7 @@
     return `
       <rect x="-2000" y="-2000" width="5000" height="5000" class="terr-mar"/>
       ${vecinos}${objetivos}
-      <g id="terr-pin" class="terr-pin" opacity="0"><circle r="20"/><text text-anchor="middle" dy="7"></text></g>`;
+      <g id="terr-pin" class="terr-pin" opacity="0"><circle r="20"/><g class="terr-pin-icono" transform="translate(-12 -12)"></g></g>`;
   }
 
   /* --- Estructura -------------------------------------------------------- */
@@ -150,7 +180,7 @@
         <svg id="terr-svg" viewBox="0 0 ${ANCHO} ${ALTO}" role="img"
              aria-label="Mapa del centro de México con Puebla, Tlaxcala e Hidalgo">${dibujarMapa()}</svg>
         <div class="terr-tabs" id="terr-tabs" role="tablist" aria-label="Estado"></div>
-        <button class="terr-alejar" id="terr-alejar" hidden>⤢ Ver los tres</button>
+        <button class="terr-alejar" id="terr-alejar" hidden>Ver los tres</button>
         <span class="terr-nota">Contornos aproximados</span>
       </div>
       <div class="terr-info">
@@ -160,12 +190,12 @@
         <div class="terr-detalle" id="terr-detalle" aria-live="polite"></div>
         <div class="terr-pie">
           <span id="terr-reto"></span>
-          <button id="terr-consejo-btn" class="terr-consejo-btn" aria-expanded="false">💡 Consejo</button>
+          <button id="terr-consejo-btn" class="terr-consejo-btn" aria-expanded="false">Consejo</button>
         </div>
         <p class="terr-consejo" id="terr-consejo" hidden></p>
       </div>
     </div>
-    <span class="fuente">Fuentes: INIFAP, Rev. Fitotecnia Mexicana y SIAP · datos del reto: 197 parcelas de 2025. Ver Referencias.</span>`;
+    <span class="fuente">Fuentes: INIFAP, FAO, Rev. Fitotecnia Mexicana y SIAP 2024 · lo medido: datos del reto (INEGI, CHIRPS y CHIRTS-ERA5) en las 197 parcelas de 2025. Ver Referencias.</span>`;
 
   const el = {
     svg: $("#terr-svg"),
@@ -240,7 +270,7 @@
       boton.className = `terr-factor ${i === estado.factor ? "active" : ""}`;
       boton.setAttribute("aria-pressed", String(i === estado.factor));
       boton.innerHTML = `
-        <span class="terr-factor-icono" aria-hidden="true">${factor.icono}</span>
+        <span class="terr-factor-icono" aria-hidden="true">${icono(factor.clave)}</span>
         <span>${factor.nombre}</span>
         <span class="terr-marca ${marca}" aria-label="${marca === "si" ? "cumple" : "depende del año"}">${marca === "si" ? "✓" : "!"}</span>`;
       boton.addEventListener("click", () => {
@@ -262,13 +292,14 @@
         <div><small>Lo ideal</small><b>${factor.ideal}</b></div>
         <div class="${marca}"><small>En ${nombre}</small><b>${texto}</b></div>
       </div>
+      ${medido(nombre, factor.clave) ? `<p class="terr-medido"><small>Medido en sus ${RETO[estado.zona].parcelas} parcelas</small>${medido(nombre, factor.clave)}</p>` : ""}
       <p class="terr-porque">${factor.porque}</p>`;
     el.detalle.classList.remove("entra");
     void el.detalle.offsetWidth; // reinicia la animación de entrada
     el.detalle.classList.add("entra");
 
     // El ícono del factor aparece sobre el estado en el mapa
-    el.pin.querySelector("text").textContent = factor.icono;
+    el.pin.querySelector(".terr-pin-icono").innerHTML = ICONOS[factor.clave];
     el.pin.setAttribute("opacity", "1");
     colocarPin();
   }

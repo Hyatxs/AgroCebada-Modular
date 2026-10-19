@@ -5,12 +5,67 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Referencias · Barley Bot</title>
+  <meta name="description" content="De dónde sale cada dato del sitio: datos del reto, capítulo 1 (la cebada), capítulo 2 (el modelo) y capítulo 3 (el crédito)." />
 
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=DM+Sans:wght@400;600&display=swap"
     rel="stylesheet"
   />
   <link rel="stylesheet" href="vistas/compartido/styles.css" />
+  <link rel="stylesheet" href="vistas/compartido/diccionario.css" />
+  <style>
+    /* Solo para esta página: secciones por capítulo y un índice corto */
+    .ref-indice {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 1.2rem 0 0.4rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .ref-indice a {
+      display: inline-block;
+      padding: 0.3rem 0.9rem;
+      border: 1.5px solid var(--green);
+      border-radius: 999px;
+      color: var(--green);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+    }
+
+    .ref-indice a:hover {
+      background: var(--green);
+      color: var(--sky);
+    }
+
+    .ref-seccion {
+      margin-top: 2.6rem;
+      padding-top: 1rem;
+      border-top: 2px solid var(--line);
+      scroll-margin-top: 80px;
+    }
+
+    .ref-seccion h2 {
+      margin: 0 0 0.3rem;
+      font-size: clamp(1.5rem, 3.6vw, 2.2rem);
+    }
+
+    .ref-seccion > p {
+      max-width: 680px;
+      margin: 0 0 1rem;
+    }
+
+    .lista-referencias small {
+      color: var(--rosa);
+      font-weight: 600;
+    }
+
+    .lista-referencias a {
+      overflow-wrap: anywhere;
+    }
+  </style>
 </head>
 
 <body data-page="referencias">
@@ -20,28 +75,188 @@
   <main id="contenido" class="pagina">
     <span class="kicker">Referencias</span>
     <h1>De dónde sale cada dato</h1>
-    <p class="intro">Las cifras de contexto vienen de estas fuentes; revísalas antes de citarlas.
-    Las fechas de la línea del tiempo de la Antigüedad (domesticación hacia el 8000 a. C., Himno a
-    Ninkasi hacia el 1800 a. C.) son aproximadas y de conocimiento general.</p>
-    <ul class="lista-referencias">
-      <li><b>Reto FIRA 2026 · AgroCebada</b> <small>(FIRA)</small><br>Conjuntos de datos del reto (IDs y rendimiento 70/30, BÁSICO y PRO): polígonos, áreas, rendimientos de entrenamiento e índices Planet y Sentinel-2 de 2025.<br><a href="https://www.fira.gob.mx" target="_blank" rel="noopener">https://www.fira.gob.mx</a></li>
-      <li><b>Cebada en México: estados productores</b> <small>(Artículo)</small><br>Datos de participación 2011 (Hidalgo 26%, Tlaxcala 13%, Puebla 10%), variedades sembradas y producción nacional. SAGARPA-SIAP (2011), citado en “La oferta de cebada grano en México”, Revista Global Crossroads / Georgetown.<br><a href="https://gcgjournal.georgetown.edu/index.php/gcg/article/download/448/574" target="_blank" rel="noopener">https://gcgjournal.georgetown.edu/index.php/gcg/article/download/448/574</a></li>
-      <li><b>Hidalgo, mayor productor desde 2023</b> <small>(Artículo)</small><br>Modelo matemático de rentabilidad de cultivos en Hidalgo (UAEH), con cifras SIAP 2025: Hidalgo es el mayor productor de cebada del país desde 2023.<br><a href="https://rsdjournal.org/rsd/article/download/50771/39806/515061" target="_blank" rel="noopener">https://rsdjournal.org/rsd/article/download/50771/39806/515061</a></li>
-      <li><b>Cebada maltera en el Altiplano</b> <small>(Artículo)</small><br>INIFAP. Evaluación agronómica y física en líneas avanzadas de cebada maltera (Revista Mexicana de Ciencias Agrícolas). Cuarto cereal del mundo; producción concentrada en Hidalgo, Puebla, Tlaxcala y Estado de México.<br><a href="https://www.redalyc.org/pdf/2631/263144153014.pdf" target="_blank" rel="noopener">https://www.redalyc.org/pdf/2631/263144153014.pdf</a></li>
-      <li><b>Adabella, variedad maltera</b> <small>(Artículo)</small><br>INIFAP. Adabella: variedad de cebada maltera para Valles Altos de la Mesa Central de México. Agricultura Técnica en México.<br><a href="https://www.scielo.org.mx/pdf/agritm/v34n4/v34n4a12.pdf" target="_blank" rel="noopener">https://www.scielo.org.mx/pdf/agritm/v34n4/v34n4a12.pdf</a></li>
-      <li><b>Compra de 500 mil toneladas y 25 mil familias</b> <small>(Nota)</small><br>SADER y cerveceras (2021): familias productoras y 235 mil hectáreas en el Altiplano, Durango y Zacatecas. Nota de Forbes México.<br><a href="https://forbes.com.mx/?p=822703" target="_blank" rel="noopener">https://forbes.com.mx/?p=822703</a></li>
-      <li><b>Producción nacional y rendimiento medio</b> <small>(Nota)</small><br>“La cebada, el insumo mexicano que aporta identidad a la cerveza”: producción mayor a 900 mil toneladas desde 2016 y rendimiento medio nacional de 2.6 t/ha (2013–2019), con base en INEGI.<br><a href="https://forbes.com.mx/red-forbes-la-cebada-el-insumo-mexicano-que-aporta-identidad-a-la-cerveza/" target="_blank" rel="noopener">https://forbes.com.mx/red-forbes-la-cebada-el-insumo-mexicano-que-aporta-identidad-a-la-cerveza/</a></li>
-      <li><b>SIAP · Servicio de Información Agroalimentaria y Pesquera</b> <small>(Estadística)</small><br>Estadística oficial de producción agrícola por cultivo y estado.<br><a href="https://www.gob.mx/siap" target="_blank" rel="noopener">https://www.gob.mx/siap</a></li>
-      <li><b>INEGI · Edafología</b> <small>(Estadística)</small><br>Tipos de suelo de México (hoy simulados en esta versión).<br><a href="https://www.inegi.org.mx" target="_blank" rel="noopener">https://www.inegi.org.mx</a></li>
-      <li><b>FAOSTAT</b> <small>(Estadística)</small><br>Estadística mundial de cultivos (ranking de cereales).<br><a href="https://www.fao.org/faostat" target="_blank" rel="noopener">https://www.fao.org/faostat</a></li>
-      <li><b>Sentinel-2 · Copernicus</b> <small>(Sensor)</small><br>Misión de imágenes multiespectrales de la Agencia Espacial Europea.<br><a href="https://sentinels.copernicus.eu" target="_blank" rel="noopener">https://sentinels.copernicus.eu</a></li>
-      <li><b>Planet</b> <small>(Sensor)</small><br>Constelación de satélites de observación de la Tierra.<br><a href="https://www.planet.com" target="_blank" rel="noopener">https://www.planet.com</a></li>
+    <p class="intro">
+      Las cifras del sitio salen de los datos del reto, de los cálculos del equipo y de estas fuentes públicas.
+      Están agrupadas por capítulo. Los precios, costos y tasas del capítulo 3 son supuestos que el simulador deja
+      cambiar.
+    </p>
+    <ul class="ref-indice" aria-label="Secciones">
+      <li><a href="vistas/06-interpretacion/referencias.html#datos">Datos del reto</a></li>
+      <li><a href="vistas/06-interpretacion/referencias.html#capitulo-1">1 · La cebada</a></li>
+      <li><a href="vistas/06-interpretacion/referencias.html#capitulo-2">2 · El modelo</a></li>
+      <li><a href="vistas/06-interpretacion/referencias.html#capitulo-3">3 · El crédito</a></li>
+      <li><a href="vistas/06-interpretacion/referencias.html#herramientas">Mapas y herramientas</a></li>
     </ul>
-    <p class="aviso">Datos reales del proyecto: polígonos, áreas, rendimientos de entrenamiento e
-    índices 2025. Datos simulados: clima, GDD, suelo y eventos. Las posiciones de las parcelas en el
-    campo y las fronteras fuera de Puebla, Tlaxcala e Hidalgo son ilustrativas.</p>
+
+    <section class="ref-seccion" id="datos">
+      <h2>Datos del reto</h2>
+      <p>Todo lo que el modelo aprende y predice sale de aquí.</p>
+      <ul class="lista-referencias">
+        <li><b>Reto AgroCebada FIRA 2026</b> <small>(FIRA)</small><br>Bases de participación y conjuntos de datos:
+          197 parcelas (shapefile con áreas y polígonos), rendimientos del ciclo abril–octubre de 2025 de 138 parcelas,
+          índices Sentinel-2 y Landsat de 2022 a 2025 (datos básicos), índices Planet de 2025 (datos PRO),
+          precipitación y temperatura mensual de 2022 a 2025 y topografía.<br>
+          <a href="https://www.fira.gob.mx" target="_blank" rel="noopener">https://www.fira.gob.mx</a></li>
+        <li><b>Sentinel-2</b> <small>(Copernicus, Agencia Espacial Europea)</small><br>Imágenes multiespectrales de 10 a 20 m.<br>
+          <a href="https://sentinels.copernicus.eu" target="_blank" rel="noopener">https://sentinels.copernicus.eu</a></li>
+        <li><b>Landsat</b> <small>(NASA y USGS)</small><br>Imágenes de 30 m con banda térmica.<br>
+          <a href="https://www.usgs.gov/landsat-missions" target="_blank" rel="noopener">https://www.usgs.gov/landsat-missions</a></li>
+        <li><b>Planet</b> <small>(Planet Labs)</small><br>Imágenes casi diarias de unos 3 m.<br>
+          <a href="https://www.planet.com" target="_blank" rel="noopener">https://www.planet.com</a></li>
+        <li><b>CHIRPS y CHIRTS-ERA5</b> <small>(Climate Hazards Center, UC Santa Barbara)</small><br>Precipitación y temperatura mensual.<br>
+          <a href="https://www.chc.ucsb.edu/data" target="_blank" rel="noopener">https://www.chc.ucsb.edu/data</a></li>
+        <li><b>Continuo de Elevaciones Mexicano</b> <small>(INEGI)</small><br>Altura de cada parcela (de 2,500 a 2,900 m).<br>
+          <a href="https://www.inegi.org.mx/app/geo2/elevacionesmex/" target="_blank" rel="noopener">https://www.inegi.org.mx/app/geo2/elevacionesmex/</a></li>
+        <li><b>SoilGrids 2.0</b> <small>(ISRIC)</small><br>Propiedades del suelo usadas en las pruebas del capítulo 2.<br>
+          <a href="https://soilgrids.org" target="_blank" rel="noopener">https://soilgrids.org</a></li>
+      </ul>
+    </section>
+
+    <section class="ref-seccion" id="capitulo-1">
+      <h2>Capítulo 1 · La cebada y su territorio</h2>
+      <ul class="lista-referencias">
+        <li><b>Producción, superficie y rendimiento de 2024</b> <small>(SADER-SIAP)</small><br>827,490 t en el país,
+          300,558 ha cosechadas, 2.8 t/ha de promedio y precio medio de $6,077 por tonelada; Hidalgo 195,412 t,
+          Puebla 133,352 t y Tlaxcala 128,892 t (juntos, el 55 %). Resumen de la estadística del SIAP en Blog
+          Agricultura.<br>
+          <a href="https://blogagricultura.com/estadisticas-cebada-grano-mexico/" target="_blank" rel="noopener">https://blogagricultura.com/estadisticas-cebada-grano-mexico/</a><br>
+          Estadística oficial: <a href="https://www.gob.mx/siap" target="_blank" rel="noopener">https://www.gob.mx/siap</a></li>
+        <li><b>Cuarto cereal del mundo</b> <small>(INIFAP)</small><br>Evaluación agronómica y física en líneas
+          avanzadas de cebada maltera, Revista Mexicana de Ciencias Agrícolas: «ocupa el cuarto lugar en importancia
+          en el mundo», después del trigo, el arroz y el maíz.<br>
+          <a href="https://www.redalyc.org/pdf/2631/263144153014.pdf" target="_blank" rel="noopener">https://www.redalyc.org/pdf/2631/263144153014.pdf</a></li>
+        <li><b>Mejoramiento genético de la cebada en el INIFAP (1985–2020)</b> <small>(Revista Mexicana de Ciencias Agrícolas)</small><br>
+          El Programa Nacional de Cebada ha liberado 22 variedades desde 1959 (17 malteras y 5 forrajeras), entre
+          ellas Esperanza y Esmeralda; autosuficiencia nacional en 2000.<br>
+          <a href="https://cienciasagricolas.inifap.gob.mx/index.php/agricolas/article/view/2807" target="_blank" rel="noopener">https://cienciasagricolas.inifap.gob.mx/index.php/agricolas/article/view/2807</a></li>
+        <li><b>Agricultura y ganadería en la Nueva España</b> <small>(SEP · Nueva Escuela Mexicana)</small><br>
+          El trigo y la cebada no existían en América: los introdujeron los españoles (siglos XV y XVI). A México
+          llegaron después de 1519, en el siglo XVI.<br>
+          <a href="https://nuevaescuelamexicana.sep.gob.mx/contenido/coleccion/agricultura-y-ganaderia-en-la-nueva-espana/" target="_blank" rel="noopener">https://nuevaescuelamexicana.sep.gob.mx/contenido/coleccion/agricultura-y-ganaderia-en-la-nueva-espana/</a></li>
+        <li><b>Barley (<i>Hordeum vulgare</i>)</b> <small>(FAO, Ecocrop)</small><br>Temperatura óptima de 15 a 20 °C,
+          lluvia óptima de 500 a 1,000 mm al año, sensible a la helada al inicio del ciclo; en el trópico prospera
+          arriba de 1,800 m.<br>
+          <a href="https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1232" target="_blank" rel="noopener">https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1232</a><br>
+          <a href="https://ecocrop.apps.fao.org/ecocrop/srv/en/cropView?id=1232" target="_blank" rel="noopener">https://ecocrop.apps.fao.org/ecocrop/srv/en/cropView?id=1232</a></li>
+        <li><b>Maravilla: variedad de cebada forrajera para Valles Altos de México</b> <small>(Zamora Díaz et al., INIFAP ·
+          Revista Mexicana de Ciencias Agrícolas 8(6), 2017)</small><br>Zonas por lluvia (más de 500 mm, buena
+          productividad; menos de 450 mm, baja), siembra del 1 de mayo al 30 de junio según la zona, floración de 45
+          a 57 días y madurez de 94 a 115 días; heladas tempranas.<br>
+          <a href="https://cienciasagricolas.inifap.gob.mx/index.php/agricolas/article/download/317/547/1917" target="_blank" rel="noopener">https://cienciasagricolas.inifap.gob.mx/index.php/agricolas/article/download/317/547/1917</a></li>
+        <li><b>Rendimiento de grano y características fisicoquímicas de cebada en función de la fecha de siembra</b>
+          <small>(Gómez-Espinoza et al. · Revista Fitotecnia Mexicana 48(3), 2025)</small><br>Rinde mejor cuando el
+          espigamiento y el llenado de grano ocurren con temperaturas moderadas; arriba de 30 °C sube la proteína del
+          grano. Usado en «Cómo crece».<br>
+          <a href="https://revistafitotecniamexicana.org/documentos/48-3/9a.pdf" target="_blank" rel="noopener">https://revistafitotecniamexicana.org/documentos/48-3/9a.pdf</a></li>
+        <li><b>Cómo crece y por qué 2025 fue distinto</b> <small>(cuadernos del equipo)</small><br>Fechas de inicio, pico
+          y fin del verdor por parcela (Planet y Sentinel-2, NB03), comparación con 2022–2024 (Sentinel-2) y clima de
+          cada parcela (CHIRPS y CHIRTS-ERA5). Las curvas semanales y la nubosidad vienen de los datos Planet del
+          reto. La lluvia mensual de la gráfica es el promedio regional que trae el inventario CHIRPS del reto. El
+          campo animado es una ilustración: su verdor, sus nubes y su lluvia siguen esos datos semana a semana.</li>
+        <li><b>Origen y domesticación de la cebada</b> <small>(Wikipedia; Plant Breeding and Genomics, eXtension)</small><br>
+          Domesticada hace unos 10 mil años en el Creciente Fértil a partir de la cebada silvestre; la silvestre suelta
+          sus granos al madurar y la cultivada no. Seis hileras: las tres espiguillas de cada nudo son fértiles; dos
+          hileras: solo la central. Es una fecha aproximada.<br>
+          <a href="https://en.wikipedia.org/wiki/Barley" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Barley</a><br>
+          <a href="https://en.wikipedia.org/wiki/Hordeum_spontaneum" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Hordeum_spontaneum</a><br>
+          <a href="https://plant-breeding-genomics.extension.org/whats-so-interesting-about-barley" target="_blank" rel="noopener">https://plant-breeding-genomics.extension.org/whats-so-interesting-about-barley</a></li>
+        <li><b><i>Hordeum vulgare</i></b> <small>(KPU Plant Database)</small><br>Espiga de 10 a 30 nudos, con tres
+          espiguillas por nudo.<br>
+          <a href="https://plantdatabase.kpu.ca/PlantPrint/hord" target="_blank" rel="noopener">https://plantdatabase.kpu.ca/PlantPrint/hord</a></li>
+      </ul>
+    </section>
+
+    <section class="ref-seccion" id="capitulo-2">
+      <h2>Capítulo 2 · El modelo</h2>
+      <p>
+        Las métricas, predicciones, rangos y respuestas a las preguntas guía son del equipo: notebooks NB05 a NB07,
+        con validación cruzada agrupada (10 repeticiones × 5 particiones) y calibración conformal.
+      </p>
+      <ul class="lista-referencias">
+        <li><b>Gaussian Processes for Machine Learning</b> <small>(Rasmussen y Williams, MIT Press, 2006)</small><br>
+          Base del GP jerárquico (núcleo Matérn 3/2).<br>
+          <a href="http://gaussianprocess.org/gpml/" target="_blank" rel="noopener">http://gaussianprocess.org/gpml/</a></li>
+        <li><b>A Gentle Introduction to Conformal Prediction</b> <small>(Angelopoulos y Bates, 2021)</small><br>
+          Cómo se ajustan los rangos P10–P90 y el P20 con los errores observados.<br>
+          <a href="https://arxiv.org/abs/2107.07511" target="_blank" rel="noopener">https://arxiv.org/abs/2107.07511</a></li>
+        <li><b>Diccionario de índices satelitales</b> <small>(material del reto)</small><br>Definición de NDVI,
+          MSAVI, SAVI, EVI, LAI y los demás índices de las preguntas guía.</li>
+      </ul>
+    </section>
+
+    <section class="ref-seccion" id="capitulo-3">
+      <h2>Capítulo 3 · El crédito</h2>
+      <ul class="lista-referencias">
+        <li><b>FIRA y FEGA</b> <small>(SHCP · Cuenta Pública 2024)</small><br>Los cuatro fondos de FIRA y las
+          garantías del FEGA.<br>
+          <a href="https://www.cuentapublica.hacienda.gob.mx/work/models/CP/2024/tomo/VII/MAT_Print.6HAS.01.INTRO.pdf" target="_blank" rel="noopener">https://www.cuentapublica.hacienda.gob.mx/work/models/CP/2024/tomo/VII/MAT_Print.6HAS.01.INTRO.pdf</a></li>
+        <li><b>Costo de producción: $15,755 por hectárea</b> <small>(FIRA, cebada de Hidalgo, primavera-verano 2025)</small><br>
+          Citado en Research, Society and Development (2025), tabla de costos por cultivo.<br>
+          <a href="https://rsdjournal.org/rsd/article/download/50771/39806/515061" target="_blank" rel="noopener">https://rsdjournal.org/rsd/article/download/50771/39806/515061</a></li>
+        <li><b>Precio 2025: $7,500 por tonelada</b> <small>(La Jornada, 4 de mayo de 2025)</small><br>Acuerdo entre
+          productores de Hidalgo y Grupo Modelo, con participación de FIRA. Según los productores, la cervecera
+          quería bajar de $8,252 (lo que pagó en 2023) a $4,500.<br>
+          <a href="https://www.jornada.com.mx/noticia/2025/05/04/estados/productores-de-hidalgo-y-modelo-fijan-precio-precio-de-cebada-finaliza-conflicto" target="_blank" rel="noopener">https://www.jornada.com.mx/noticia/2025/05/04/estados/productores-de-hidalgo-y-modelo-fijan-precio-precio-de-cebada-finaliza-conflicto</a></li>
+        <li><b>Precio 2026: $7,000 por tonelada</b> <small>(La Silla Rota, 11 de mayo de 2026)</small><br>
+          <a href="https://lasillarota.com/hidalgo/estado/2026/5/11/logran-acuerdos-comerciales-para-productores-de-cebada-son-mil-pesos-por-tonelada-509532.html" target="_blank" rel="noopener">https://lasillarota.com/hidalgo/estado/2026/5/11/logran-acuerdos-comerciales-para-productores-de-cebada-son-mil-pesos-por-tonelada-509532.html</a></li>
+        <li><b>Tasa de 8.5 % anual · Cosechando Soberanía</b> <small>(Luz Noticias, 14 de octubre de 2026; Imagen Agropecuaria, 2026)</small><br>
+          Programa federal para pequeños y medianos productores, con seguro incluido.<br>
+          <a href="https://www.luznoticias.mx/2026-10-14/sinaloa/piden-a-agricultores-de-sinaloa-tramitar-creditos-con-fira-para-evitar-intereses-mas-altos/309833" target="_blank" rel="noopener">https://www.luznoticias.mx/2026-10-14/sinaloa/piden-a-agricultores-de-sinaloa-tramitar-creditos-con-fira-para-evitar-intereses-mas-altos/309833</a><br>
+          <a href="https://imagenagropecuaria.com/2026/a-traves-de-cosechando-soberania-se-han-canalizado-creditos-por-4500-mdp-c-lopez/" target="_blank" rel="noopener">https://imagenagropecuaria.com/2026/a-traves-de-cosechando-soberania-se-han-canalizado-creditos-por-4500-mdp-c-lopez/</a></li>
+        <li><b>Cultivos de Cosechando Soberanía</b> <small>(Tus Buenas Noticias, abril de 2025)</small><br>Maíz, frijol,
+          arroz, trigo, café, leche y pesca. No encontramos que incluya la cebada: por eso la tasa es una referencia.<br>
+          <a href="https://www.tusbuenasnoticias.com/amp/noticias/economia/2025/04/11/43856-cosechando-soberania-creditos-accesibles-para-el-campo-mexicano" target="_blank" rel="noopener">https://www.tusbuenasnoticias.com/amp/noticias/economia/2025/04/11/43856-cosechando-soberania-creditos-accesibles-para-el-campo-mexicano</a></li>
+        <li><b>Tasa máxima de 17.5 % en créditos de 10 meses</b> <small>(Los Noticieristas, septiembre de 2026)</small><br>
+          Dato de la residencia estatal de FIRA en Sinaloa.<br>
+          <a href="https://losnoticieristas.com/agricola/2026/09/presenta-fira-alternativas-de-credito-para-pequenos-y-medianos-productores-de-guasave-sinaloa-1138803/" target="_blank" rel="noopener">https://losnoticieristas.com/agricola/2026/09/presenta-fira-alternativas-de-credito-para-pequenos-y-medianos-productores-de-guasave-sinaloa-1138803/</a></li>
+        <li><b>FIRA financia de 80 a 90 % del costo a pequeños productores</b> <small>(BBVA)</small><br>
+          <a href="https://www.bbva.com/es/mx/empresas/financiamiento-agropecuario-en-mexico-como-funciona-el-credito-fira/" target="_blank" rel="noopener">https://www.bbva.com/es/mx/empresas/financiamiento-agropecuario-en-mexico-como-funciona-el-credito-fira/</a></li>
+      </ul>
+    </section>
+
+    <section class="ref-seccion" id="herramientas">
+      <h2>Mapas y herramientas</h2>
+      <ul class="lista-referencias">
+        <li><b>Natural Earth</b> <small>(dominio público)</small><br>Contornos de los países y de los estados de México
+          del globo de la portada. Están simplificados: cerca de las fronteras se corren de 1 a 5 km.<br>
+          <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">https://www.naturalearthdata.com</a></li>
+        <li><b>datamaps 0.5.10</b> <small>(MIT)</small> y <b>world-atlas 2.0.2</b> <small>(ISC)</small><br>Paquetes
+          con los contornos de Natural Earth ya preparados.<br>
+          <a href="https://github.com/markmarkoh/datamaps" target="_blank" rel="noopener">https://github.com/markmarkoh/datamaps</a> ·
+          <a href="https://github.com/topojson/world-atlas" target="_blank" rel="noopener">https://github.com/topojson/world-atlas</a></li>
+        <li><b>d3-geo 3.1.1 y d3-array 3.2.4</b> <small>(ISC)</small><br>Proyección ortográfica del globo que gira.<br>
+          <a href="https://d3js.org/d3-geo" target="_blank" rel="noopener">https://d3js.org/d3-geo</a></li>
+        <li><b>Three.js r128</b> <small>(MIT)</small><br>Mascota y maqueta 3D.<br>
+          <a href="https://threejs.org" target="_blank" rel="noopener">https://threejs.org</a></li>
+        <li><b>Fraunces y DM Sans</b> <small>(Google Fonts, SIL Open Font License)</small><br>
+          <a href="https://fonts.google.com" target="_blank" rel="noopener">https://fonts.google.com</a></li>
+      </ul>
+    </section>
+
+    <p class="aviso">
+      Lo que no es medición directa: en el capítulo 1, las etapas de la planta por mes son aproximadas (se reparten
+      entre el inicio, el pico y el fin del verdor medidos, y quedan cerca de los días a floración y madurez que
+      reporta el INIFAP) y la temporada se mide por el verdor, no por la fecha de siembra, que el reto no trae. Las predicciones y rangos son estimaciones del modelo, no rendimientos observados.
+    </p>
   </main>
 
+  <footer>
+    Proyecto desarrollado por integrantes del Equipo Representativo STEM · UDLAP
+  </footer>
+
   <script src="vistas/compartido/common.js"></script>
+  <script src="vistas/compartido/diccionario.js"></script>
+  <script>
+    // Enlaces del índice con <base href>: desplazamiento dentro de la página
+    document.querySelectorAll('.ref-indice a').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        const destino = document.getElementById(a.hash.slice(1));
+        if (!destino) return;
+        e.preventDefault();
+        destino.scrollIntoView({ behavior: 'smooth' });
+        history.replaceState(null, '', a.hash);
+      });
+    });
+  </script>
 </body>
 </html>
