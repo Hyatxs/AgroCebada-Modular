@@ -1,7 +1,7 @@
 "use strict";
 
 /*
- * Barley Bot en 3D: grano de cebada con cara, planta de cebada con espiga
+ * Grano de cebada con cara, planta de cebada con espiga
  * que se desprende, y el narrador (globo de texto).
  * Requiere three.js r128 y common.js.
  */

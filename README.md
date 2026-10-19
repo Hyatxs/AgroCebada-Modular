@@ -1,4 +1,4 @@
-# Barley Bot · FIRA 2026 (Reto AgroCebada)
+#  FIRA 2026 (Reto AgroCebada)
 
 Experiencia web para contar la historia de la cebada y predecir el rendimiento de 197 parcelas
 de Puebla, Tlaxcala e Hidalgo. Es HTML, CSS y JavaScript sin compilar: Three.js r128 se carga
