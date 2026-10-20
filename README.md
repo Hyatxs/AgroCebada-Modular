@@ -121,10 +121,12 @@ Cada carpeta de `vistas/` tiene un `LEEME.md` con sus archivos, decisiones y có
 
 ## Repositorios relacionados
 
-Las cifras del sitio salen de los cuadernos del equipo (NB03 fenología, NB04 clima, NB07 modelo final):
+El proyecto vive en dos repositorios. Los dos están enlazados al final del capítulo 2 de la página
+(sección «¿Quieres ver cómo lo hicimos?»).
 
-- Modelo predictivo (cuadernos): [completar enlace]
-- Simulador biofísico: [completar enlace]
+- **Página web (este repositorio):** [github.com/Hyatxs/AgroCebada-Modular](https://github.com/Hyatxs/AgroCebada-Modular)
+- **Modelo predictivo:** [github.com/Valoo-1201/AgroCebada-Modelo](https://github.com/Valoo-1201/AgroCebada-Modelo).
+  Contiene los notebooks de donde salen las cifras del sitio (NB03 fenología, NB04 clima, NB07 modelo final).
 
 ## Créditos y licencias
 
@@ -137,4 +139,4 @@ Las cifras del sitio salen de los cuadernos del equipo (NB03 fenología, NB04 cl
 
 ## Equipo
 
-Equipo Representativo STEM · UDLAP: [completar nombres y qué hizo cada quien]
+Equipo Representativo STEM · UDLAP · Lourdes María García Garfias | María Valentina García Hernández | Dana Paola Sánchez Alonso | Dulce Grecia Pérez Capilla | Lizeth Bonilla Díaz 
