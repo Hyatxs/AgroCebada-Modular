@@ -1853,3 +1853,27 @@ html[data-motion="reduce"] .c1-desliza::after {
     margin-top: 1.2rem;
   }
 }
+
+
+/* --- Nombres del equipo en el pie de página --- */
+
+.equipo-nombres {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 0.8rem auto 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.equipo-nombres li {
+  padding: 0.3rem 1rem;
+  border: 1.5px solid var(--rosa);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--rosa) 12%, transparent);
+  color: var(--rosa);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
