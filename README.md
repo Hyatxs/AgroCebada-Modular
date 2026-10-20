@@ -1,4 +1,4 @@
-# Cebada-verse · FIRA 2026 (Reto AgroCebada)
+# Agro-verse · FIRA 2026 (Reto AgroCebada)
 
 Experiencia web en tres capítulos que cuenta la historia de la cebada y predice el rendimiento de las
 197 parcelas del reto en Puebla, Tlaxcala e Hidalgo (138 con rendimiento conocido y 59 por predecir).

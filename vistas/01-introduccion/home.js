@@ -171,7 +171,7 @@ window.addEventListener("load", medirDesfase);
 medirDesfase();
 
 
-$("#hero-title").innerHTML = "Cebada-verse"
+$("#hero-title").innerHTML = "Agro-verse"
   .split("")
   .map(
     (letra, i) =>

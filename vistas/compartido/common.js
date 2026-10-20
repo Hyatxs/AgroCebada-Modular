@@ -316,7 +316,7 @@ function montarNavegacion() {
   const opcionesCvd = Object.entries(Paleta.DALTONISMO).map(([clave, d]) => [clave, d.etiqueta]);
 
   nav.innerHTML = `
-    <a class="logo" href="index.html" aria-label="Barley Bot, inicio">${Grano.svg(24)}</a>
+    <a class="logo" href="index.html" aria-label="Agro-verse, inicio">${Grano.svg(24)}</a>
     <div class="nav-pill">
       ${enlaces
         .map(
