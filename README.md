@@ -1,4 +1,4 @@
-# Agro-verse · FIRA 2026 (Reto AgroCebada)
+# Cebada-verse · FIRA 2026 (Reto AgroCebada)
 
 Experiencia web en tres capítulos que cuenta la historia de la cebada y predice el rendimiento de las
 197 parcelas del reto en Puebla, Tlaxcala e Hidalgo (138 con rendimiento conocido y 59 por predecir).
@@ -16,7 +16,12 @@ junto con su polígono y sus índices de satélite. Hay que **predecir el rendim
 explicar cómo se llegó a la predicción. Este sitio cuenta ese proceso para un público general y muestra
 cómo podría usarse la predicción para dar crédito agrícola.
 
-**En línea:** [completar con el enlace donde se publique]
+**En línea:** https://agro-cebada-modular.vercel.app
+
+> **Sobre el nombre:** el proyecto se llamó primero *Agro-verse* y su mascota *Barley Bot*. El nombre
+> final es **Cebada-verse**. En algunos archivos, textos y nombres internos del código todavía aparecen
+> los nombres anteriores; se conservaron para no romper estilos ni scripts. Si ves «Agro-verse» o
+> «Barley Bot», se refiere a Cebada-verse.
 
 ## Cómo abrirlo
 

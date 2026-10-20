@@ -877,7 +877,7 @@ html[data-motion="reduce"] #c1-telon {
 }
 
 /* Título de la portada: cada letra es una pieza aparte, así que se mantiene en una línea y el tamaño se
-   ajusta al ancho. Medido para «Agro-verse» (12 letras), para que no se corte a la derecha. */
+   ajusta al ancho. Medido para «Cebada-verse» (12 letras), para que no se corte a la derecha. */
 .hero #hero-title {
   white-space: nowrap;
   font-size: clamp(2.4rem, 9.6vw, 11rem);
