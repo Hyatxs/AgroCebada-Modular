@@ -1,0 +1,6 @@
+{
+  "framework": null,
+  "installCommand": "",
+  "buildCommand": "mkdir -p public && cp -R *.html vistas public/",
+  "outputDirectory": "public"
+}
