@@ -1,3 +1,5 @@
+<p align="center"><b>Español</b> | <a href="README.en.md">English</a></p>
+
 # Cebada-verse · FIRA 2026 (Reto AgroCebada)
 
 Experiencia web en tres capítulos que cuenta la historia de la cebada y predice el rendimiento de las
@@ -8,6 +10,12 @@ Three.js r128 (la mascota) se carga desde cdnjs y las fuentes desde Google Fonts
 páginas funcionan, pero sin la mascota y con otra tipografía.
 
 Proyecto del Equipo Representativo STEM · UDLAP.
+
+<p align="center">
+  <a href="https://agro-cebada-modular.vercel.app">
+    <img src="docs/capturas/01-introduccion.jpg" alt="Portada del sitio" />
+  </a>
+</p>
 
 ## El reto
 
@@ -53,6 +61,26 @@ edita la de `vistas/`.
 **Barra superior (en todas):** Introducción, Modelo, Crédito, **Diccionario** (glosario de términos;
 las palabras marcadas en el texto se pueden tocar) y **Preferencias**: Referencias, tema
 (automático / claro / oscuro), daltonismo (protanopia, deuteranopia, tritanopia) y «Reducir movimiento».
+
+## Capturas
+
+<table>
+  <tr>
+    <td align="center" width="50%"><img src="docs/capturas/02-modelo-maqueta-3d.jpg" alt="Capítulo 2: maqueta 3D de las parcelas" /><br /><b>Capítulo 2: maqueta 3D de las parcelas</b></td>
+    <td align="center" width="50%"><img src="docs/capturas/03-comparacion-modelos.jpg" alt="Capítulo 2: comparación de diez modelos" /><br /><b>Capítulo 2: comparación de diez modelos</b></td>
+  </tr>
+  <tr>
+    <td align="center" width="50%"><img src="docs/capturas/04-resultados.jpg" alt="Capítulo 2: resultados de la validación" /><br /><b>Capítulo 2: resultados de la validación</b></td>
+    <td align="center" width="50%"><img src="docs/capturas/05-preguntas-guia.jpg" alt="Capítulo 2: preguntas guía del reto" /><br /><b>Capítulo 2: preguntas guía del reto</b></td>
+  </tr>
+  <tr>
+    <td align="center" width="50%"><img src="docs/capturas/06-credito.jpg" alt="Capítulo 3: del rendimiento al crédito" /><br /><b>Capítulo 3: del rendimiento al crédito</b></td>
+    <td align="center" width="50%"><img src="docs/capturas/07-simulador-credito.jpg" alt="Capítulo 3: simulador de crédito por parcela" /><br /><b>Capítulo 3: simulador de crédito por parcela</b></td>
+  </tr>
+  <tr>
+    <td align="center" width="50%"><img src="docs/capturas/08-cartera.jpg" alt="Capítulo 3: riesgo de la cartera" /><br /><b>Capítulo 3: riesgo de la cartera</b></td>
+  </tr>
+</table>
 
 ## El modelo
 
